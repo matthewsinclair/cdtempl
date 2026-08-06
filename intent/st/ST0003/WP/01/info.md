@@ -3,7 +3,7 @@ verblock: "02 Aug 2026:v0.2: matts - Filled from the ST0001/ST0002 close-out car
 wp_id: WP-01
 title: "Cut the 0.1.0 release"
 scope: Small
-status: WIP
+status: Done
 ---
 
 # WP-01: Cut the 0.1.0 release
