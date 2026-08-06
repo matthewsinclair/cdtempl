@@ -70,7 +70,10 @@ no `v`, no suffix.
 1. **Gates.** All of them run and all of them report, so a refusal says which
    check refused rather than making you rerun blind.
 2. **Write** `VERSION`.
-3. **Commit** `release: vX.Y.Z`.
+3. **Commit** `release: vX.Y.Z` -- **skipped when `VERSION` already held the
+   target**, which is the ordinary shape of a first release. There is nothing
+   to commit, so the tag goes on the commit that is already the release rather
+   than on an empty one manufactured to sit beside it.
 4. **Tag** `vX.Y.Z`, annotated.
 5. **Package** `dist/cdsync-X.Y.Z.tar.gz`, built by `git archive` **from the
    tag**.

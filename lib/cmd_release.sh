@@ -106,6 +106,40 @@ release_bump_part() {
   esac
 }
 
+# Commit the VERSION write -- unless there is nothing to write.
+#
+# CUTTING THE VERSION ALREADY IN `VERSION` WRITES THE SAME BYTES. That is the
+# normal shape of a first release: the repository already declares 0.1.0, the
+# tag is what is missing. `git commit` refuses an empty commit, so the ceremony
+# ran every gate green and then died at this step -- after the explicit-version
+# form had been added specifically to make that release possible.
+#
+# TAG IN PLACE RATHER THAN MANUFACTURE AN EMPTY COMMIT. The commit that is
+# already the release is the honest thing for the tag to name; an empty
+# `release: vX.Y.Z` beside it would be a second commit claiming to be the same
+# thing. `--allow-empty` would have made the failure go away and left that
+# behind.
+#
+# Takes the repository as an argument so it can be exercised against a real one
+# in the suite. The ceremony around it cannot be: `release_gates` refuses to run
+# inside bats, deliberately, because running the suite from inside the suite
+# does not terminate -- which is exactly why this defect reached a real cut.
+release_commit_version() {
+  local next="$1"
+  local repo="${2:-$CDSYNC_HOME}"
+
+  git -C "$repo" add VERSION || return 1
+
+  if git -C "$repo" diff --cached --quiet; then
+    echo "  commit  none needed -- VERSION is already $next"
+    return 0
+  fi
+
+  git -C "$repo" commit -q -m "release: v$next" || return 1
+  echo "  commit  release: v$next"
+  return 0
+}
+
 # Every gate reports rather than returning a bare status, because a release that
 # refuses without saying which check refused is a release someone reruns blind.
 release_gates() {
@@ -351,9 +385,7 @@ release_do_cut() {
   printf '%s\n' "$next" | atomic_write "$CDSYNC_HOME/VERSION" || return 1
   echo "  write   VERSION = $next"
 
-  git -C "$CDSYNC_HOME" add VERSION || return 1
-  git -C "$CDSYNC_HOME" commit -q -m "release: v$next" || return 1
-  echo "  commit  release: v$next"
+  release_commit_version "$next" "$CDSYNC_HOME" || return 1
 
   git -C "$CDSYNC_HOME" tag -a "v$next" -m "cdsync $next" || return 1
   echo "  tag     v$next"

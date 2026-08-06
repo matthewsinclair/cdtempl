@@ -1590,6 +1590,48 @@ HTML
   assert_contains "nothing was written"
 }
 
+# THE SECOND HALF OF THE FIRST-RELEASE GAP, and it survived the first fix.
+# Teaching `cut` to accept an explicit version got past the arithmetic, and
+# then the ceremony died one step later: cutting the version already in
+# VERSION writes the same bytes, so `git commit` has nothing to commit and
+# refuses. `cut 0.1.0` ran every gate green and then failed at step 3.
+#
+# It could not have been caught by a dry run, which stops before writing, nor
+# by the six tests around `release_bump_part`, which assert one layer above
+# where this lives. And the ceremony itself is untestable end to end here on
+# purpose -- the gates refuse to run inside the suite, because running the
+# suite from inside the suite does not terminate. So the decision is extracted
+# to a function that CAN be tested, against a real repository.
+#
+# NO EMPTY COMMIT. The tag names the commit that already is the release; a
+# manufactured empty commit would add a second thing claiming to be it.
+@test "release commits a version change, and tags in place when VERSION is already correct" {
+  local repo="$TESTDIR/relrepo"
+  mkdir -p "$repo"
+  git -C "$repo" init -q
+  git -C "$repo" config user.email "test@example.invalid"
+  git -C "$repo" config user.name "test"
+  printf '0.1.0\n' >"$repo/VERSION"
+  git -C "$repo" add VERSION
+  git -C "$repo" commit -q -m "init"
+
+  local before
+  before="$(git -C "$repo" rev-list --count HEAD)"
+
+  # VERSION already holds the target: nothing to commit. Must SUCCEED.
+  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_commit_version 0.1.0 '$repo'"
+  [ "$status" -eq 0 ]
+  [ "$(git -C "$repo" rev-list --count HEAD)" -eq "$before" ]
+
+  # A real move still commits exactly once, and leaves nothing behind.
+  printf '0.2.0\n' >"$repo/VERSION"
+  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_commit_version 0.2.0 '$repo'"
+  [ "$status" -eq 0 ]
+  [ "$(git -C "$repo" rev-list --count HEAD)" -eq "$((before + 1))" ]
+  [ -z "$(git -C "$repo" status --porcelain)" ]
+  git -C "$repo" log -1 --format=%s | grep -q '^release: v0.2.0$'
+}
+
 # The `v` belongs to the git tag and nowhere else. A version string that
 # sometimes carries it is one that gets compared against one that does not.
 @test "release accepts bare semver and refuses everything else" {
