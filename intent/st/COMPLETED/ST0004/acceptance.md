@@ -46,3 +46,19 @@ The rename is verified by probes rather than by new tests: the existing suite is
 
 - AT-00.1 test/cdsync.bats (whole suite, 328 tests) -- covers AC-00.3 -- status: green
 - AT-00.2 test/cdsync.bats::"a release archive carries the tool and not how it is made" -- covers AC-00.3 -- status: green -- called out separately because it builds its listing with `git archive HEAD` and so failed until the rename was committed; it reads committed state by design, which is what makes it the honest check of the packaging contract
+
+## Post-close note -- 6 August 2026: the boundary was too narrow, and the remainder is now done
+
+**Every criterion above was satisfied as written. The bar they were measured against was wrong**, and this note exists so the next reader does not inherit it.
+
+The boundary at the head of this file scopes the work to *"five repositories -- this one and the four siblings **that carried the name**"*. The italicised clause is a claim about the world; the five names after it are the set that was actually checked. **`~/Devel/prj/Sites/gyreandgymble` and `~/Devel/prj/Sites/snorkeltoast` also carried the name** -- 28 and 26 occurrences -- and were never in the set, because the survey that drew it up enumerated `~/Devel/prj/*` and did not descend into `Sites/`.
+
+**No control could have caught this.** AC-00.2 and AC-00.7 each proved a probe able to hit inside the repository it was pointed at, which is a statement about the instrument. Nothing anywhere in this contract asked what enumerated the repositories. That distinction is now on the board's watch-out list as its own shape.
+
+**AC-00.1 was also false for this repository**, in the narrow region it explicitly claimed: `templates/_test/Acme/` is gitignored, so a sweep working from tracked content never saw it. It held 30 occurrences and a `vboot.json` -- and the filename was the live defect, because the tool resolves through `cdsync.json` now, so `cdsync brief` there would have reported *"no cdsync.json here"* with the configuration beside it under its old name.
+
+**All three are now at zero** -- tracked, on disk, and in filenames -- each with the same paired positive control (28, 26 and 30 against their own pre-mutation baselines), and adjacency enumerated before substitution in every case. `design/.gitignore` gives the strongest available check and passes: the four repositories hold a byte-identical repo-owned copy, the rename had split them into two pairs, and all four now hash to `d230e257` again.
+
+**Three on-disk occurrences remain across the family and are deliberate**: a dated backup under `Utilz/.backup/` (editing inside a backup corrupts it), Laksa's `_build/` release output (regenerates), and a base64 image fixture in a vendored dependency of Lamplight whose bytes happen to contain the letters -- it matches only a case-INSENSITIVE probe, and this thread's substitution was case-sensitive.
+
+**This thread stays closed.** It did what it said within the boundary it declared; the boundary is what failed, and a close is not the place to relitigate scope. The completion above is recorded here rather than in a new thread because it is the same work, finished.

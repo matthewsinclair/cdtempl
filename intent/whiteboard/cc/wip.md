@@ -3,7 +3,7 @@ node: cc
 name: Control Claude
 role: control
 session_id: dc81d7ec-8e40-4353-8410-71d6499122ed
-heartbeat_at: 2026-08-06T11:29Z
+heartbeat_at: 2026-08-06T11:47Z
 status: active
 focus: "0.1.0 RELEASED and the repo is PUBLIC. ST0003 WIP, WP-01 closed 8/8; WP-07 and WP-08 unblocked and next. 335 tests, CI green all three jobs, all remotes at ahead=0. Localfolded for a compact -- session continues after the bounce"
 claims: [ST0003]
@@ -68,6 +68,7 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 - **`cmd | tail; echo $?` captures `tail`'s exit code, never `cmd`'s.** It reported shellcheck exit 0 over eight live findings.
 - **A path constructed rather than found.** **`find` the file, then grep it.**
 - **A case-sensitive `grep`** missing `Sixteen`, and a pattern requiring `` `--flag` `` unable to match `` `--target PATH` ``.
+- **A POSITIVE CONTROL VALIDATES THE INSTRUMENT, NOT THE SAMPLING FRAME.** ST0004 renamed the tool across five repositories and every one of its criteria verified with a paired control -- each proving its probe could hit *inside the repository it was pointed at*. Two repositories were missing from the list entirely, carrying 54 occurrences, because the survey that drew the list up enumerated `~/Devel/prj/*` and never saw `~/Devel/prj/Sites/*`. **Every control was sound and the answer was still wrong. Ask separately what enumerated the set they were run over** -- and note the contract said "the four siblings *that carried the name*", which is a claim about the world, not about the five repositories it then checked.
 
 ### Mutation testing has two failure modes, not one
 
@@ -112,11 +113,12 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 ### Standing
 
 - **A generated document is not a report -- it is an instruction the other side obeys.** **Read every generated document against the tree before it is sent.**
-- **`BOOTSTRAP-CD.md` regenerates on sync and on nothing else.** Regenerate by hand after touching `addenda/` -- or after changing the generator, which stales every copy at once with no local symptom.
+- **`BOOTSTRAP-CD.md` regenerates on sync and on nothing else.** Regenerate by hand after touching `addenda/` -- or after changing the generator, which stales every copy at once with no local symptom. **Four copies are now known stale, not the two WP-08 records.** Baize's steel-thread high-water; and on 6 August G&G's (inventory missing `business/`, and it embeds a *superseded revision* of its own addendum) and snorkeltoast's (`docs/` 92 against 93, `email/` 3 against 7, one whole section absent). **Assume stale and diff, rather than reading it.** The advisory staleness rule in WP-08 has now been earned four times over.
 - **Two descriptions of one thing will disagree, and the terse one tends to survive.** **Structural tests now guard help files, the rule count, and every colour form the scanner reads.**
 - **What matters is usually in Claude Design's tree, which this side cannot see.**
 - **NEVER kill a process this session did not start.** Background jobs I start have task IDs; TaskStop is what they are for.
-- **A file written into a repository another session is working in is not safe until it is committed.** The Laksa handoff note vanished between writing and updating it on 2 August.
+- **A file written into a repository another session is working in is not safe until it is committed.** The Laksa handoff note vanished between writing and updating it on 2 August. **6 August, the other direction: a live session in snorkeltoast COMMITTED four files this session had just edited**, into a commit of its own called *"Content for new laksa release"*. The work survived and is mislabelled, so **the hazard is not only loss** -- check the reflog before assuming a clean tree means your edit failed.
+- **An explicit FILE LIST is not an explicit pathspec.** It governs which files move, not which hunks inside them. 6 August: staging six named files swept 20 lines of unrelated uncommitted work into a commit labelled a rename. **The arithmetic is what caught it** -- every other file reconciled exactly against its occurrence count and one did not. ST0004's AC-00.10 names the discipline; obeying its letter with `git add -A <list>` is not obeying it.
 - **Whether CD can read a repository is PER PROJECT, and reading is not writing.** **A drop can be AHEAD of its repository.**
 - **Verify a correction by content, never by filename and never by a receipt.**
 - **`assets/` is a name the drop contract owns, and three of four projects use it for something else.** The marker for an asset is its `spec.md`.
