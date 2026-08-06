@@ -13,7 +13,7 @@ Created at the close-out of ST0001 and ST0002 to hold what those threads carried
 ### Unblocked
 
 - [x] **WP-01 -- Cut 0.1.0.** DONE 6 Aug, 8/8. Tagged `v0.1.0`, packaged, pushed, GitHub release published and the published asset verified by downloading and running it. Running it for real found two defects in `release` itself, both now fixed and fenced
-- [ ] **WP-07 -- Integrate Gyre & Gymble.** Cdsync-shaped, `tokens.json`, `check` clean at 17 assets. Nothing in the way; do it first so any process problem surfaces cheaply
+- [x] **WP-07 -- Integrate Gyre & Gymble.** DONE 6 Aug. **The premise was wrong for this project: it was already integrated.** `theme/theme.css` carries the whole palette and `layout.liquid:92` loads it. What was missing was any link back to the kit -- a hand transcription across three naming conventions with nothing checking it. Now measured at **61 of 62 tokens, zero disagreements**, by `tools/check-theme-against-kit.py` in that repo, and the three findings that belong to the kit are in its `addenda/`
 - [ ] **WP-07 -- Integrate Baize and snorkeltoast** by reading. `check` refuses on both because their tokens sit outside `kit/`; that is expected, not a blocker
 - [ ] **WP-08 -- Commit Baize's regenerated `BOOTSTRAP-CD.md`** once that repository's own uncommitted work is clear
 - [ ] **WP-08 -- Report Intent's baked absolute path** in `.claude/settings.json` upstream. Cdsync's is fixed and guarded; Baize's and Lamplight's still carry theirs

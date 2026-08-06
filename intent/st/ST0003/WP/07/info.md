@@ -12,6 +12,8 @@ status: Not Started
 
 Lamplight, Baize, snorkeltoast and Gyre & Gymble each hold a design-system record and **none has been built against.** matthewsinclair and geodica went from cold tree to rollout in Laksa inside two days; these four have had a record since 31 July and nothing downstream.
 
+**6 August: that premise was false for Gyre & Gymble, and the correction is the finding.** Its site was already built against its design system -- `theme/theme.css` carries the entire Oat & Olive palette and `theme/layout.liquid:92` loads the compiled result. **The objective above was written from the drop's side of the boundary**, where an integration is invisible unless the drop can see it, and a drop cannot see an application. **Check what the application does before recording that it does nothing.** Ask the same question of the other three rather than inheriting this paragraph.
+
 **Integration is unblocked and independent of everything else in this thread.** It does not wait on the conversion round, on the rulings, or on the release.
 
 ## What each one needs
