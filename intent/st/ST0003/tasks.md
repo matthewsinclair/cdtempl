@@ -6,13 +6,13 @@ Created at the close-out of ST0001 and ST0002 to hold what those threads carried
 
 ## Start here, if picking this up cold
 
-**Three work packages are unblocked and can be started today**: WP-01 (cut the release), WP-07 (integrate the original four), WP-08 (housekeeping). Everything else is waiting on a ruling or on transport, and **guessing at a ruling is how this project has generated its worst work**.
+**WP-01 is done (6 August, 8/8).** **Two work packages remain unblocked**: WP-07 (integrate the original four) and WP-08 (housekeeping). Everything else is waiting on a ruling or on transport, and **guessing at a ruling is how this project has generated its worst work**.
 
 ## Tasks
 
 ### Unblocked
 
-- [ ] **WP-01 -- Cut 0.1.0.** `cdsync release` has never been run for real. Dry run passes every gate; `cut` will not push without `--push`
+- [x] **WP-01 -- Cut 0.1.0.** DONE 6 Aug, 8/8. Tagged `v0.1.0`, packaged, pushed, GitHub release published and the published asset verified by downloading and running it. Running it for real found two defects in `release` itself, both now fixed and fenced
 - [ ] **WP-07 -- Integrate Gyre & Gymble.** Cdsync-shaped, `tokens.json`, `check` clean at 17 assets. Nothing in the way; do it first so any process problem surfaces cheaply
 - [ ] **WP-07 -- Integrate Baize and snorkeltoast** by reading. `check` refuses on both because their tokens sit outside `kit/`; that is expected, not a blocker
 - [ ] **WP-08 -- Commit Baize's regenerated `BOOTSTRAP-CD.md`** once that repository's own uncommitted work is clear
@@ -60,7 +60,7 @@ WP-04  --(transport)--> hv
 WP-02, WP-05, WP-06  --> hv rulings
 ```
 
-**Nothing in this thread blocks the release.** WP-01 can happen first and probably should, because everything else is easier to reason about against a fixed baseline than against a moving `main`.
+**The release happened first, as planned.** Everything remaining is now reasoned about against a fixed released baseline rather than a moving `main`.
 
 ## Task Notes
 

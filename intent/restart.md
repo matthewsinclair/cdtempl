@@ -23,7 +23,9 @@ The 2 August fold left the rulings restated in four documents and the watch-outs
 
 Cdsync has completed a **full cold round trip** -- initialise an empty tree, hand it to Claude Design, take the return back, check it -- for matthewsinclair and geodica. **Both came back Cdsync-shaped, so the cold-start document works.** **Ten commands, 328 tests, a spec library of 27 against a 52-slug taxonomy, CI green on ubuntu-latest and macos-latest.** **Nothing is in flight and no thread is open**: ST0001 (16/16), ST0002 (12/12) and ST0004 (11/11) all closed through the gate, which refuses a BLOCKED contract. **Six projects hold a design system tree** -- the original four awaiting integration, plus the two spikes, whose implementations hv is rolling out in Laksa and fixing forward.
 
-**The tool was renamed from its former name to Cdsync on 6 August** across five repositories, with zero remnant anywhere it can be read. It was free: nothing had ever been released and no tag existed.
+**The tool was renamed from its former name to Cdsync on 6 August** across five repositories, with zero remnant anywhere it can be read. It was free, and only because it was done before the first release: no tag existed and no published artefact carried the old name. **That window has now closed** -- `v0.1.0` is released, so any future rename carries a published artefact with it.
+
+**The repository went public the same day**, from a single root commit. The 135-commit development history was truncated and retained privately at the Dropbox mirror on `archive/pre-public-20260806`, with a bundle beside it. **Everything committed here is published on push** -- no key, token, absolute path or real contact address belongs in a tracked file.
 
 ## Canon, and it outranks this file
 
@@ -47,7 +49,7 @@ Full statements and their blockers live in each WP's own `info.md`. This is the 
 1. **WP-02, two rulings on rule 4** -- the hex-approximation case (fourteen of matthewsinclair's fifteen findings) and a colour named in order to forbid it. Both raised by real findings; neither to be taken unilaterally.
 2. **WP-05, scope for the next round** -- `cdsync.json`'s home, and `spec_version` for a NEW asset, now asked by a fourth project.
 3. **WP-07, integrate the original four** -- unblocked and independent of everything above. Hold Lamplight's `ref`, the only open ruling that could move paths.
-4. **WP-01, cut the release** -- unblocked; nothing has ever been released.
+4. ~~**WP-01, cut the release**~~ -- **DONE 6 August, 8/8.** `v0.1.0` is tagged, pushed and published.
 5. **WP-03, grow the spec library.** 25 of 52 slugs have no spec. **`pattern-library` is blocked, not queued** -- `specs/library.md` names it as the live exemplar of "real, in the taxonomy, and unwritten" and a test pins the same invariant, so writing it makes library text false.
 
 ## Where the work is

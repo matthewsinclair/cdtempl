@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: dc81d7ec-8e40-4353-8410-71d6499122ed
-heartbeat_at: 2026-08-06T09:11Z
-status: paused
-focus: "ST0004 CLOSED 11/11 through the gate, pushed on all five repositories: 0 remnant everywhere against paired positive controls, 328 tests green, CI success on all three jobs on main. Nothing in flight; ST0003 still holds the carry-forward"
+heartbeat_at: 2026-08-06T11:29Z
+status: active
+focus: "0.1.0 RELEASED and the repo is PUBLIC. ST0003 WIP, WP-01 closed 8/8; WP-07 and WP-08 unblocked and next. 335 tests, CI green all three jobs, all remotes at ahead=0. Localfolded for a compact -- session continues after the bounce"
 claims: [ST0003]
 ---
 
@@ -17,15 +17,19 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 
 ## Where things stand
 
-**Nothing is in flight and no thread is open.** ST0001 (16/16), ST0002 (12/12) and ST0004 (11/11) all closed through the gate. **hv has put Cdsync to bed until it is needed again, and picking something up unasked is not the job.**
+**ST0003 is in flight, 1 of 8 work packages done.** ST0001 (16/16), ST0002 (12/12), ST0004 (11/11) and ST0003/WP-01 (8/8) all closed through the gate.
+
+**0.1.0 is released and the repository is PUBLIC.** Tag `v0.1.0`, GitHub release published, the published asset downloaded and run to verify it. Published from a single root commit; the 135-commit history is retained privately on the mirror's `archive/pre-public-20260806` and in a bundle beside it.
+
+**Next, both unblocked: WP-07 (integrate the original four, holding Lamplight's `ref`) and WP-08 (housekeeping).** Resuming after a compact, at hv's direction.
 
 **The 6 August globalfold collapsed the live docs to one home per thing.** The rulings had been restated in four documents and the watch-outs in three -- the drift hazard this board keeps naming, committed by this board's own siblings. **`## Watch-outs` and `## Decisions` below are now the only copies.** `intent/wip.md` and `intent/restart.md` point here and do not restate.
 
 ## TODO
 
-**All of it lives in ST0003, "Post-release 0.1.0 clean-up"** -- `intent/st/NOT-STARTED/ST0003/`, eight work packages, each with its own `info.md` stating what blocks it. **The ordering is in `intent/restart.md`.** This board carries no second copy.
+**All of it lives in ST0003, "Post-release 0.1.0 clean-up"** -- `intent/st/ST0003/`, eight work packages, each with its own `info.md` stating what blocks it. **The ordering is in `intent/restart.md`.** This board carries no second copy.
 
-**Unblocked:** WP-01 cut the release, WP-07 integrate the original four, WP-08 housekeeping.
+**Done:** WP-01, cut the release. **Unblocked:** WP-07 integrate the original four, WP-08 housekeeping.
 
 ## Wants hv
 
@@ -40,6 +44,14 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 - **No `hv` node here, by hv's ruling -- `cc` is the whole roster**, so rulings arrive in conversation and land in `## Decisions`. The whiteboard `README.md` roster stays deferred.
 
 ## Watch-outs
+
+### Standing, and new on 6 August: THIS REPOSITORY IS PUBLIC
+
+**Everything committed here is published the moment it is pushed** -- `intent/`, the steel threads, this board. There is no private tree to be careless in any more. No key, token, absolute path or real contact address belongs in a tracked file; two venture addresses were redacted immediately before publication and reintroducing one would undo that.
+
+**The published history is a single root commit.** The 135-commit development history lives privately on the mirror's `archive/pre-public-20260806` and in a bundle beside it. **Do not try to recover it from the public repository** -- it is not there, and re-pushing it would undo a deliberate decision.
+
+**A window closed here.** The rename was free only because it happened before the first release: no tag existed and no published artefact carried the old name. `v0.1.0` is out now, so the next rename of anything carries a published artefact with it.
 
 ### The recurring one
 
@@ -64,6 +76,16 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 **2. The mutation applies perfectly and the test still passes, because it asserts at a layer the bug cannot reach.** New on 2 August, and it is the subtler one. Three colour tests piped straight into `normalise_colours`, whose fall-through `print value` passes an unrecognised string along unchanged -- so they produced the right answer with the bug still in place. The gap was one layer up, in the grep. **Check the test actually exercises the changed code path, not just that the mutation landed.**
 
 **My own tests have been wrong rather than the code more often than the reverse.**
+
+### Where a defect hides when the thing itself cannot be tested
+
+**A DRY RUN CANNOT COVER THE WRITE PATH -- that is what makes it a dry run.** 6 Aug: `release cut 0.1.0 --dry-run` printed a perfect plan and passed every gate; the real run died at step 3. Everything after "write" is unexercised by definition, so a green dry run says nothing at all about it.
+
+**A gate that deliberately refuses to run in the suite is exactly where a defect will sit.** `release_gates` refuses inside bats -- correctly, because running the suite from inside the suite does not terminate -- so the whole `cut` ceremony has no end-to-end test and never could. **When something is untestable by design, name the decision inside it and extract that decision to something testable.** `release_commit_version` takes its repository as an argument for precisely this reason.
+
+**A command whose verbs presume a prior state cannot bootstrap.** `cut` took only `major|minor|patch`, all forward-moving, so the FIRST release of any project was unreachable. Nothing said a predecessor was required; the assumption was in the arithmetic. **Ask what a command does on its first run, with nothing behind it.**
+
+**Every version component compares as a NUMBER.** Sorted as strings, `0.10.0` falls below `0.9.0` -- a bug that stays invisible for nine minor releases.
 
 ### A local pass does not predict CI, and both misses were shell-version deep
 
@@ -110,6 +132,10 @@ Settled and not to be re-opened. Full reasoning in `intent/st/ST0001/design.md`.
 
 **CANON, above every Decision below: `intent/docs/design-system-lifecycle.md`.**
 
+- (2026-08-06) **0.1.0 is released, and the repository is public.** Published from a single root commit on hv's ruling; the full history is retained privately rather than rewritten in place, because a force-push does not scrub what GitHub keeps reachable through a PR ref. The repository was deleted and recreated to make it genuinely unreachable.
+- (2026-08-06) **A release may land on an explicit version, and it may equal the current one.** All three bump parts move forward, which made the first release of any project unreachable. Whether a version has been RELEASED is a question about tags, not about `VERSION`, so it stays with the gate that finds the tag already exists rather than moving into the arithmetic.
+- (2026-08-06) **When `VERSION` does not change, the tag goes on the commit that is already the release.** No empty commit is manufactured to sit beside it. `--allow-empty` would have silenced the failure and left a second commit claiming to be the same thing.
+- (2026-08-06) **There is no forcing a close, and hv's authority is spent writing the contract rather than skipping it.** `wp done` offers only "define the criteria" or "declare `acceptance: exempt`", and exempt means deliberately AC-free -- applying it to real engineering would write a false label into the record. WP-01 closed 8/8 on a contract written at close from evidence measured before the criteria were phrased, which is what 4a1c3ff did for ST0001 and ST0002.
 - (2026-08-06) **The tool is called Cdsync, and the former name survives nowhere it can be read.** 1420 occurrences here and 149 across four siblings, all gone, verified in every repository against a positive control equal to that repository's own pre-mutation baseline. **The former name is recoverable from git history, which is where superseded names belong** -- so nothing outside history preserves it, including ST0004's own documents, which name the outcome and the mechanism rather than both names. A thread titled after both cannot survive its own rename.
 - (2026-08-06) **A rename is safe to do as a plain substitution only after enumerating what is adjacent to every match.** Not a word-boundary regex chosen on faith -- the actual set of preceding and following characters, checked. Here no alphanumeric ever touched a match, which is what made a bare replace provably unable to corrupt a neighbour. **Establish that first or the mechanism is a guess.**
 - (2026-08-06) **Substitute over a superset, verify with a different probe than the one that chose the files.** A file list built from a probe inherits that probe's blind spots. In this repo the target set was every tracked text file; in the siblings, where sessions were live and needless mtime churn was the greater risk, it was the match-list -- and the verification was an independent disk-level sweep rather than the same `git grep`.

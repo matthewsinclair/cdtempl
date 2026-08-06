@@ -8,13 +8,15 @@ Project-wide snapshot, folded at the end of 6 August. The live per-session chann
 
 ## Where the project stands
 
-**Cdsync v1 is closed out and public-ready.** **Ten commands** -- `new`, `init`, `brief`, `bootstrap`, `install`, `import`, `check`, `site`, `release`, plus `doctor`. **328 tests, 0 failures.** Shellcheck silent at default severity. **CI green on hygiene, ubuntu-latest and macos-latest.** A spec library of 27 against a 52-slug taxonomy, plus 7 bundles. `README.md` and `LICENSE.md` (MIT).
+**Cdsync v1 is released and public.** **Ten commands** -- `new`, `init`, `brief`, `bootstrap`, `install`, `import`, `check`, `site`, `release`, plus `doctor`. **335 tests, 0 failures.** Shellcheck silent at default severity. **CI green on hygiene, ubuntu-latest and macos-latest.** A spec library of 27 against a 52-slug taxonomy, plus 7 bundles. `README.md` and `LICENSE.md` (MIT).
 
-**Nothing is in flight and no thread is open.** All five repositories are pushed and at `ahead=0` on every remote.
+**The repository is public as of 6 August**, published from a single root commit. The 135-commit development history was truncated and retained privately at the Dropbox mirror on `archive/pre-public-20260806`, with a bundle beside it. **Everything committed here is now published on push.**
+
+**ST0003 is in flight**, 1 of 8 work packages done. All five repositories are pushed and at `ahead=0` on every remote.
 
 **Six projects hold a design system tree.** matthewsinclair and geodica completed round one on 2 August; the original four -- Lamplight, Baize, snorkeltoast, Gyre & Gymble -- are from round three and await integration. **hv is rolling both new design systems out in Laksa and fixing forward**; implementation is not this project's thread.
 
-**Nothing has ever been released.** `VERSION` is `0.1.0` and no tag exists.
+**0.1.0 is released.** Tag `v0.1.0` on `e54ebbc`, annotated; GitHub release published with `cdsync-0.1.0.tar.gz` (474,181 bytes, 140 entries). Verified by downloading the published asset, confirming its sha256 matched the local build byte for byte, extracting it and running it. `VERSION` stays `0.1.0` and is now a **released** version, so the next cut moves off it.
 
 ## Steel threads
 
@@ -23,7 +25,7 @@ Project-wide snapshot, folded at the end of 6 August. The live per-session chann
 | ST0001 | Harvest template v0 from the three Claude Design projects | Completed | 16/16 |
 | ST0002 | Port four established projects to the Cdsync shape | Completed | 12/12 |
 | ST0004 | Rename the tool to Cdsync | Completed | 11/11 |
-| ST0003 | Post-release 0.1.0 clean-up | Not Started | contract deliberately unwritten |
+| ST0003 | Post-release 0.1.0 clean-up | **WIP** | WP-01 closed 8/8; 7 remain |
 
 Each close went through `intent st done`, which refuses while a contract is BLOCKED, so each had to earn its number. `intent st list` shows nothing by default -- use `--status Completed`.
 
@@ -40,6 +42,15 @@ Three things it taught, all now standing watch-outs on the board:
 - **A rename is safe as a plain substitution only after enumerating what is adjacent to every match** -- the actual character set, not a word-boundary regex chosen on faith.
 - **The first substitution pass applied nothing at all** and the loop ran to completion looking fine. BSD `xargs` has no `-a`. The before/after counters caught it.
 - **A generator pointed at the wrong root reports an empty tree with total confidence.** It did not error; it produced a well-formed document falsely claiming Lamplight has no assets.
+
+## What WP-01 did, 6 August
+
+**0.1.0 is cut and shipped, and getting there needed two fixes to the release command itself.** Neither was visible from reading it; both showed up the first time anyone tried to release anything.
+
+- **`cut` could not tag the version a project is on.** It took only `major|minor|patch`, all of which move forward -- so the version a first release needs was unreachable, for every project. Both verbs now also take a bare semver. Equality with the current version is allowed deliberately; whether a version has been *released* is a question about tags, answered by the gate that finds the tag already exists.
+- **The ceremony then died one step later.** Cutting the version already in `VERSION` writes the same bytes, so `git commit` had nothing to commit. Every gate went green and step 3 failed. The tag now goes on the commit that is already the release rather than on an empty one manufactured beside it.
+
+**Three reasons nothing caught the second one, all of them on the board's watch-out list:** a dry run stops before writing; the six new unit tests asserted one layer above where it lived; and the ceremony is untestable end to end here on purpose, because `release_gates` refuses to run inside bats.
 
 ## Structural guards, cumulative
 

@@ -10,9 +10,23 @@ status: Done
 
 ## Objective
 
-**`cdsync release` exists and nothing has ever been released.** `VERSION` is `0.1.0`, a clean-tree `cdsync release cut minor --dry-run` passes every gate, and the tarball is built by `git archive` from the tag. The machinery is done; the act has not happened.
+**DONE 6 August, 8/8 through the close-gate.** `v0.1.0` is tagged on `e54ebbc` (annotated), packaged as `cdsync-0.1.0.tar.gz` (474,181 bytes, 140 entries), pushed to both remotes, and published as a GitHub release. Verified by downloading the published asset, confirming its sha256 matched the local build byte for byte, extracting it and running it.
 
-This is first in the thread because the thread is named for it, and because everything else in here is easier to reason about against a fixed released baseline than against a moving `main`.
+The original statement of this WP -- *"the machinery is done; the act has not happened"* -- turned out to be half wrong, and that is the finding.
+
+## What running it for real found
+
+**The machinery was not done. `cdsync release` could not cut a first release at all**, and it took two fixes to get there. Neither was visible from reading the code; both appeared the first time anyone tried to release anything.
+
+**1. `cut` could not tag the version a project is on.** It accepted only `major|minor|patch`, and all three move forward -- so the version a *first* release needs was unreachable, for every project, not just this one. `cut minor` would have produced 0.2.0 and skipped the release the repository already announced. The verbs presumed a predecessor existed and nothing said so. Both verbs now also take a bare semver; equality with the current version is allowed deliberately, because whether a version has been *released* is a question about tags and is answered by the gate that finds the tag already exists.
+
+**2. The ceremony then died one step later.** Cutting the version already in `VERSION` writes the same bytes, so `git commit` had nothing to commit and refused. `cut 0.1.0` ran all six gates green and failed at step 3. The tag now goes on the commit that is already the release rather than on an empty one manufactured beside it -- `--allow-empty` would have silenced the failure and left a second commit claiming to be the same thing.
+
+**Three reasons nothing caught the second one, all already on the board's watch-out list.** A dry run stops before writing, so it passed. The six new unit tests asserted one layer above where the defect lived. And the ceremony is untestable end to end here *by design*: `release_gates` refuses to run inside bats, because running the suite from inside the suite does not terminate. The commit decision was extracted to `release_commit_version`, which takes the repository as an argument and is exercised against a real one.
+
+**The failed run left nothing half-written** -- `VERSION` unchanged, no tag, no tarball, clean tree. That is the module header's ordering principle holding: every step is safe to rerun after the one following it failed.
+
+Seven tests, red-first. Four mutations -- string-compare, refuse-equality, remove-the-case, remove-the-commit-guard -- each confirmed to land by diff, each killing exactly the test meant to catch it. **Two of the seven passed before the fix for the wrong reason**, because the old code refused everything that was not a bump part; they are recorded that way rather than counted as pre-existing green.
 
 ## Deliverables
 

@@ -25,7 +25,7 @@ Two things are worth knowing before picking anything up.
 
 **Most of this is blocked on a ruling, not on effort.** WP-02, WP-05 and WP-06 are all questions with their evidence already gathered, waiting on hv. They are cheap to answer and cheap to leave; what they are not is cheap to guess at, which is why they were not guessed at when they arose.
 
-**The naming is aspirational.** Nothing has been released. `VERSION` is `0.1.0` and `cdsync release` has never been run for real -- WP-01 is that act, and the thread is named for the state it will put the project in rather than the state it is in now.
+**The naming stopped being aspirational on 6 August.** WP-01 closed 8/8: `v0.1.0` is tagged, packaged, pushed and published, so this really is post-release clean-up now. Running `cdsync release` for real found two defects in it, neither visible from reading the code -- see WP-01's `info.md`.
 
 ## The work packages
 

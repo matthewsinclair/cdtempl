@@ -2,21 +2,32 @@
 
 Run `/in-session` first. Then `intent/docs/design-system-lifecycle.md` (canon), then `intent/restart.md`. This file is only the focus.
 
-## Nothing to pick up
+## THE REPOSITORY IS PUBLIC
 
-**Cdsync is finished and in bed.** hv put it away on 2 August and it has not been taken out since. **Do not start a work package unasked.**
+Since 6 August. **Everything committed here is published the moment it is pushed** -- `intent/`, the steel threads, the whiteboard, this file. There is no private tree to be careless in any more.
 
-**No steel thread is open.** ST0001 (16/16), ST0002 (12/12) and ST0004 (11/11) all closed through `intent st done`, which refuses a BLOCKED contract, so each earned it. They live at `intent/st/COMPLETED/`; `intent st list` shows nothing by default -- use `--status Completed`. **Do not go looking for half-finished work.**
+The published history is a **single root commit**; the 135-commit development history was truncated and is retained privately at the Dropbox mirror on `archive/pre-public-20260806`, plus a bundle beside it. **Do not try to recover it from the public repository -- it is not there**, and re-pushing it would undo a deliberate decision.
 
-**ST0003 "Post-release 0.1.0 clean-up" holds everything carried forward** -- eight work packages at `intent/st/NOT-STARTED/ST0003/`, each with its own `info.md` stating what blocks it. **WP-01 (cut the release), WP-07 (integrate the original four) and WP-08 (housekeeping) are unblocked.** The rest wait on a ruling from hv or on transport. **Do not start a blocked WP by guessing at its ruling.**
+Two venture contact addresses were redacted before publication. **Do not reintroduce a real contact address, key, token or absolute path into any tracked file.**
+
+## Picked up, and mid-flight
+
+ST0003 "Post-release 0.1.0 clean-up" is **WIP**, 1 of 8 work packages done.
+
+**Next, and both unblocked:**
+
+- **WP-07 -- integrate the original four.** Hold Lamplight's `ref`: it is the one open ruling that could still move paths.
+- **WP-08 -- housekeeping and small gaps.**
+
+**Blocked on hv, and do not start one by guessing at its ruling:** WP-02 (two rule-4 rulings), WP-05 (`cdsync.json`'s home, `spec_version` for a new asset), WP-06 (round three's seven rulings), WP-03 (partly on WP-05), WP-04 (transport, which only hv can decide to send).
 
 ## State, 6 August
 
-**Green everywhere.** 328 tests, 0 failures. Shellcheck silent at default severity. **CI success on hygiene, ubuntu-latest and macos-latest**, read per job. All five repositories pushed and at `ahead=0` on every remote.
+**0.1.0 is RELEASED.** Tag `v0.1.0` on `e54ebbc`, annotated, pushed. GitHub release published with `cdsync-0.1.0.tar.gz` (474,181 bytes, 140 entries), verified by downloading the published asset and running it. **`VERSION` is `0.1.0` and it is now a released version** -- the next cut moves off it.
 
-**The tool was renamed to Cdsync on 6 August** (ST0004), across this repository and Utilz, Laksa, Lamplight and Baize -- 1569 occurrences, zero remnant, verified in each against a positive control equal to its own pre-mutation baseline. The former name is recoverable from git history and survives nowhere else.
+**335 tests, 0 failures.** Shellcheck silent at default severity. **CI success on hygiene, ubuntu-latest and macos-latest.** All five repositories at `ahead=0`.
 
-**Nothing has ever been released.** `VERSION` is `0.1.0`, no tags exist, and `cdsync release cut` will not push without `--push`.
+**Closed:** ST0001 16/16, ST0002 12/12, ST0004 11/11 (the rename), ST0003/WP-01 8/8.
 
 ## Where everything else lives
 
@@ -27,11 +38,11 @@ Run `/in-session` first. Then `intent/docs/design-system-lifecycle.md` (canon), 
 | Rulings, settled and not to be re-opened | `intent/whiteboard/cc/wip.md` `## Decisions` |
 | Watch-outs, the standing hazards | `intent/whiteboard/cc/wip.md` `## Watch-outs` |
 | Canon | `intent/docs/design-system-lifecycle.md` |
-| What is open, and what blocks it | `intent/st/NOT-STARTED/ST0003/WP/*/info.md` |
+| What is open, and what blocks it | `intent/st/ST0003/WP/*/info.md` |
 | Orientation, and where the work is | `intent/restart.md` |
 
 ## The two that will cost you most
 
 **`install` replaces, `import` merges, and hand-unzipping is never correct.** An as-is export is the whole tree; a converted drop is a subset. Choosing wrong is the most destructive thing in the tool.
 
-**A local pass has never predicted CI here** -- four misses now, every one shell-version deep. Read `gh run view --log-failed` rather than guessing.
+**A local pass has never predicted CI here** -- four misses, every one shell-version deep. Read `gh run view --log-failed` rather than guessing.
