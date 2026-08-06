@@ -1,0 +1,106 @@
+/* templprj neutral kit — tokens
+ *
+ * The deliberately unfinished palette. Every template imports this, and a
+ * venture's first design act is to replace the marked values from its brand.
+ *
+ * Chroma is exactly zero throughout. A warm white or a blue-black would be an
+ * aesthetic decision inherited by every venture without anyone choosing it.
+ *
+ * Values marked REPLACE are the seams. Values marked KEEP are structural and
+ * survive into a real venture unless there is a reason to move them.
+ */
+
+:root {
+  /* Greyscale ramp — KEEP the steps, REPLACE nothing. Named by number, never
+     by role: naming something "primary" is deciding that it matters. */
+  --grey-0:    #ffffff;
+  --grey-50:   #f7f7f7;
+  --grey-100:  #ededed;
+  --grey-200:  #dcdcdc;
+  --grey-300:  #c4c4c4;
+  --grey-400:  #a3a3a3;
+  --grey-500:  #808080;
+  --grey-600:  #616161;
+  --grey-700:  #474747;
+  --grey-800:  #2e2e2e;
+  --grey-900:  #1a1a1a;
+  --grey-1000: #000000;
+
+  /* Accent — REPLACE. Present so templates have somewhere to put colour;
+     resolves to grey so nothing looks designed. A venture drop is a two-line
+     change and the seams are already in the right places. */
+  --accent:    var(--grey-500);
+  --accent-fg: var(--grey-0);
+
+  /* Semantic surfaces — KEEP the names, REPLACE the mappings if the brand
+     needs it. Two background values per page, maximum. */
+  --bg:          var(--grey-0);
+  --bg-inverse:  var(--grey-900);
+  --fg:          var(--grey-900);
+  --fg-inverse:  var(--grey-0);
+  --fg-muted:    var(--grey-700);
+  --fg-subtle:   var(--grey-600);
+  --fg-placeholder: var(--grey-600);
+  --line:        var(--grey-300);
+  --line-strong: var(--grey-200);
+
+  /* Type — REPLACE the faces from the brand. No webfont here: a loaded
+     typeface is a brand decision and would be inherited silently. */
+  --font-text: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Two weights only. No display face, no letterspacing, no small caps. */
+  --weight-regular: 400;
+  --weight-strong:  600;
+
+  /* Scale, ratio 1.25 on a 16px base. KEEP. */
+  --text-xs:  13px;
+  --text-sm:  16px;
+  --text-md:  20px;
+  --text-lg:  25px;
+  --text-xl:  31px;
+  --text-2xl: 39px;
+  --text-3xl: 49px;
+
+  /* Display continuation, same 1.25 ratio, for 1920x1080 slide contexts. */
+  --text-4xl: 61px;
+  --text-5xl: 76px;
+  --text-6xl: 95px;
+  --text-7xl: 119px;
+
+  /* Floors that override the scale. Practice, not preference. */
+  --floor-slide: 24px;  /* nothing smaller on a 1920x1080 slide */
+  --floor-print: 12pt;  /* nothing smaller in print */
+
+  --leading-tight: 1.1;
+  --leading-body:  1.4;
+  --measure:       68ch;  /* max prose line length */
+
+  /* Space, 4px base. KEEP. */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+
+  /* Radius 0 and no shadow are deliberate. Rounded corners and elevation are
+     style decisions, and shadow is where templates get pretty first.
+     A venture REPLACEs these from the brand; a template must not. */
+  --radius: 0;
+  --shadow: none;
+  --hairline: 1px solid var(--line);
+
+  /* Motion — 120ms, opacity and position only. */
+  --duration: 120ms;
+  --easing:   linear;
+
+  /* Placeholder treatment. See kit.md for the two kinds of blank. */
+  --ph-bg:      var(--grey-100);
+  --ph-line:    var(--grey-300);
+  --ph-caption: var(--grey-600);
+  --ph-hatch:   repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px);
+}

@@ -1,0 +1,87 @@
+# cdsync init
+
+Start a design system in a repository that already exists.
+
+```
+cdsync init [--target PATH]
+```
+
+Creates the target skeleton -- `assets/`, `kit/`, `notes/`, each with a
+`.gitkeep` -- plus the repo-owned `.gitignore` that keeps delivery archives out
+of git. The tree is then cold, which is exactly what `cdsync bootstrap` wants to
+see.
+
+## The one file written outside the target
+
+`.gitignore`, in the target's **parent**, holding one anchored rule:
+
+```
+/system/_inbox/
+```
+
+**It has to live outside.** `install` replaces the target wholesale, so a guard
+inside it would not survive the first delivery it exists to protect against.
+Today's drops happen to ship a `.gitignore` saying `_inbox/`, and that agreement
+is the accident rather than the design: one 2026-07-31 export shipped none at
+all, and another project deleted its repo-owned guard on the reasoning that the
+drop's copy made it redundant. **Tracking policy flows from the repository
+outward, never from a drop inward.**
+
+It **never truncates**. The parent may be the project root and may already hold
+everything else the project ignores, so an existing `.gitignore` is appended to,
+and only when the rule is genuinely absent.
+
+## Options
+
+| Option | Effect |
+|---|---|
+| `--target PATH` | Initialise this path instead of the resolved one |
+
+## `init` or `new`
+
+They are not variants of each other. The question is what the new thing is.
+
+| The new thing | The command | What you get |
+|---|---|---|
+| A **venture** | `cdsync new <name>` | Its own git repository, `cdsync.json`, the agent contract, and the skeleton underneath `design/` |
+| A **design system**, in a project that already exists | `cdsync init` | The skeleton, in the repository you are already in |
+
+**An existing project must not get the `new` treatment.** The canon is explicit
+that no Cdsync protocol material belongs inside a project: no `cdsync.json`, no
+outbox, no handover scaffolding. All four ported projects bear that out -- not
+one carries a `cdsync.json`, and what they hold is the tree and nothing else.
+`new` would also `git init` a second repository nested inside the first.
+
+## Why this exists
+
+`bootstrap` refused over a tree that did not exist and advised `cdsync new
+<name>`, which for an existing project was the wrong command -- but it was the
+only advice available, because there was no right one. **A tool giving the only
+advice it has, and that advice being wrong, is the tell for a missing command
+rather than a missing flag.**
+
+## It refuses over a tree that is not empty
+
+`init` starts a design system; it does not adopt one. The refusal is not about
+protecting files -- this command only ever creates directories -- it is about
+what happens next. **Cold or warm is measured, never declared**, and a silent
+success over a populated tree would hand `bootstrap` a warm tree it had been
+told was cold.
+
+To regenerate the document over a tree that already holds a drop, that is what
+`bootstrap` does on its own:
+
+```
+cdsync bootstrap --target <path>
+```
+
+## What comes next
+
+```
+cdsync init --target <repo>/design/system
+cdsync bootstrap --target <repo>/design/system
+```
+
+Then commit the tree in the project's own repository. It versions with that
+project, not with Cdsync -- the tree is the project's single source of truth for
+its design system, and Claude Design is a clamp-on tool used to work on it.

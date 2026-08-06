@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Design system index — template</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #f7f7f7; }
+  a { color: #474747; text-decoration: underline; }
+  a:hover { color: #1a1a1a; }
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #ffffff; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; color: #1a1a1a; padding: 64px; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 64px;">
+
+  <header style="display: flex; flex-direction: column; gap: 16px;">
+    <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">design system index</span>
+    <h1 style="margin: 0; font-size: 49px; font-weight: 600; line-height: 1.1;">{{ ventureName }} design system</h1>
+    <p style="margin: 0; font-size: 20px; line-height: 1.4; color: #474747; max-width: 68ch;">The front door. What exists, where it lives, and what state it is in. This page is a map — it points at the parts and never restates them, because an index that restates becomes a second source of truth and then the wrong one.</p>
+  </header>
+
+  <sc-if value="{{ kitIsNeutral }}" hint-placeholder-val="{{ true }}">
+    <div style="border: 1px solid #1a1a1a; padding: 24px; display: flex; flex-direction: column; gap: 8px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #1a1a1a;">the neutral kit has not been replaced</span>
+      <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #474747; max-width: 68ch; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">Every value below is a deliberately unfinished placeholder: pure greyscale, system fonts, no radius, no elevation. A venture's first design act is to replace the <span style="color: #1a1a1a;">REPLACE</span>-marked tokens in <span style="color: #1a1a1a;">kit/tokens.css</span> from its brand. Switch this notice off once that is done.</p>
+    </div>
+  </sc-if>
+
+  <section style="display: flex; flex-direction: column; gap: 24px;">
+    <h2 style="margin: 0; font-size: 31px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 16px;">Status</h2>
+    <div style="display: grid; grid-template-columns: 240px 1fr; gap: 16px 32px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+      <span style="color: #808080;">version</span><span>[0.1]</span>
+      <span style="color: #808080;">kit version</span><span>1</span>
+      <span style="color: #808080;">owner</span><span>[a person, not a team name]</span>
+      <span style="color: #808080;">last change</span><span>[date] — [what changed]</span>
+      <span style="color: #808080;">how to propose a change</span><span>[the actual process — a design system with none is a snapshot]</span>
+      <span style="color: #808080;">accessibility target</span><span>WCAG 2.2 AA</span>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 24px;">
+    <h2 style="margin: 0; font-size: 31px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 16px;">Inventory</h2>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; max-width: 68ch;">Each asset's own spec.md is authoritative for its state; this table mirrors it. Mirroring is a drift risk, so it should be computed rather than maintained.</p>
+    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 2fr; gap: 0;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #1a1a1a; padding: 16px 24px 16px 0;">asset</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #1a1a1a; padding: 16px 24px 16px 0;">form</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #1a1a1a; padding: 16px 24px 16px 0;">state</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #1a1a1a; padding: 16px 24px 16px 0;">where</span>
+
+      <span style="font-size: 16px; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">Design tokens</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">B</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">complete</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;"><a href="../../kit/kit.md">kit/</a></span>
+
+      <span style="font-size: 16px; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">Component library</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">C</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">[state]</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;"><a href="../component-library/Component Library.dc.html">component-library/</a></span>
+
+      <span style="font-size: 16px; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">States and interaction</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">C</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">[state]</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;"><a href="../states-and-interaction/States And Interaction.dc.html">states-and-interaction/</a></span>
+
+      <span style="font-size: 16px; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0; color: #616161;">Grid, layout and responsive</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">B</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">not ordered</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">—</span>
+
+      <span style="font-size: 16px; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0; color: #616161;">Pattern library</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">C</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">not ordered</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">—</span>
+
+      <span style="font-size: 16px; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0; color: #616161;">Accessibility standard</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">A</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">not ordered</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">—</span>
+
+      <span style="font-size: 16px; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0; color: #616161;">Theming spec</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">B</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">not ordered</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">—</span>
+
+      <span style="font-size: 16px; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0; color: #616161;">Data visualisation standard</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">B</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">not ordered</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">—</span>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 32px;">
+    <h2 style="margin: 0; font-size: 31px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 16px;">Foundations at a glance</h2>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; max-width: 68ch;">Shown rather than listed. Twelve labelled swatches are checkable at a glance; a table of hex values is not.</p>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">the ramp — chroma exactly zero</span>
+      <div style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 0; border: 1px solid #c4c4c4;">
+        <div style="height: 96px; background: #ffffff;"></div>
+        <div style="height: 96px; background: #f7f7f7;"></div>
+        <div style="height: 96px; background: #ededed;"></div>
+        <div style="height: 96px; background: #dcdcdc;"></div>
+        <div style="height: 96px; background: #c4c4c4;"></div>
+        <div style="height: 96px; background: #a3a3a3;"></div>
+        <div style="height: 96px; background: #808080;"></div>
+        <div style="height: 96px; background: #616161;"></div>
+        <div style="height: 96px; background: #474747;"></div>
+        <div style="height: 96px; background: #2e2e2e;"></div>
+        <div style="height: 96px; background: #1a1a1a;"></div>
+        <div style="height: 96px; background: #000000;"></div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">
+        <span>0</span><span>50</span><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span><span>600</span><span>700</span><span>800</span><span>900</span><span>1000</span>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">the scale — 1.25 on a 16px base, two weights, no display face</span>
+      <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #dcdcdc; padding-top: 16px;">
+        <span style="font-size: 49px; font-weight: 600; line-height: 1.1;">49 — page title</span>
+        <span style="font-size: 39px; font-weight: 600; line-height: 1.1;">39 — section</span>
+        <span style="font-size: 31px; font-weight: 600; line-height: 1.2;">31 — subsection</span>
+        <span style="font-size: 25px; line-height: 1.3;">25 — lede</span>
+        <span style="font-size: 20px; line-height: 1.4;">20 — body large</span>
+        <span style="font-size: 16px; line-height: 1.4;">16 — body, and the print floor at 12pt</span>
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">16 — mono, for labels and placeholders</span>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">space — 4px base</span>
+      <div style="display: flex; align-items: flex-end; gap: 16px; border-top: 1px solid #dcdcdc; padding-top: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;"><div style="width: 4px; height: 4px; background: #1a1a1a;"></div><span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">4</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;"><div style="width: 8px; height: 8px; background: #1a1a1a;"></div><span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">8</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;"><div style="width: 12px; height: 12px; background: #1a1a1a;"></div><span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">12</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;"><div style="width: 16px; height: 16px; background: #1a1a1a;"></div><span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">16</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;"><div style="width: 24px; height: 24px; background: #1a1a1a;"></div><span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">24</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;"><div style="width: 32px; height: 32px; background: #1a1a1a;"></div><span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">32</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;"><div style="width: 48px; height: 48px; background: #1a1a1a;"></div><span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">48</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;"><div style="width: 64px; height: 64px; background: #1a1a1a;"></div><span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">64</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;"><div style="width: 96px; height: 96px; background: #1a1a1a;"></div><span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">96</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 24px;">
+    <h2 style="margin: 0; font-size: 31px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 16px;">The rules that are not negotiable</h2>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; max-width: 68ch;">These are the kit's prohibitions. They are checked mechanically, not remembered — a colour literal that is not in the token file fails the check.</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 48px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+      <span style="border-top: 1px solid #dcdcdc; padding-top: 12px;">no colour-transition gradients</span>
+      <span style="border-top: 1px solid #dcdcdc; padding-top: 12px;">no photography in the system itself</span>
+      <span style="border-top: 1px solid #dcdcdc; padding-top: 12px;">no hue outside the token file</span>
+      <span style="border-top: 1px solid #dcdcdc; padding-top: 12px;">no icons beyond geometric primitives</span>
+      <span style="border-top: 1px solid #dcdcdc; padding-top: 12px;">no webfont not declared in the kit</span>
+      <span style="border-top: 1px solid #dcdcdc; padding-top: 12px;">no animation beyond 120ms opacity or position</span>
+      <span style="border-top: 1px solid #dcdcdc; padding-top: 12px;">no more than two weights</span>
+      <span style="border-top: 1px solid #dcdcdc; padding-top: 12px;">no letterspacing or small caps</span>
+      <span style="border-top: 1px solid #dcdcdc; padding-top: 12px;">no component with a hard-coded value</span>
+      <span style="border-top: 1px solid #dcdcdc; padding-top: 12px;">focus-visible is never removed</span>
+    </div>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; max-width: 68ch;">Radius and elevation are prohibited in the <span style="color: #1a1a1a;">neutral kit</span> and permitted once a venture has decided them deliberately. [state this venture's decision, or delete this line]</p>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 24px;">
+    <h2 style="margin: 0; font-size: 31px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 16px;">How this reaches the application</h2>
+    <p style="margin: 0; font-size: 20px; line-height: 1.4; color: #474747; max-width: 68ch;">This directory is the <strong style="font-weight: 600;">as-designed</strong> record. The application is the <strong style="font-weight: 600;">as-built</strong>. Nothing here is written into the application automatically — the venture takes what it needs, by hand, with judgement. That boundary is the point: it is what lets someone hold intent against implementation.</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #1a1a1a; padding: 16px 24px 16px 0;">this file</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #1a1a1a; padding: 16px 24px 16px 0;">feeds {{ stackLabel }}</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">kit/tokens.css</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">[the stylesheet that consumes the custom properties]</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">kit/tokens.json</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">[the theme file or build step that parses it]</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">component-library</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 16px 24px 16px 0;">[read by hand — nothing generates components from this]</span>
+    </div>
+  </section>
+
+  <footer style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-top: 1px solid #dcdcdc; padding-top: 24px;">
+    <span>{{ ventureName }} · design system index · last reviewed [date] by [name]</span>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;ventureName&quot;: {
+    &quot;editor&quot;: &quot;text&quot;,
+    &quot;default&quot;: &quot;[venture name]&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Venture name (title and footer)&quot;
+  },
+  &quot;kitState&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;options&quot;: [&quot;neutral&quot;, &quot;brand applied&quot;],
+    &quot;default&quot;: &quot;neutral&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Kit state — 'neutral' shows the unreplaced-kit notice&quot;
+  },
+  &quot;stack&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;options&quot;: [&quot;Phoenix + Tailwind&quot;, &quot;React + CSS variables&quot;, &quot;other&quot;],
+    &quot;default&quot;: &quot;Phoenix + Tailwind&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Target stack (application-boundary section)&quot;
+  }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const stack = this.props.stack ?? 'Phoenix + Tailwind';
+    return {
+      ventureName: this.props.ventureName ?? '[venture name]',
+      kitIsNeutral: (this.props.kitState ?? 'neutral') === 'neutral',
+      stackLabel: stack
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!-- treeindex v1 fingerprint:a1cb2106 generated:2026-08-06T08:33:19Z -->
+
+# help/
+
+Documentation for Cdsync commands and concepts. Covers venture creation, design brief assembly, drop handling (install vs import), validation, and microsite generation.
+
+## Files
+
+- `cdsync.md` -- Architecture and command loop overview for the design system workflow
+- `new.md` -- Scaffold a new venture with design system skeleton
+- `init.md` -- Initialize a design system in an existing repository
+- `bootstrap.md` -- Generate `BOOTSTRAP-CD.md` for Claude Design projects
+- `brief.md` -- Assemble the design brief from venture facts and spec library
+- `install.md` -- Replace the target with an as-is Claude Design drop (whole tree)
+- `import.md` -- Merge a Claude Design drop into the target (subset only)
+- `check.md` -- Validate drop against specifications and compute metrics
+- `site.md` -- Generate and serve the design system microsite
+- `doctor.md` -- Verify installation, dependencies, and spec library integrity
+- `release.md` -- Version management and release ceremony

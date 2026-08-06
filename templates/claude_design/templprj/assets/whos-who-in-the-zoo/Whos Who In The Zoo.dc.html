@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Who's who in the zoo — template</title>
+<script src="./vendor/doc-page.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; }
+  a { color: #474747; text-decoration: underline; }
+  a:hover { color: #1a1a1a; }
+</style>
+</helmet>
+<doc-page margin="0.75in">
+
+  <div slot="header" style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 8px;">
+    <span>{{ ventureName }}</span>
+    <span>who's who in the zoo</span>
+  </div>
+
+  <div slot="footer" style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-top: 1px solid #dcdcdc; padding-top: 8px;">
+    <span>[confidentiality note]</span>
+    <span>[date] · {{ audienceLabel }}</span>
+  </div>
+
+  <div style="font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; color: #1a1a1a;">
+
+    <h1 style="margin: 0 0 16px 0; font-size: 39px; font-weight: 600; line-height: 1.1;">Who's who in the zoo</h1>
+    <p style="margin: 0 0 32px 0; font-size: 20px; line-height: 1.4; color: #474747; max-width: 68ch;">Who is here, what they own, and how to reach them. Kept current, because the version that is out of date is worse than none — it sends people to the wrong person with confidence.</p>
+
+    <div style="border: 1px solid #c4c4c4; padding: 16px; margin: 0 0 32px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; line-height: 1.5; color: #616161;">
+      <p style="margin: 0 0 8px 0; color: #474747;">Template note — delete this box when filled.</p>
+      <p style="margin: 0;">This document cannot be generated. Every fact in it is a fact only you have: names, titles, what each person actually owns as distinct from their title, and whether their photograph may be published. Headshot slots stay hatched until real images arrive — a stock photograph of a stranger is worse than an empty frame.</p>
+    </div>
+
+    <h2 style="margin: 0 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Leadership</h2>
+    <p style="margin: 8px 0 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">[the people who can commit the company to something]</p>
+
+    <div style="display: flex; gap: 24px; break-inside: avoid; border-top: 1px solid #dcdcdc; padding: 24px 0;">
+      <div style="width: 140px; height: 140px; flex: none; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;">
+        <span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">1:1</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+        <span style="font-size: 20px; font-weight: 600; color: #1a1a1a;">[full name]</span>
+        <span style="color: #474747;">[title] · [where they are based]</span>
+        <span><span style="color: #808080;">owns </span>[the decisions that are theirs — not their title restated]</span>
+        <span><span style="color: #808080;">why them </span>[the one fact that makes them the obvious person for this]</span>
+        <sc-if value="{{ showContact }}" hint-placeholder-val="{{ true }}">
+          <span><span style="color: #808080;">reach </span>[email] · [handle or phone]</span>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 24px; break-inside: avoid; border-top: 1px solid #dcdcdc; padding: 24px 0;">
+      <div style="width: 140px; height: 140px; flex: none; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;">
+        <span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">1:1</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+        <span style="font-size: 20px; font-weight: 600; color: #1a1a1a;">[full name]</span>
+        <span style="color: #474747;">[title] · [where they are based]</span>
+        <span><span style="color: #808080;">owns </span>[the decisions that are theirs]</span>
+        <span><span style="color: #808080;">why them </span>[the one fact]</span>
+        <sc-if value="{{ showContact }}" hint-placeholder-val="{{ true }}">
+          <span><span style="color: #808080;">reach </span>[email] · [handle or phone]</span>
+        </sc-if>
+      </div>
+    </div>
+
+    <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Team</h2>
+    <p style="margin: 8px 0 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">[duplicate an entry per person — ordered by what they own, not by seniority]</p>
+
+    <div style="display: flex; gap: 24px; break-inside: avoid; border-top: 1px solid #dcdcdc; padding: 24px 0;">
+      <div style="width: 140px; height: 140px; flex: none; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;">
+        <span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">1:1</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+        <span style="font-size: 20px; font-weight: 600; color: #1a1a1a;">[full name]</span>
+        <span style="color: #474747;">[title] · [where they are based]</span>
+        <span><span style="color: #808080;">owns </span>[the area someone should come to them about]</span>
+        <sc-if value="{{ showContact }}" hint-placeholder-val="{{ true }}">
+          <span><span style="color: #808080;">reach </span>[email] · [handle]</span>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 24px; break-inside: avoid; border-top: 1px solid #dcdcdc; padding: 24px 0;">
+      <div style="width: 140px; height: 140px; flex: none; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;">
+        <span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">1:1</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+        <span style="font-size: 20px; font-weight: 600; color: #1a1a1a;">[full name]</span>
+        <span style="color: #474747;">[title] · [where they are based]</span>
+        <span><span style="color: #808080;">owns </span>[the area someone should come to them about]</span>
+        <sc-if value="{{ showContact }}" hint-placeholder-val="{{ true }}">
+          <span><span style="color: #808080;">reach </span>[email] · [handle]</span>
+        </sc-if>
+      </div>
+    </div>
+
+    <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Advisors and board</h2>
+    <p style="margin: 8px 0 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">[state the commitment honestly — an advisor who has had one call is a contact, not an advisor]</p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px 32px; break-inside: avoid; border-top: 1px solid #dcdcdc; padding-top: 24px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+      <span style="color: #808080;">name</span>
+      <span style="color: #808080;">what they help with</span>
+      <span style="color: #808080;">commitment</span>
+      <span style="color: #1a1a1a;">[name]</span>
+      <span>[the specific thing]</span>
+      <span>[hours per month, or ad hoc]</span>
+      <span style="color: #1a1a1a;">[name]</span>
+      <span>[the specific thing]</span>
+      <span>[hours per month, or ad hoc]</span>
+    </div>
+
+    <sc-if value="{{ showGaps }}" hint-placeholder-val="{{ true }}">
+      <div style="break-inside: avoid;">
+        <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Gaps</h2>
+        <p style="margin: 8px 0 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">[an acknowledged gap reads as self-awareness; a hidden one reads as a surprise later]</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px 32px; border-top: 1px solid #dcdcdc; padding-top: 24px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+          <span style="color: #808080;">role</span>
+          <span style="color: #808080;">who covers it today</span>
+          <span style="color: #808080;">when it gets hired</span>
+          <span style="color: #1a1a1a;">[role]</span>
+          <span>[name, and what it costs them]</span>
+          <span>[quarter, or the trigger]</span>
+          <span style="color: #1a1a1a;">[role]</span>
+          <span>[name, and what it costs them]</span>
+          <span>[quarter, or the trigger]</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">How to reach us</h2>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 16px 32px; border-top: 1px solid #dcdcdc; padding-top: 24px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+      <span style="color: #808080;">anything urgent</span>
+      <span>[person or channel]</span>
+      <span style="color: #808080;">anything commercial</span>
+      <span>[person or channel]</span>
+      <span style="color: #808080;">anything technical</span>
+      <span>[person or channel]</span>
+      <span style="color: #808080;">where decisions are written down</span>
+      <span>[the place — a document, not a person]</span>
+    </div>
+
+    <p style="margin: 32px 0 0 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-top: 1px solid #dcdcdc; padding-top: 16px;">last reviewed [date] by [name] · review whenever someone joins or leaves</p>
+
+  </div>
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;ventureName&quot;: {
+    &quot;editor&quot;: &quot;text&quot;,
+    &quot;default&quot;: &quot;[venture name]&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Venture name (header and footer, every page)&quot;
+  },
+  &quot;audience&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;options&quot;: [&quot;internal&quot;, &quot;investor&quot;],
+    &quot;default&quot;: &quot;internal&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Audience — internal shows contact details, investor omits them&quot;
+  },
+  &quot;showGaps&quot;: {
+    &quot;editor&quot;: &quot;boolean&quot;,
+    &quot;default&quot;: true,
+    &quot;tsType&quot;: &quot;boolean&quot;,
+    &quot;section&quot;: &quot;Discipline&quot;,
+    &quot;label&quot;: &quot;Include the Gaps section&quot;
+  }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const audience = this.props.audience ?? 'internal';
+    return {
+      ventureName: this.props.ventureName ?? '[venture name]',
+      audienceLabel: audience === 'investor' ? 'investor copy' : 'internal copy',
+      showContact: audience === 'internal',
+      showGaps: this.props.showGaps ?? true
+    };
+  }
+
+  componentDidMount() { this.reserveRunningBands(); }
+  componentDidUpdate() { this.reserveRunningBands(); }
+
+  // doc-page measures its slotted header/footer on connect, which happens
+  // before this runtime slots them in — so the reserved bands stay at 0px and
+  // the running header draws over the first heading. Nudge it after mount.
+  reserveRunningBands() {
+    const run = () => {
+      const page = document.querySelector('doc-page');
+      if (!page) return;
+      if (typeof page._measure === 'function') { page._measure(); return; }
+      const band = (name, sel) => {
+        const el = page.querySelector(sel);
+        if (el) page.style.setProperty(name, Math.ceil(el.getBoundingClientRect().height) + 'px');
+      };
+      band('--doc-hdr-h', '[slot="header"]');
+      band('--doc-ftr-h', '[slot="footer"]');
+    };
+    requestAnimationFrame(run);
+    setTimeout(run, 300);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(run);
+  }
+}
+</script>
+</body>
+</html>

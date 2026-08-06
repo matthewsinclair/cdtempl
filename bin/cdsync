@@ -1,0 +1,196 @@
+#!/usr/bin/env bash
+#
+# cdsync - bootstrap a venture with Claude Code and Claude Design
+#
+# A thin coordinator: resolve home, source the shared primitives, parse the
+# command, dispatch. No business logic lives here -- each command owns its own
+# module under lib/.
+#
+
+set -euo pipefail
+
+# A GENERATED DOCUMENT MUST BE A FUNCTION OF THE TREE, NOT OF WHOSE SHELL RAN
+# IT. Pathname expansion and `sort` both order by the current locale's
+# collating sequence, so `for entry in "$target"/*` put the uppercase names
+# together under C and interleaved them with the lowercase ones under
+# en_US.UTF-8 -- and BOOTSTRAP-CD.md is built by walking exactly such a glob.
+#
+# The symptom was every project's document reporting itself stale against a
+# regeneration that had changed nothing, which is worse than cosmetic: the
+# standing rule is to regenerate after touching the generator and read the
+# diff, and a diff that is always noisy is a diff nobody reads.
+#
+# LC_COLLATE rather than LC_ALL, deliberately. Ordering is the bug; character
+# classification is not, and `each_metric_in_file` matches a multi-byte pound
+# sign whose handling should stay exactly as it is.
+export LC_COLLATE=C
+
+# ============================================================================
+# CDSYNC_HOME
+# ============================================================================
+
+# Resolve from the real location of this script, following the symlink chain
+# so `~/bin/cdsync -> ~/Devel/prj/Cdsync/bin/cdsync` still finds lib/ and help/.
+# An already-exported CDSYNC_HOME wins, matching how $UTILZ_HOME and
+# $INTENT_HOME behave in the sibling tools.
+determine_cdsync_home() {
+  local script="$0"
+  local link
+
+  while [[ -L "$script" ]]; do
+    link="$(readlink "$script")"
+    case "$link" in
+      /*) script="$link" ;;
+      *) script="$(dirname "$script")/$link" ;;
+    esac
+  done
+
+  local script_dir
+  script_dir="$(cd "$(dirname "$script")" && pwd)"
+  (cd "$script_dir/.." && pwd)
+}
+
+if [[ -z "${CDSYNC_HOME:-}" ]]; then
+  CDSYNC_HOME="$(determine_cdsync_home)"
+fi
+export CDSYNC_HOME
+
+# ============================================================================
+# LIBRARIES
+# ============================================================================
+
+# Shared primitives, always available. Command modules are sourced on demand
+# by the dispatch below; these are not, because more than one command needs
+# each of them and a module that re-sources its own dependencies is how two
+# copies of a dependency list start to drift.
+for _lib in common config target frontmatter drop archive specs scan; do
+  if [[ ! -f "$CDSYNC_HOME/lib/$_lib.sh" ]]; then
+    echo "error: cannot find library: $CDSYNC_HOME/lib/$_lib.sh" >&2
+    echo "  CDSYNC_HOME resolved to $CDSYNC_HOME -- is the installation intact?" >&2
+    exit 1
+  fi
+  # shellcheck source=/dev/null
+  source "$CDSYNC_HOME/lib/$_lib.sh"
+done
+unset _lib
+
+# ============================================================================
+# HELP
+# ============================================================================
+
+show_help() {
+  local topic="${1:-cdsync}"
+  local help_file="$CDSYNC_HOME/help/$topic.md"
+
+  if [[ ! -f "$help_file" ]]; then
+    error "no help for: $topic"
+    echo "" >&2
+    echo "Try: cdsync help" >&2
+    return 1
+  fi
+
+  # A PRETTY RENDERER ONLY WHEN A HUMAN IS LOOKING AT A TERMINAL.
+  #
+  # `glow` and `bat` page, and a pager with nowhere to page to waits forever.
+  # Unguarded, `cdsync help import | grep whatever` hangs, and so does any CI or
+  # script that captures the output. It hung the test suite on 31 July 2026 --
+  # intermittently, which is worse, because whether a pager blocks depends on
+  # how the harness happened to attach stdin, so the same suite passed in the
+  # foreground and stalled in the background.
+  if [[ -t 1 ]] && check_command glow; then
+    glow "$help_file"
+  elif [[ -t 1 ]] && check_command bat; then
+    bat --style=plain --language=markdown "$help_file"
+  else
+    cat "$help_file"
+  fi
+}
+
+show_version() {
+  echo "cdsync $(get_cdsync_version)"
+}
+
+usage() {
+  cat <<'EOF'
+Usage: cdsync <command> [options]
+
+Bootstrap a venture with Claude Code and Claude Design.
+
+Commands:
+  new <name>          Scaffold a venture
+  init                Start a design system in an existing repository
+  brief               Assemble the brief for Claude Design
+  bootstrap           Hand the design system to a Claude Design project
+  import <zip>        Merge a converted drop into the target
+  install [zip]       Replace the target with an as-is drop
+  check               Hold a drop against its own specifications
+  site                Stand up the microsite over the target
+
+  release             Read the version, move it, cut a release
+
+  doctor              Run diagnostics
+  help [command]      Show help
+  version             Show version
+
+Options:
+  --target PATH       Override the target directory for this invocation
+
+The target defaults to design/ and may be pointed anywhere. What is
+standardised is the structure underneath it, never the location:
+
+  $CDSYNC_TARGET/
+    RETURN.md         this drop's narrative
+    brief.md          the order this drop answers
+    index.md          manifest: every asset, its status, its spec version
+    kit/              the neutral kit every artefact imports
+    assets/<slug>/    flat, one directory per asset
+    notes/            durable thinking that is not an asset
+    addenda/          repo-authored -- protected, no install writes it
+    BOOTSTRAP-CD.md   generated -- protected, no install writes it
+    _inbox/           delivery archives; ephemeral transport, git-ignored
+
+Resolution order: --target, then $CDSYNC_TARGET, then cdsync.json, then design/.
+
+Run 'cdsync help <command>' for detail.
+EOF
+}
+
+# ============================================================================
+# DISPATCH
+# ============================================================================
+
+COMMAND="${1:-help}"
+[[ $# -gt 0 ]] && shift
+
+case "$COMMAND" in
+  -h|--help|help)
+    if [[ $# -gt 0 ]]; then
+      show_help "$1"
+    else
+      usage
+    fi
+    ;;
+
+  -v|--version|version)
+    show_version
+    ;;
+
+  doctor)
+    # shellcheck source=/dev/null
+    source "$CDSYNC_HOME/lib/doctor.sh"
+    run_doctor
+    ;;
+
+  new|init|brief|bootstrap|import|install|site|check|release)
+    # shellcheck source=/dev/null
+    source "$CDSYNC_HOME/lib/cmd_$COMMAND.sh"
+    "cmd_$COMMAND" "$@"
+    ;;
+
+  *)
+    error "unknown command: $COMMAND"
+    echo "" >&2
+    usage >&2
+    exit 1
+    ;;
+esac

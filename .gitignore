@@ -1,0 +1,29 @@
+# Test output and scratch.
+tmp/
+
+# Scratch ventures for exercising the loop end to end. Each one is its own git
+# repository -- `cdsync new` inits it -- so tracking them here would nest a repo
+# inside this one and the contents would not version either way. Same convention
+# as the underscore-prefixed directories under templates/claude_design/.
+templates/_test/
+
+# macOS Finder droppings. `Icon?` rather than `Icon` because the real filename
+# is Icon followed by a carriage return -- the glob avoids putting a
+# non-printing character in this file to match it.
+.DS_Store
+Icon?
+
+# Per-developer Claude Code settings (paths and tool allowlists vary).
+.claude/settings.local.json
+
+# AGENTS.md regeneration safety net (intent agents sync writes this; transient).
+/AGENTS.md.bak
+
+# `intent upgrade` writes a timestamped snapshot of everything it is about to
+# rewrite. It is a safety net for the upgrade run, not project history -- git
+# already holds the previous state, so committing it stores every tracked doc twice.
+.backup/
+
+# Release tarballs, built from a tag by `cdsync release cut`. Regenerable;
+# git already holds every tagged state they are built from.
+dist/

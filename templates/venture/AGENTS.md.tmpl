@@ -1,0 +1,63 @@
+# {{VENTURE}}
+
+Scaffolded by `cdsync new`. This file is the tool-agnostic contract for coding
+agents working in this repository.
+
+## What this repository is
+
+A venture. It holds two records that are deliberately kept apart:
+
+| Record | Where | What it is |
+|---|---|---|
+| **as-designed** | `design/` | What was designed. Claude Design's output, imported by `cdsync import`. |
+| **as-built** | everywhere else | What was actually built. |
+
+**Nothing automatically copies from one to the other.** That separation is the
+point, not an oversight:
+
+- You can hold one against the other and see where implementation diverged from
+  intent.
+- You can return to the as-designed state and recover what was being aimed at.
+- Re-importing a later design drop cannot clobber application work, because
+  `cdsync import` writes only inside `design/` and only the paths a drop owns.
+
+## The rule that matters most
+
+**Never write into `design/` by hand, and never copy out of it mechanically.**
+
+`design/` is owned by the design process. `cdsync import` writes `assets/`, `kit/`,
+`notes/`, `index.md` and `RETURN.md` there and nothing else. Anything else you put
+in `design/` survives a drop, but it does not belong to the design record and will
+confuse whoever reads it next.
+
+Taking something from `design/` into the application is application work done with
+judgement: you read the artefact, you decide what the built thing should be, you
+write it. A design artefact is a statement of intent, not source code. A pitch
+deck has no home in a component tree.
+
+## The loop
+
+```
+cdsync brief          assemble the brief from cdsync.json and the spec library
+                     -> design/brief.md, which goes to Claude Design
+cdsync import <zip>   unpack a drop into design/
+cdsync check          hold the drop against its own specifications
+cdsync site           stand up a microsite over design/
+```
+
+`cdsync.json` holds the venture's facts once. The brief is generated from them, so
+two rounds cannot disagree about what stage the venture is at.
+
+## Reading a drop
+
+Start with `design/RETURN.md`. It carries what changed in Claude Design's
+understanding, and the decisions it made that nobody asked it to make. That second
+list is the one to audit.
+
+Then `design/index.md` for what is present and what state it is in. Each asset
+carries its own `spec.md` — the definition of done, travelling with the artefact.
+
+`status: spec-only` means a template, not a deliverable. `blanks` is the number of
+substitutions still facing a human. Both are computed by `cdsync check`, not
+declared, because hand-maintained counts of mechanically countable properties
+always drift.

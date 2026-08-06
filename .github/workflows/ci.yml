@@ -1,0 +1,143 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A second push to the same branch cancels the first. The suite is the contract,
+# and there is no value in finishing a run against code nobody will ship.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # Both platforms always report. A failure on one is a portability finding
+      # worth seeing next to the other's pass, not a reason to hide it.
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pinned to a tag and installed from source rather than taken from a
+      # third-party action. A public repository's CI is a supply chain, and
+      # `apt install bats` is 1.2 on ubuntu against 1.11 on brew -- which would
+      # make the two platforms run different test runners and call it a matrix.
+      - name: Install bats
+        run: |
+          git clone --depth 1 --branch v1.11.0 \
+            https://github.com/bats-core/bats-core.git /tmp/bats-core
+          sudo /tmp/bats-core/install.sh /usr/local
+          bats --version
+
+      - name: Install shellcheck
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          else
+            brew install shellcheck
+          fi
+          shellcheck --version
+
+      # doctor checks that cdsync is reachable on PATH, and it is right to: that
+      # is how the tool is actually used, and `./bin/cdsync` is not. Putting the
+      # checkout on PATH makes CI exercise the real arrangement rather than
+      # weakening the check to suit the runner.
+      - name: Put cdsync on PATH
+        run: echo "$GITHUB_WORKSPACE/bin" >> "$GITHUB_PATH"
+
+      # jq, zip, unzip, python3 and git are preinstalled on both runners. doctor
+      # is the tool's own statement of what it needs, so it gates rather than a
+      # list maintained separately here -- two lists of the same thing drift.
+      - name: cdsync doctor
+        run: cdsync doctor
+
+      # --print-output-on-failure, because without it a failing `run` assertion
+      # reports only which line failed. The first real macOS-only failure this
+      # matrix caught could not be diagnosed from the log at all.
+      - name: Tests
+        run: bats --print-output-on-failure test/cdsync.bats
+
+      # Run bare. `shellcheck ... | tail` reports tail's exit code and is
+      # therefore 0 whatever shellcheck found, which is exactly how this repo
+      # believed it was clean for several days while it was not.
+      - name: Shellcheck
+        run: shellcheck bin/cdsync lib/*.sh .claude/scripts/*.sh
+
+  hygiene:
+    name: hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Deliberately NOT shfmt. The project's stated rule is two-space
+      # indentation, which the code already satisfies; shfmt's remaining
+      # opinions are its own house style, and adopting them would rewrite 1043
+      # lines across every shell file to make `<<< "$x"` into `<<<"$x"`. These
+      # three checks are the ones nobody argues with.
+      - name: Tabs, trailing whitespace, final newline
+        run: |
+          fail=0
+
+          # git grep: 0 = found, 1 = not found, >1 = the probe itself failed.
+          # Collapsing 1 and 2 is how a check that CANNOT RUN reports clean,
+          # which is this repo's most repeated bug. Each check below therefore
+          # distinguishes them, and the tab search uses a literal tab rather
+          # than -P, whose PCRE support is not guaranteed on every runner.
+          check() {
+            local label="$1"; shift
+            local out status
+            # `out="$(cmd)"` under `bash -e` -- which is what GitHub runs -- exits
+            # the whole script the moment cmd returns non-zero. So the NO-MATCH
+            # case, the one this is looking for, killed the run before `$?` was
+            # ever read: exit 1, no output, nothing to read in the log. Wrapping
+            # the assignment in `if` is what makes it -e-safe.
+            if out="$("$@" 2>&1)"; then status=0; else status=$?; fi
+            case "$status" in
+              0) echo "::error::$label"; printf '%s\n' "$out"; fail=1 ;;
+              1) ;;
+              *) echo "::error::probe failed for '$label' (exit $status) -- \
+          treating as a failure rather than a pass"; printf '%s\n' "$out"; fail=1 ;;
+            esac
+          }
+
+          TAB="$(printf '\t')"
+          check "tab indentation found (the standard is two spaces)" \
+            git grep -lI -- "$TAB" -- '*.sh' 'bin/cdsync'
+
+          check "trailing whitespace found" \
+            git grep -lIE ' +$' -- '*.sh' 'bin/cdsync' '*.md'
+
+          # A file not ending in a newline makes the next diff touch a line
+          # nobody edited.
+          while IFS= read -r f; do
+            [ -s "$f" ] || continue
+            if [ -n "$(tail -c 1 "$f")" ]; then
+              echo "::error::no final newline: $f"
+              fail=1
+            fi
+          done < <(git ls-files -- '*.sh' 'bin/cdsync' '*.md')
+
+          exit "$fail"
+
+      # Every executable the dispatcher can reach must actually be executable,
+      # and every shell file must parse. Cheap, and catches a bad merge before
+      # the suite does.
+      - name: Syntax and permissions
+        run: |
+          fail=0
+          [ -x bin/cdsync ] || { echo "::error::bin/cdsync is not executable"; fail=1; }
+          for f in bin/cdsync lib/*.sh .claude/scripts/*.sh; do
+            bash -n "$f" || { echo "::error::syntax error in $f"; fail=1; }
+          done
+          exit "$fail"

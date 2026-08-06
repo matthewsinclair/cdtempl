@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Product one-pager — template</title>
+<script src="./vendor/doc-page.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; }
+  a { color: #474747; text-decoration: underline; }
+  a:hover { color: #1a1a1a; }
+</style>
+</helmet>
+<doc-page>
+  <section class="page" style="box-sizing: border-box; padding: 56px; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; color: #1a1a1a; background: #ffffff; display: flex; flex-direction: column; gap: 24px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 12px;">
+      <span>{{ audienceLabel }}</span>
+      <span>[date] · [confidentiality note]</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <h1 style="margin: 0; font-size: 39px; font-weight: 600; line-height: 1.1;">{{ ventureName }}</h1>
+      <p style="margin: 0; font-size: 20px; line-height: 1.4; color: #474747; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[one-line description — what it does, for whom]</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #1a1a1a; padding-top: 16px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">the problem</span>
+      <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #474747; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[one sentence, as the reader experiences it — not as the absence of this product]</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #dcdcdc; padding-top: 16px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">{{ capabilityLabel }}</span>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span style="font-size: 16px; font-weight: 600;">[capability]</span>
+          <span style="font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the concrete outcome, not the feature]</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span style="font-size: 16px; font-weight: 600;">[capability]</span>
+          <span style="font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the concrete outcome]</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span style="font-size: 16px; font-weight: 600;">[capability]</span>
+          <span style="font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[three is the maximum, not the target]</span>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ showProductShot }}" hint-placeholder-val="{{ true }}">
+      <div style="height: 180px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;">
+        <span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 6px 12px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">product shot — a real screen, wide crop</span>
+      </div>
+    </sc-if>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; border: 2px solid #1a1a1a; padding: 16px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #1a1a1a;">proof</span>
+      <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #474747; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[one real thing — a named customer, a dated number, or a specific comparison. a one-pager with no proof is a brochure, and this is the block that decides whether the page works.]</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #dcdcdc; padding-top: 16px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">how it works</span>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div style="display: flex; flex-direction: column; gap: 6px; border-top: 1px solid #1a1a1a; padding-top: 10px;">
+          <span style="font-size: 25px; font-weight: 600; line-height: 1.1;">1</span>
+          <span style="font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[what the customer does]</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; border-top: 1px solid #1a1a1a; padding-top: 10px;">
+          <span style="font-size: 25px; font-weight: 600; line-height: 1.1;">2</span>
+          <span style="font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[what happens next]</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; border-top: 1px solid #1a1a1a; padding-top: 10px;">
+          <span style="font-size: 25px; font-weight: 600; line-height: 1.1;">3</span>
+          <span style="font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the outcome they get]</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; border-top: 1px solid #dcdcdc; padding-top: 16px;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">{{ commercialLabel }}</span>
+        <span style="font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[a price, a range, or the honest reason there is not one yet]</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">who it is not for</span>
+        <span style="font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the disqualifier — stating it makes the rest credible]</span>
+      </div>
+    </div>
+
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #1a1a1a; padding-top: 16px;">
+      <span style="font-size: 20px; font-weight: 600;">[the one action — named specifically, and the only one on this page]</span>
+      <div style="display: flex; gap: 32px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+        <span>[name]</span>
+        <span>[email]</span>
+        <span>[url]</span>
+      </div>
+    </div>
+
+  </section>
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;ventureName&quot;: {
+    &quot;editor&quot;: &quot;text&quot;,
+    &quot;default&quot;: &quot;[venture name]&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Venture name&quot;
+  },
+  &quot;audience&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;options&quot;: [&quot;customer&quot;, &quot;investor&quot;],
+    &quot;default&quot;: &quot;customer&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Audience — retitles three blocks; the copy underneath still differs&quot;
+  },
+  &quot;showProductShot&quot;: {
+    &quot;editor&quot;: &quot;boolean&quot;,
+    &quot;default&quot;: true,
+    &quot;tsType&quot;: &quot;boolean&quot;,
+    &quot;section&quot;: &quot;Layout&quot;,
+    &quot;label&quot;: &quot;Product shot — off if no real screen exists yet&quot;
+  }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const investor = (this.props.audience ?? 'customer') === 'investor';
+    return {
+      ventureName: this.props.ventureName ?? '[venture name]',
+      audienceLabel: investor ? 'one-pager · investor copy' : 'one-pager · customer copy',
+      capabilityLabel: investor ? 'why this wins' : 'what it does',
+      commercialLabel: investor ? 'how it makes money' : 'what it costs',
+      showProductShot: this.props.showProductShot ?? true
+    };
+  }
+}
+</script>
+</body>
+</html>

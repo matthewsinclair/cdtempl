@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Brand guidelines — template</title>
+<script src="./vendor/doc-page.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; }
+  a { color: #474747; text-decoration: underline; }
+  a:hover { color: #1a1a1a; }
+</style>
+</helmet>
+<doc-page margin="0.75in">
+
+  <div slot="header" style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 8px;">
+    <span>{{ ventureName }} brand guidelines</span>
+    <span>v[0.1] · [date]</span>
+  </div>
+
+  <div slot="footer" style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-top: 1px solid #dcdcdc; padding-top: 8px;">
+    <span>exceptions approved by [name]</span>
+    <span>[confidentiality note]</span>
+  </div>
+
+  <div style="font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; color: #1a1a1a;">
+
+    <h1 style="margin: 0 0 16px 0; font-size: 39px; font-weight: 600; line-height: 1.1;">{{ ventureName }} brand guidelines</h1>
+    <p style="margin: 0 0 32px 0; font-size: 20px; line-height: 1.4; color: #474747; max-width: 68ch;">Version [0.1], [date]. Send this to anyone producing work in the brand — an agency, a printer, a new designer, a partner.</p>
+
+    <div style="border: 1px solid #c4c4c4; padding: 16px; margin: 0 0 32px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; line-height: 1.5; color: #616161; break-inside: avoid;">
+      <p style="margin: 0 0 8px 0; color: #474747;">Template note — delete this box when filled.</p>
+      <p style="margin: 0;">This document is an assembly, not a source. Every section restates a decision made elsewhere, which makes it the one document in the suite that is legitimately duplicative — and means it goes stale silently. A colour changed in <span style="color: #1a1a1a;">kit/tokens.css</span> does not change here. Version it, date it, and treat a mismatch as a defect rather than a discrepancy.</p>
+    </div>
+
+    <h2 style="margin: 0 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">The brand in one page</h2>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 12px 32px; margin: 24px 0 32px 0; font-size: 16px; line-height: 1.5;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #808080;">what we are</span><span>[the positioning statement, one sentence]</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #808080;">who for</span><span>[target customer]</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #808080;">what we are not</span><span>[the exclusions — this line does more work than the one above it]</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #808080;">the feeling</span><span>[three adjectives, and none of them "modern"]</span>
+    </div>
+
+    <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Logo</h2>
+    <p style="margin: 16px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">[no mark is supplied here on purpose — a placeholder mark is the thing that survives into a real document]</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 0 0 24px 0; break-inside: avoid;">
+      <div style="height: 140px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;"><span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">primary lockup</span></div>
+      <div style="height: 140px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;"><span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">horizontal</span></div>
+      <div style="height: 140px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;"><span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">mark only</span></div>
+    </div>
+    <div style="display: grid; grid-template-columns: 240px 1fr; gap: 12px 32px; margin: 0 0 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+      <span style="color: #808080;">clear space</span><span>[a multiple of a measurable part of the mark — never "use your judgement"]</span>
+      <span style="color: #808080;">minimum size, screen</span><span>[00px wide]</span>
+      <span style="color: #808080;">minimum size, print</span><span>[00mm wide]</span>
+      <span style="color: #808080;">on dark</span><span>[which lockup, and at what value]</span>
+      <span style="color: #808080;">file formats supplied</span><span>[svg, png at 1x/2x/3x, eps for print]</span>
+    </div>
+    <p style="margin: 0 0 8px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">misuse — shown wrong, because this is the section people actually read</p>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 0 0 32px 0; break-inside: avoid;">
+      <div style="height: 100px; border: 1px solid #c4c4c4; display: flex; align-items: flex-end; padding: 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">[stretched]</div>
+      <div style="height: 100px; border: 1px solid #c4c4c4; display: flex; align-items: flex-end; padding: 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">[recoloured]</div>
+      <div style="height: 100px; border: 1px solid #c4c4c4; display: flex; align-items: flex-end; padding: 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">[on a busy photo]</div>
+      <div style="height: 100px; border: 1px solid #c4c4c4; display: flex; align-items: flex-end; padding: 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">[too small]</div>
+    </div>
+
+    <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Colour</h2>
+    <p style="margin: 16px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">shown at neutral-kit values — chroma zero, so nothing here is a recommendation</p>
+    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; border: 1px solid #c4c4c4; margin: 0 0 8px 0; break-inside: avoid;">
+      <div style="height: 64px; background: #ffffff;"></div>
+      <div style="height: 64px; background: #ededed;"></div>
+      <div style="height: 64px; background: #c4c4c4;"></div>
+      <div style="height: 64px; background: #808080;"></div>
+      <div style="height: 64px; background: #474747;"></div>
+      <div style="height: 64px; background: #1a1a1a;"></div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; margin: 0 0 24px 0;">
+      <span>[role]</span><span>[role]</span><span>[role]</span><span>[role]</span><span>[role]</span><span>[role]</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 240px 1fr; gap: 12px 32px; margin: 0 0 32px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+      <span style="color: #808080;">accent</span><span>[the one colour that is the brand — or two, sharing chroma and lightness]</span>
+      <span style="color: #808080;">body text on light</span><span>[value] — passes AA at 16px</span>
+      <span style="color: #808080;">body text on dark</span><span>[value] — passes AA at 16px</span>
+      <span style="color: #808080;">never carries text</span><span>[the light steps, named explicitly]</span>
+      <span style="color: #808080;">dark mode</span><span>[a mapping, not a second palette]</span>
+    </div>
+
+    <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Typography</h2>
+    <div style="display: flex; flex-direction: column; gap: 8px; margin: 24px 0; break-inside: avoid;">
+      <span style="font-size: 39px; font-weight: 600; line-height: 1.1;">39 — display</span>
+      <span style="font-size: 25px; font-weight: 600; line-height: 1.2;">25 — heading</span>
+      <span style="font-size: 20px; line-height: 1.4;">20 — lede</span>
+      <span style="font-size: 16px; line-height: 1.5;">16 — body, and the print floor at 12pt</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">16 — mono, for labels and data</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 240px 1fr; gap: 12px 32px; margin: 0 0 32px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+      <span style="color: #808080;">display and text face</span><span>[family] — [weights licensed]</span>
+      <span style="color: #808080;">mono face</span><span>[family]</span>
+      <span style="color: #808080;">fallback stack</span><span>[the system stack that must not look broken]</span>
+      <span style="color: #808080;">scale</span><span>1.25 on a 16px base — [keep or restate]</span>
+      <span style="color: #808080;">line length</span><span>68 characters maximum for prose</span>
+      <span style="color: #808080;">licences</span><span>[what they cover: web, print, embedding in a PDF, logo use]</span>
+    </div>
+    <p style="margin: 0 0 32px 0; font-size: 16px; line-height: 1.5; color: #474747; max-width: 68ch;">The licence line is the one that causes a legal problem eighteen months later. State what is covered, not just which family was bought.</p>
+
+    <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Voice</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px; margin: 24px 0 32px 0; font-size: 16px; line-height: 1.5; break-inside: avoid;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 8px;">we say</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 8px;">not</span>
+      <span>[a real sentence in the voice]</span><span style="color: #616161;">[the same thing, said wrongly]</span>
+      <span>[a real sentence in the voice]</span><span style="color: #616161;">[the same thing, said wrongly]</span>
+      <span>[a real sentence in the voice]</span><span style="color: #616161;">[the same thing, said wrongly]</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 240px 1fr; gap: 12px 32px; margin: 0 0 32px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+      <span style="color: #808080;">in the product</span><span>[register — usually shorter and plainer than marketing]</span>
+      <span style="color: #808080;">in marketing</span><span>[register]</span>
+      <span style="color: #808080;">when something breaks</span><span>[register — the one that matters most and is written last]</span>
+      <span style="color: #808080;">words we never use</span><span>[the list, and it should be specific enough to be enforceable]</span>
+    </div>
+
+    <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Imagery</h2>
+    <p style="margin: 16px 0; font-size: 16px; line-height: 1.5; color: #474747; max-width: 68ch;">Written art direction plus a reference set. The reference set is the useful half — adjectives about photography do not survive contact with a photographer.</p>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 0 0 24px 0; break-inside: avoid;">
+      <div style="height: 160px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;"><span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">reference 3:2</span></div>
+      <div style="height: 160px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;"><span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">reference 3:2</span></div>
+      <div style="height: 160px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;"><span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">reference 3:2</span></div>
+    </div>
+    <div style="display: grid; grid-template-columns: 240px 1fr; gap: 12px 32px; margin: 0 0 32px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+      <span style="color: #808080;">subject</span><span>[what is in frame — people, product, place]</span>
+      <span style="color: #808080;">treatment</span><span>[natural light, grade, contrast]</span>
+      <span style="color: #808080;">crop</span><span>[close, wide, and what is never cropped]</span>
+      <span style="color: #808080;">never</span><span>[the specific things that would look wrong — this is the enforceable half]</span>
+      <span style="color: #808080;">illustration</span><span>[is there any, and if so who draws it]</span>
+    </div>
+
+    <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Layout</h2>
+    <div style="display: grid; grid-template-columns: 240px 1fr; gap: 12px 32px; margin: 24px 0 32px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+      <span style="color: #808080;">space scale</span><span>4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96</span>
+      <span style="color: #808080;">grid</span><span>[columns, gutter, container width]</span>
+      <span style="color: #808080;">radius</span><span>[0 in the neutral kit — decide this deliberately]</span>
+      <span style="color: #808080;">elevation</span><span>[none in the neutral kit — decide this deliberately]</span>
+      <span style="color: #808080;">how much air the brand needs</span><span>[the thing an agency will get wrong first]</span>
+    </div>
+
+    <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Application</h2>
+    <p style="margin: 16px 0; font-size: 16px; line-height: 1.5; color: #474747; max-width: 68ch;">Real examples in real formats. A guideline document with no applied examples gets interpreted, and interpretation is where brands drift.</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 0 0 32px 0; break-inside: avoid;">
+      <div style="height: 180px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;"><span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">a slide 16:9</span></div>
+      <div style="height: 180px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;"><span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">a document page</span></div>
+      <div style="height: 180px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;"><span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">a social frame 1:1</span></div>
+      <div style="height: 180px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;"><span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 4px 8px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">the product UI</span></div>
+    </div>
+
+    <h2 style="margin: 32px 0 8px 0; font-size: 25px; font-weight: 600; line-height: 1.2; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;">Exceptions</h2>
+    <div style="display: grid; grid-template-columns: 240px 1fr; gap: 12px 32px; margin: 24px 0 0 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">
+      <span style="color: #808080;">who approves one</span><span>[a person, named]</span>
+      <span style="color: #808080;">how to ask</span><span>[the channel, and the expected turnaround]</span>
+      <span style="color: #808080;">where the assets live</span><span>[the location, and who grants access]</span>
+    </div>
+    <p style="margin: 24px 0 0 0; font-size: 16px; line-height: 1.5; color: #474747; max-width: 68ch;">A guideline with no exception path gets ignored wholesale the first time it is inconvenient. Naming the person is what makes the rest of the document usable rather than merely correct.</p>
+
+    <p style="margin: 32px 0 0 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; border-top: 1px solid #dcdcdc; padding-top: 16px;">kit version 1 · last reviewed [date] by [name] · copies of this document are in circulation, so version and date every change</p>
+
+  </div>
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;ventureName&quot;: {
+    &quot;editor&quot;: &quot;text&quot;,
+    &quot;default&quot;: &quot;[venture name]&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Venture name (title and running header)&quot;
+  }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return { ventureName: this.props.ventureName ?? '[venture name]' };
+  }
+
+  componentDidMount() { this.reserveRunningBands(); }
+  componentDidUpdate() { this.reserveRunningBands(); }
+
+  // doc-page measures its slotted header/footer on connect, before this runtime
+  // slots them in — so the reserved bands stay at 0px and the running header
+  // draws over the first heading. Nudge it after mount.
+  reserveRunningBands() {
+    const run = () => {
+      const page = document.querySelector('doc-page');
+      if (!page) return;
+      if (typeof page._measure === 'function') { page._measure(); return; }
+      const band = (name, sel) => {
+        const el = page.querySelector(sel);
+        if (el) page.style.setProperty(name, Math.ceil(el.getBoundingClientRect().height) + 'px');
+      };
+      band('--doc-hdr-h', '[slot="header"]');
+      band('--doc-ftr-h', '[slot="footer"]');
+    };
+    requestAnimationFrame(run);
+    setTimeout(run, 300);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(run);
+  }
+}
+</script>
+</body>
+</html>

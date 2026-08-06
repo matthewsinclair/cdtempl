@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Pitch deck — template</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #f7f7f7; }
+  a { color: #474747; text-decoration: underline; }
+  a:hover { color: #1a1a1a; }
+</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./vendor/deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+  <section data-label="Cover" data-screen-label="01 Cover" data-speaker-notes="The cover earns nothing and loses plenty. Name, one line, stage, date, confidentiality — that is all. The one-liner is the hardest sentence in the deck: it must say what it does and for whom, without a category claim you have not yet argued. No logo slot is filled here on purpose: a placeholder mark is the thing that survives into a real deck." style="padding: 96px; background: #1a1a1a; color: #ffffff; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #a3a3a3; border-bottom: 1px solid #474747; padding-bottom: 24px;">
+      <span>pitch deck · {{ stageLabel }}</span>
+      <span>[date]</span>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 48px;">
+      <div style="width: 320px; height: 160px; background-color: #2e2e2e; background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0) 0 7px, #616161 7px 8px); border: 1px solid #616161; display: flex; align-items: center; justify-content: center;">
+        <span style="background: #1a1a1a; border: 1px solid #616161; padding: 8px 16px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #a3a3a3;">logo mark</span>
+      </div>
+      <h1 style="margin: 0; font-size: 119px; font-weight: 600; line-height: 1.1; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #a3a3a3;">[venture name]</h1>
+      <p style="margin: 0; font-size: 39px; line-height: 1.3; max-width: 1400px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #a3a3a3;">[one-line description — what it does, for whom, no category claim]</p>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-top: 1px solid #474747; padding-top: 24px;">
+      <span>[confidentiality note]</span>
+      <span>[contact email]</span>
+    </div>
+  </section>
+
+  <section data-label="Problem" data-screen-label="02 Problem" data-speaker-notes="Three questions, and the third is the one that separates a real problem from a plausible one: how do you know. Evidence beats adjectives. Name a specific person or role who hurts, quantify the cost in their units — hours, dollars, churn — and say where the number came from. If the evidence is anecdotal, say so; an honest anecdote reads better than a fabricated statistic." style="padding: 96px; background: #ffffff; color: #1a1a1a; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 24px;">
+      <span>02 · problem</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <h2 style="margin: 0; font-size: 76px; font-weight: 600; line-height: 1.1;">The problem</h2>
+    <p style="margin: 0; font-size: 39px; line-height: 1.3; max-width: 1500px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the problem in one sentence — stated as it is experienced, not as your product's absence]</p>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; align-content: end;">
+      <div style="display: flex; flex-direction: column; gap: 24px; border-top: 1px solid #dcdcdc; padding-top: 24px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">who hurts</span>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[a specific role, in a specific kind of company]</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px; border-top: 1px solid #dcdcdc; padding-top: 24px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">how much it costs them</span>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[quantified, in their units]</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px; border-top: 1px solid #dcdcdc; padding-top: 24px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">how you know</span>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the evidence, and its limits]</p>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="Why now" data-screen-label="03 Why now" data-speaker-notes="The most often missing slide, and the one that most often decides the meeting. Something changed — a cost curve, a regulation, a platform, a behaviour — and that change is why this is possible now and was not before. Without it the reader's question is 'why has nobody done this', and they will answer it themselves, unfavourably." style="padding: 96px; background: #ffffff; color: #1a1a1a; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 24px;">
+      <span>03 · why now</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <h2 style="margin: 0; font-size: 76px; font-weight: 600; line-height: 1.1;">Why now</h2>
+    <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-content: center;">
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">what changed</span>
+        <p style="margin: 0; font-size: 39px; line-height: 1.3; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the shift — cost, regulation, platform, or behaviour — with the year it happened]</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">why it could not be done before</span>
+        <p style="margin: 0; font-size: 39px; line-height: 1.3; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the specific thing that used to be prohibitive]</p>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="Solution" data-screen-label="04 Solution" data-speaker-notes="One sentence, then show it. The sentence is not the pitch — it is the plainest possible description of what the thing is. Resist the urge to describe the benefit here; the benefit belongs to the problem slide and the model slide. Replace the hatched panel with a real screen, not a diagram of your architecture." style="padding: 96px; background: #ffffff; color: #1a1a1a; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 24px;">
+      <span>04 · solution</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <div style="display: flex; gap: 96px; align-items: baseline;">
+      <h2 style="margin: 0; font-size: 76px; font-weight: 600; line-height: 1.1; white-space: nowrap;">The solution</h2>
+      <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[what it is, in one plain sentence]</p>
+    </div>
+    <div style="flex: 1; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;">
+      <span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 8px 16px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #616161;">product shot 16:9 — a real screen, not a diagram</span>
+    </div>
+  </section>
+
+  <section data-label="How it works" data-screen-label="05 How it works" data-speaker-notes="Three steps, maximum. If it takes four, the product is not yet simple enough to pitch. Each step is what the customer does, not what the system does — 'connect your billing data', not 'ingest via API'. The test: someone who has never seen the product can repeat these three steps back." style="padding: 96px; background: #ffffff; color: #1a1a1a; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 24px;">
+      <span>05 · how it works</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <h2 style="margin: 0; font-size: 76px; font-weight: 600; line-height: 1.1;">How it works</h2>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; align-content: center;">
+      <div style="display: flex; flex-direction: column; gap: 24px; border-top: 1px solid #1a1a1a; padding-top: 24px;">
+        <span style="font-size: 61px; font-weight: 600; line-height: 1.1;">1</span>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[what the customer does first]</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px; border-top: 1px solid #1a1a1a; padding-top: 24px;">
+        <span style="font-size: 61px; font-weight: 600; line-height: 1.1;">2</span>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[what happens next]</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px; border-top: 1px solid #1a1a1a; padding-top: 24px;">
+        <span style="font-size: 61px; font-weight: 600; line-height: 1.1;">3</span>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the outcome they get]</p>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="Market" data-screen-label="06 Market" data-speaker-notes="The derivation matters more than the number. A TAM with no arithmetic behind it is read as decoration and discounted entirely; a smaller number with a visible bottom-up calculation is read as competence. Show the multiplication. Mark the figures illustrative unless they are sourced." style="padding: 96px; background: #ffffff; color: #1a1a1a; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 24px;">
+      <span>06 · market</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <div style="display: flex; gap: 32px; align-items: center;">
+      <h2 style="margin: 0; font-size: 76px; font-weight: 600; line-height: 1.1;">Market</h2>
+      <sc-if value="{{ showMarkers }}" hint-placeholder-val="{{ true }}">
+        <span style="display: inline-block; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #474747; background: #ededed; border: 1px solid #c4c4c4; padding: 4px 12px;">illustrative</span>
+      </sc-if>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 32px; justify-content: center;">
+      <div style="display: grid; grid-template-columns: 200px 320px 1fr; gap: 48px; align-items: baseline; border-top: 1px solid #dcdcdc; padding-top: 32px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">TAM</span>
+        <span style="font-size: 61px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[$0.0b]</span>
+        <span style="font-size: 31px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the arithmetic — count × price × frequency, with the source of each]</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 200px 320px 1fr; gap: 48px; align-items: baseline; border-top: 1px solid #dcdcdc; padding-top: 32px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">SAM</span>
+        <span style="font-size: 61px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[$0.0b]</span>
+        <span style="font-size: 31px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[what you can reach with this model, in these geographies]</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 200px 320px 1fr; gap: 48px; align-items: baseline; border-top: 1px solid #dcdcdc; padding-top: 32px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">SOM</span>
+        <span style="font-size: 61px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[$0.0m]</span>
+        <span style="font-size: 31px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[what this round buys, over the period it buys it]</span>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="Business model" data-screen-label="07 Business model" data-speaker-notes="What you charge, for what, and whether the arithmetic works. Unit economics before scale: one customer, one period, all the costs. A reader who cannot tell whether a single customer is profitable will assume not. Traction comes after this slide on purpose — a metric means nothing until the reader knows what is being sold." style="padding: 96px; background: #ffffff; color: #1a1a1a; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 24px;">
+      <span>07 · business model</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <h2 style="margin: 0; font-size: 76px; font-weight: 600; line-height: 1.1;">Business model</h2>
+    <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 96px;">
+      <div style="display: flex; flex-direction: column; gap: 32px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 16px;">what you charge</span>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the unit of value — per seat, per transaction, per outcome]</p>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[price, and why the buyer thinks it is cheap]</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 32px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 16px;">unit economics</span>
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 24px 32px; font-size: 31px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">
+          <span>gross margin</span><span>[00%]</span>
+          <span>CAC</span><span>[$0]</span>
+          <span>payback</span><span>[0 months]</span>
+          <span>net revenue retention</span><span>[000%]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="Go-to-market" data-screen-label="08 Go-to-market" data-speaker-notes="Three channels at most, and be explicit about which one is proven versus hypothesised. Listing five channels signals that none of them works yet. One channel with real numbers beats three with plans." style="padding: 96px; background: #ffffff; color: #1a1a1a; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 24px;">
+      <span>08 · go-to-market</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <h2 style="margin: 0; font-size: 76px; font-weight: 600; line-height: 1.1;">Go-to-market</h2>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; align-content: center;">
+      <div style="display: flex; flex-direction: column; gap: 24px; border: 1px solid #c4c4c4; padding: 32px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #474747; background: #ededed; border: 1px solid #c4c4c4; padding: 4px 12px; align-self: flex-start;">proven</span>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the channel that already works, with its numbers]</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px; border: 1px solid #dcdcdc; padding: 32px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">hypothesis</span>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the next channel, and the test that would prove it]</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px; border: 1px solid #dcdcdc; padding: 32px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">hypothesis</span>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[or delete this column — three is a maximum, not a target]</p>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="Traction" data-screen-label="09 Traction" data-speaker-notes="Dated, trended, and honest. Three metrics maximum, chosen because they are the ones you manage against — not the three that look best. The chart matters more than the headline numbers because it shows direction. If the trend is flat or down, address it here rather than letting it be found." style="padding: 96px; background: #ffffff; color: #1a1a1a; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 24px;">
+      <span>09 · traction</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <div style="display: flex; gap: 32px; align-items: center;">
+      <h2 style="margin: 0; font-size: 76px; font-weight: 600; line-height: 1.1;">Traction</h2>
+      <sc-if value="{{ showMarkers }}" hint-placeholder-val="{{ true }}">
+        <span style="display: inline-block; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #474747; background: #ededed; border: 1px solid #c4c4c4; padding: 4px 12px;">illustrative</span>
+      </sc-if>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">as at [date]</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px;">
+      <div style="display: flex; flex-direction: column; gap: 16px; border-top: 1px solid #1a1a1a; padding-top: 24px;">
+        <span style="font-size: 61px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[$000k]</span>
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">[metric name, e.g. ARR]</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px; border-top: 1px solid #1a1a1a; padding-top: 24px;">
+        <span style="font-size: 61px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[000]</span>
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">[metric name]</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px; border-top: 1px solid #1a1a1a; padding-top: 24px;">
+        <span style="font-size: 61px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[00%]</span>
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">[metric name]</span>
+      </div>
+    </div>
+    <div style="flex: 1; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;">
+      <span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 8px 16px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #616161;">growth chart — monthly, from first revenue, axes labelled</span>
+    </div>
+  </section>
+
+  <section data-label="Competition" data-screen-label="10 Competition" data-speaker-notes="Name real competitors, including the ones you would rather not. 'We have no competitors' is read as 'we have not looked', and the status quo is always a competitor. The axis is the argument: choose the dimension on which you win and which the customer actually cares about — those are not always the same dimension, and picking the wrong one is the failure mode here." style="padding: 96px; background: #ffffff; color: #1a1a1a; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 24px;">
+      <span>10 · competition</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <div style="display: flex; gap: 96px; align-items: baseline;">
+      <h2 style="margin: 0; font-size: 76px; font-weight: 600; line-height: 1.1; white-space: nowrap;">Competition</h2>
+      <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the axis you win on — the template cannot supply this]</p>
+    </div>
+    <div style="flex: 1; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; grid-auto-rows: 1fr; align-content: center;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #1a1a1a; padding: 24px 32px 24px 0;"></span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #1a1a1a; padding: 24px 32px 24px 0;">[capability 1]</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #1a1a1a; padding: 24px 32px 24px 0;">[capability 2]</span>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #1a1a1a; padding: 24px 32px 24px 0;">[capability 3]</span>
+
+      <span style="font-size: 31px; font-weight: 600; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">{{ ventureName }}</span>
+      <span style="font-size: 31px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[yes / partial / no]</span>
+      <span style="font-size: 31px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[yes / partial / no]</span>
+      <span style="font-size: 31px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[yes / partial / no]</span>
+
+      <span style="font-size: 31px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[named competitor]</span>
+      <span style="font-size: 31px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[yes / partial / no]</span>
+      <span style="font-size: 31px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[yes / partial / no]</span>
+      <span style="font-size: 31px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[yes / partial / no]</span>
+
+      <span style="font-size: 31px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the status quo — always a competitor]</span>
+      <span style="font-size: 31px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[yes / partial / no]</span>
+      <span style="font-size: 31px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[yes / partial / no]</span>
+      <span style="font-size: 31px; color: #616161; border-bottom: 1px solid #dcdcdc; padding: 24px 32px 24px 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[yes / partial / no]</span>
+    </div>
+  </section>
+
+  <section data-label="Team" data-screen-label="11 Team" data-speaker-notes="Why these people, specifically, for this problem. Not a résumé — the one fact about each person that makes them the obvious choice here. Name the gaps too, and what the round hires; an acknowledged gap reads as self-awareness, a hidden one reads as a surprise later. Headshots are a licence question: leave them hatched rather than substituting stock." style="padding: 96px; background: #ffffff; color: #1a1a1a; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 24px;">
+      <span>11 · team</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <h2 style="margin: 0; font-size: 76px; font-weight: 600; line-height: 1.1;">Team</h2>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 64px; align-content: start;">
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div style="aspect-ratio: 1 / 1; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;">
+          <span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 8px 16px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #616161;">headshot 1:1</span>
+        </div>
+        <span style="font-size: 31px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[name] — [role]</span>
+        <p style="margin: 0; font-size: 25px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the one fact that makes them the obvious person for this]</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div style="aspect-ratio: 1 / 1; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;">
+          <span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 8px 16px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #616161;">headshot 1:1</span>
+        </div>
+        <span style="font-size: 31px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[name] — [role]</span>
+        <p style="margin: 0; font-size: 25px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the one fact that makes them the obvious person for this]</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div style="aspect-ratio: 1 / 1; border: 1px solid #dcdcdc; display: flex; align-items: center; justify-content: center;">
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">gap</span>
+        </div>
+        <span style="font-size: 31px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the role this round hires]</span>
+        <p style="margin: 0; font-size: 25px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[why it is the next hire and not a later one]</p>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="The ask" data-screen-label="12 The ask" data-speaker-notes="A round size without a use of funds is not an ask, and it is the most common way a deck arrives unfinished. State the number, the split, and the milestones it buys — then the reader can judge whether the number is right, which is the judgement you actually want them making." style="padding: 96px; background: #ffffff; color: #1a1a1a; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 24px;">
+      <span>12 · the ask</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">raising a {{ stageLabel }} round of</span>
+      <h2 style="margin: 0; font-size: 119px; font-weight: 600; line-height: 1.1; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[$0.0m]</h2>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080;">[pre / post money] · [instrument] · [amount committed to date]</span>
+    </div>
+    <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-content: end;">
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 16px;">use of funds</span>
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 24px 32px; font-size: 31px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">
+          <span>[category]</span><span>[00%]</span>
+          <span>[category]</span><span>[00%]</span>
+          <span>[category]</span><span>[00%]</span>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-bottom: 1px solid #dcdcdc; padding-bottom: 16px;">what it buys</span>
+        <p style="margin: 0; font-size: 31px; line-height: 1.4; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the milestone that makes the next round obvious, and the month you reach it]</p>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="Close" data-screen-label="13 Close" data-speaker-notes="One sentence, and contact details. This is the slide left on screen while questions are asked, so it should carry the single thing you want remembered — not a thank-you. If you cannot decide what that sentence is, the deck above it is not finished." style="padding: 96px; background: #1a1a1a; color: #ffffff; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; display: flex; flex-direction: column; gap: 48px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #a3a3a3; border-bottom: 1px solid #474747; padding-bottom: 24px;">
+      <span>13 · close</span>
+      <span>{{ ventureName }}</span>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 64px;">
+      <p style="margin: 0; font-size: 76px; font-weight: 600; line-height: 1.1; max-width: 1500px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #a3a3a3;">[the one thing you want remembered]</p>
+      <div style="display: flex; gap: 96px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 31px; color: #a3a3a3;">
+        <span>[name]</span>
+        <span>[email]</span>
+        <span>[phone]</span>
+      </div>
+    </div>
+    <div style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 24px; color: #808080; border-top: 1px solid #474747; padding-top: 24px;">
+      <span>[confidentiality note]</span>
+    </div>
+  </section>
+
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;ventureName&quot;: {
+    &quot;editor&quot;: &quot;text&quot;,
+    &quot;default&quot;: &quot;[venture name]&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Venture name (writes to every slide footer)&quot;
+  },
+  &quot;stage&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;options&quot;: [&quot;pre-seed&quot;, &quot;seed&quot;, &quot;series A&quot;],
+    &quot;default&quot;: &quot;seed&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Stage (cover eyebrow and the ask)&quot;
+  },
+  &quot;showIllustrativeMarkers&quot;: {
+    &quot;editor&quot;: &quot;boolean&quot;,
+    &quot;default&quot;: true,
+    &quot;tsType&quot;: &quot;boolean&quot;,
+    &quot;section&quot;: &quot;Discipline&quot;,
+    &quot;label&quot;: &quot;Show 'illustrative' markers on unsourced numbers&quot;
+  }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      ventureName: this.props.ventureName ?? '[venture name]',
+      stageLabel: this.props.stage ?? 'seed',
+      showMarkers: this.props.showIllustrativeMarkers ?? true
+    };
+  }
+}
+</script>
+</body>
+</html>

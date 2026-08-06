@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Landing page — template</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  a { color: #474747; text-decoration: underline; }
+  a:hover { color: #1a1a1a; }
+</style>
+</helmet>
+<div style="font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; color: #1a1a1a; background: #ffffff;">
+
+  <header style="border-bottom: 1px solid #dcdcdc;">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 16px 24px; display: flex; gap: 24px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span style="width: 96px; height: 32px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: block;"></span>
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">{{ ventureName }}</span>
+      </div>
+      <nav style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <a href="#how" style="font-size: 16px; text-decoration: none;">How it works</a>
+        <a href="#pricing" style="font-size: 16px; text-decoration: none;">Pricing</a>
+        <a href="#close" style="font-family: inherit; font-size: 16px; font-weight: 600; padding: 12px 24px; background: #1a1a1a; color: #ffffff; border: 1px solid #1a1a1a; text-decoration: none;">{{ actionLabel }}</a>
+      </nav>
+    </div>
+  </header>
+
+  <section style="max-width: 1120px; margin: 0 auto; padding: 64px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px; align-items: center;">
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">{{ launchLabel }}</span>
+      <h1 style="margin: 0; font-size: clamp(31px, 5vw, 61px); font-weight: 600; line-height: 1.1; text-wrap: pretty;">[what it is — say this before you say why it is good]</h1>
+      <p style="margin: 0; font-size: 20px; line-height: 1.4; color: #474747; max-width: 52ch; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the subhead that earns the click — who it is for, and the one outcome]</p>
+      <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+        <a href="#close" style="font-family: inherit; font-size: 20px; font-weight: 600; padding: 16px 32px; background: #1a1a1a; color: #ffffff; border: 1px solid #1a1a1a; text-decoration: none;">{{ actionLabel }}</a>
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">[the reassurance that removes the risk — no card, two minutes, cancel anytime]</span>
+      </div>
+    </div>
+    <div style="min-height: 320px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: flex; align-items: center; justify-content: center;">
+      <span style="background: #ffffff; border: 1px solid #c4c4c4; padding: 8px 16px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161; text-align: center;">product shot 4:3 — a hero with a hatched slot does not go live</span>
+    </div>
+  </section>
+
+  <section style="border-top: 1px solid #dcdcdc;">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 64px 24px; display: flex; flex-direction: column; gap: 16px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">the problem</span>
+      <p style="margin: 0; font-size: clamp(20px, 3vw, 31px); line-height: 1.3; max-width: 40ch; text-wrap: pretty; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[the problem, named as the visitor would name it — their words, not the category's]</p>
+    </div>
+  </section>
+
+  <section style="border-top: 1px solid #dcdcdc;">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 64px 24px; display: flex; flex-direction: column; gap: 32px;">
+      <h2 style="margin: 0; font-size: 31px; font-weight: 600; line-height: 1.2;">What it does</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px;">
+        <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #1a1a1a; padding-top: 16px;">
+          <span style="font-size: 20px; font-weight: 600;">[capability]</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the concrete outcome, in the visitor's units — hours saved, errors avoided]</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #1a1a1a; padding-top: 16px;">
+          <span style="font-size: 20px; font-weight: 600;">[capability]</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the concrete outcome]</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #1a1a1a; padding-top: 16px;">
+          <span style="font-size: 20px; font-weight: 600;">[capability]</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[three is the maximum]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="border-top: 1px solid #dcdcdc;">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 64px 24px; display: flex; flex-direction: column; gap: 32px;">
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">proof — whichever of these is real. delete the rest.</span>
+      <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
+        <span style="width: 120px; height: 40px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: block;"></span>
+        <span style="width: 120px; height: 40px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: block;"></span>
+        <span style="width: 120px; height: 40px; background-color: #ededed; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0 7px, #c4c4c4 7px 8px); border: 1px solid #c4c4c4; display: block;"></span>
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">[customer logos — only ones who have agreed]</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px;">
+        <blockquote style="margin: 0; border: 1px solid #c4c4c4; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+          <p style="margin: 0; font-size: 20px; line-height: 1.4; text-wrap: pretty;">[a quote that says what changed, not that the product is good]</p>
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">[name], [role], [company]</span>
+        </blockquote>
+        <div style="border: 2px solid #1a1a1a; padding: 24px; display: flex; flex-direction: column; gap: 8px;">
+          <span style="font-size: clamp(31px, 4vw, 49px); font-weight: 600; line-height: 1.1; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[00%]</span>
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">[what the number measures, over what period]</span>
+          <span style="display: inline-block; align-self: flex-start; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #474747; background: #ededed; border: 1px solid #c4c4c4; padding: 2px 8px;">illustrative</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" style="border-top: 1px solid #dcdcdc;">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 64px 24px; display: flex; flex-direction: column; gap: 32px;">
+      <h2 style="margin: 0; font-size: 31px; font-weight: 600; line-height: 1.2;">How it works</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px;">
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <span style="font-size: 39px; font-weight: 600; line-height: 1.1;">1</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[what the visitor does first — their action, not the system's]</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <span style="font-size: 39px; font-weight: 600; line-height: 1.1;">2</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[what happens next]</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <span style="font-size: 39px; font-weight: 600; line-height: 1.1;">3</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the outcome]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing" style="border-top: 1px solid #dcdcdc;">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 64px 24px; display: flex; flex-direction: column; gap: 32px;">
+      <h2 style="margin: 0; font-size: 31px; font-weight: 600; line-height: 1.2;">{{ pricingHeading }}</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px;">
+        <div style="border: 1px solid #c4c4c4; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">[tier name]</span>
+          <span style="font-size: 31px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[$00]</span>
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">[per what, per how often]</span>
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">[what is gated above this]</span>
+        </div>
+        <div style="border: 2px solid #1a1a1a; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #1a1a1a;">[tier name] — [why this is the default]</span>
+          <span style="font-size: 31px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[$00]</span>
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">[per what, per how often]</span>
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">[what is gated above this]</span>
+        </div>
+        <div style="border: 1px solid #c4c4c4; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">[enterprise, or delete]</span>
+          <span style="font-size: 31px; font-weight: 600; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; color: #616161;">[talk to us]</span>
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #616161;">[the honest reason there is no number here]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="border-top: 1px solid #dcdcdc;">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 64px 24px; display: flex; flex-direction: column; gap: 32px;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <h2 style="margin: 0; font-size: 31px; font-weight: 600; line-height: 1.2;">Objections</h2>
+        <p style="margin: 0; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080; max-width: 68ch;">The section that lifts conversion and the one most often left out, because writing it means knowing why people say no.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px;">
+        <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #dcdcdc; padding-top: 16px;">
+          <span style="font-size: 20px; font-weight: 600;">[the objection, in their words]</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the answer — concede what is true before answering]</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #dcdcdc; padding-top: 16px;">
+          <span style="font-size: 20px; font-weight: 600;">[the objection]</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the answer]</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #dcdcdc; padding-top: 16px;">
+          <span style="font-size: 20px; font-weight: 600;">[the objection]</span>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #616161; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;">[the answer]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="close" style="border-top: 1px solid #1a1a1a; background: #ffffff;">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 64px 24px; display: flex; flex-direction: column; gap: 24px; align-items: flex-start;">
+      <h2 style="margin: 0; font-size: clamp(31px, 4vw, 49px); font-weight: 600; line-height: 1.1; max-width: 40ch; text-wrap: pretty;">[the close — the same promise as the hero, said once more]</h2>
+      <a href="#close" style="font-family: inherit; font-size: 20px; font-weight: 600; padding: 16px 32px; background: #1a1a1a; color: #ffffff; border: 1px solid #1a1a1a; text-decoration: none;">{{ actionLabel }}</a>
+      <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">the same action as the hero, in the same words. two different actions on one page measures neither.</span>
+    </div>
+  </section>
+
+  <footer style="border-top: 1px solid #dcdcdc;">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 32px 24px; display: flex; gap: 24px; justify-content: space-between; flex-wrap: wrap; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; color: #808080;">
+      <span>{{ ventureName }} · [year]</span>
+      <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+        <a href="#">[privacy]</a>
+        <a href="#">[terms]</a>
+        <a href="#">[contact]</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;ventureName&quot;: {
+    &quot;editor&quot;: &quot;text&quot;,
+    &quot;default&quot;: &quot;[venture name]&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Venture name&quot;
+  },
+  &quot;launchState&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;options&quot;: [&quot;pre-launch&quot;, &quot;post-launch&quot;],
+    &quot;default&quot;: &quot;pre-launch&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Venture&quot;,
+    &quot;label&quot;: &quot;Launch state — a waitlist page and a product page differ throughout&quot;
+  },
+  &quot;actionLabel&quot;: {
+    &quot;editor&quot;: &quot;text&quot;,
+    &quot;default&quot;: &quot;[join the waitlist]&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Conversion&quot;,
+    &quot;label&quot;: &quot;The single action — writes to all three buttons at once&quot;
+  }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const pre = (this.props.launchState ?? 'pre-launch') === 'pre-launch';
+    return {
+      ventureName: this.props.ventureName ?? '[venture name]',
+      actionLabel: this.props.actionLabel ?? (pre ? '[join the waitlist]' : '[start free]'),
+      launchLabel: pre ? 'pre-launch — this page sells an idea and asks for an email' : 'post-launch — this page sells a product and asks for a signup',
+      pricingHeading: pre ? 'What it will cost' : 'Pricing'
+    };
+  }
+}
+</script>
+</body>
+</html>
