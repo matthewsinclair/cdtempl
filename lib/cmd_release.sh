@@ -42,6 +42,45 @@ release_assert_semver() {
   return 0
 }
 
+# Is $1 an older version than $2? Both must already be bare semver.
+#
+# EVERY COMPONENT COMPARES AS A NUMBER. Sorting these as strings puts 0.10.0
+# below 0.9.0, which would refuse a legitimate release on the tenth minor
+# version -- a bug that stays invisible for nine of them.
+#
+# Written as explicit if/else returning 0 or 1 rather than the terser
+# arithmetic form. `(( expr ))` evaluating to zero returns non-zero, and under
+# the `set -e` this file runs with -- and the `bash -e` GitHub runs -- that
+# kills the script rather than answering the question. The terse version reads
+# better and is a trap.
+release_version_lt() {
+  local am an ap bm bn bp
+  IFS='.' read -r am an ap <<<"$1"
+  IFS='.' read -r bm bn bp <<<"$2"
+
+  if [[ "$am" -ne "$bm" ]]; then
+    if [[ "$am" -lt "$bm" ]]; then return 0; else return 1; fi
+  fi
+  if [[ "$an" -ne "$bn" ]]; then
+    if [[ "$an" -lt "$bn" ]]; then return 0; else return 1; fi
+  fi
+  if [[ "$ap" -lt "$bp" ]]; then return 0; else return 1; fi
+}
+
+# Resolve what to release: either a bump of the current version, or an explicit
+# target.
+#
+# THE EXPLICIT FORM EXISTS BECAUSE THE FIRST RELEASE WAS UNREACHABLE WITHOUT
+# IT. The three bump parts all move forward, so the version a project is ON
+# could never be tagged -- and that is precisely the version a first release
+# needs. Cdsync sat at 0.1.0 with no tags and no way to cut 0.1.0; `cut minor`
+# would have produced 0.2.0 and skipped the release the repository already
+# announced. The verbs presumed a previous release existed, and nothing said so.
+#
+# EQUAL IS ALLOWED, and that is the whole point. Whether a version has already
+# been released is a question about tags, not about `VERSION`, so it is refused
+# one layer up where `cut` finds the tag already exists. Refusing equality here
+# would re-close the gap this opened.
 release_bump_part() {
   local current="$1" part="$2"
   local major minor patch
@@ -52,8 +91,16 @@ release_bump_part() {
     major) printf '%d.0.0\n' "$((major + 1))" ;;
     minor) printf '%d.%d.0\n' "$major" "$((minor + 1))" ;;
     patch) printf '%d.%d.%d\n' "$major" "$minor" "$((patch + 1))" ;;
+    *.*.*)
+      release_assert_semver "$part" || return 1
+      if release_version_lt "$part" "$current"; then
+        error "target version $part is older than the current version $current"
+        return 1
+      fi
+      printf '%s\n' "$part"
+      ;;
     *)
-      error "invalid bump part '$part' -- use major, minor or patch"
+      error "invalid bump part '$part' -- use major, minor, patch or an explicit version (eg 0.1.0)"
       return 1
       ;;
   esac
@@ -218,7 +265,7 @@ cmd_release() {
 release_do_bump() {
   local part="${1:-}"
   if [[ -z "$part" ]]; then
-    error "usage: cdsync release bump <major|minor|patch>"
+    error "usage: cdsync release bump <major|minor|patch|X.Y.Z>"
     return 2
   fi
 
@@ -262,7 +309,7 @@ release_do_cut() {
   done
 
   if [[ -z "$part" ]]; then
-    error "usage: cdsync release cut <major|minor|patch> [--push] [--dry-run]"
+    error "usage: cdsync release cut <major|minor|patch|X.Y.Z> [--push] [--dry-run]"
     return 2
   fi
 

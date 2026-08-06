@@ -1,7 +1,7 @@
 ---
 verblock: "02 Aug 2026:v0.2: matts - Filled from the ST0001/ST0002 close-out carry-forward"
 intent_version: 2.18.0
-status: Not Started
+status: WIP
 slug: post-release-0-1-0-clean-up
 created: 20260802
 completed:

@@ -1526,6 +1526,70 @@ HTML
   [ "$status" -ne 0 ]
 }
 
+# THE FIRST RELEASE WAS UNREACHABLE. `cut` took only major|minor|patch and
+# always moved forward, so the version a project is ON could never be tagged --
+# and that is exactly the version a project's FIRST release needs. Cdsync sat
+# at 0.1.0 with zero tags and no way to cut 0.1.0: `cut minor` would have
+# produced 0.2.0, skipping the release the repository already announced.
+#
+# The bump verbs presumed a previous release existed. Nothing said so, and the
+# gap is invisible from reading the code -- it only shows up the first time
+# anyone tries to release anything.
+@test "release accepts an explicit target version, not only a bump part" {
+  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 2.0.0"
+  [ "$status" -eq 0 ]
+  [ "$output" = "2.0.0" ]
+}
+
+# The whole point of the explicit form: cutting the version already in VERSION.
+# Equality is ALLOWED here and refused one layer up -- `cut` refuses when the
+# tag already exists, which is the check that actually knows whether a version
+# has been released. Refusing equality here would re-close the gap.
+@test "release accepts the current version as an explicit target, so a first release can be cut" {
+  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 0.1.0 0.1.0"
+  [ "$status" -eq 0 ]
+  [ "$output" = "0.1.0" ]
+}
+
+# Forward or level, never backward. A tag that names a version older than the
+# one in VERSION would make the two disagree about what is current.
+@test "release refuses an explicit target older than the current version" {
+  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 1.0.0"
+  [ "$status" -ne 0 ]
+  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 1.2.2"
+  [ "$status" -ne 0 ]
+  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 0.10.0 0.9.0"
+  [ "$status" -ne 0 ]
+}
+
+# Each component compares as a NUMBER. String ordering puts 0.10.0 below 0.9.0
+# and would refuse a legitimate release on the tenth minor version.
+@test "release compares version components numerically, not as strings" {
+  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 0.9.0 0.10.0"
+  [ "$status" -eq 0 ]
+  [ "$output" = "0.10.0" ]
+}
+
+# An explicit target is held to the same shape as VERSION itself. The `v`
+# belongs to the git tag and nowhere else.
+@test "release refuses an explicit target that is not bare semver" {
+  local bad
+  for bad in v2.0.0 2.0.0-rc1 1.2.3.4 2.0.x; do
+    run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 '$bad'"
+    [ "$status" -ne 0 ] || {
+      echo "accepted '$bad' as an explicit target, which is not bare semver" >&2
+      return 1
+    }
+  done
+}
+
+@test "release cut plans the explicit version it was given" {
+  run "$CDSYNC_BIN" release cut 9.9.9 --dry-run
+  [ "$status" -eq 0 ]
+  assert_contains "9.9.9"
+  assert_contains "nothing was written"
+}
+
 # The `v` belongs to the git tag and nowhere else. A version string that
 # sometimes carries it is one that gets compared against one that does not.
 @test "release accepts bare semver and refuses everything else" {

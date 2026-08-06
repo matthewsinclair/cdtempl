@@ -4,8 +4,8 @@ Read the version, move it, cut a release.
 
 ```
 cdsync release show
-cdsync release bump <major|minor|patch>
-cdsync release cut  <major|minor|patch> [--push] [--dry-run]
+cdsync release bump <major|minor|patch|X.Y.Z>
+cdsync release cut  <major|minor|patch|X.Y.Z> [--push] [--dry-run]
 ```
 
 `VERSION` at the repository root is the single source of truth, bare semver and
@@ -31,6 +31,39 @@ keep in step.
 `bump` exists separately because moving the version is sometimes part of a
 change rather than the whole of it, and a verb that also commits cannot be
 composed with one.
+
+## Bump part, or an explicit version
+
+Both verbs take either one of the three bump parts or a bare semver to land on
+directly.
+
+| Given | From `0.1.0` | Means |
+|---|---|---|
+| `major` | `1.0.0` | Bump the part |
+| `minor` | `0.2.0` | Bump the part |
+| `patch` | `0.1.1` | Bump the part |
+| `0.1.0` | `0.1.0` | Land on it exactly -- **including the version already in `VERSION`** |
+| `0.4.0` | `0.4.0` | Land on it exactly, skipping intervening versions |
+
+**The explicit form exists because the first release was otherwise
+unreachable.** All three bump parts move forward, so the version a project is
+*on* could never be tagged -- and that is precisely the version a first release
+needs. This repository sat at `0.1.0` with no tags and no way to cut `0.1.0`:
+`cut minor` would have produced `0.2.0` and skipped the release the repository
+already announced. The verbs presumed a previous release existed, and nothing
+said so.
+
+**An explicit target may equal the current version, and that is the point.**
+Whether a version has already been *released* is a question about tags, not
+about `VERSION`, so it is answered by the gate that finds the tag already
+exists rather than here.
+
+**It may not go backwards.** A tag naming a version older than `VERSION` would
+make the two disagree about what is current. Components compare as numbers, so
+`0.10.0` is correctly newer than `0.9.0`.
+
+An explicit target is held to the same shape as `VERSION` itself: bare semver,
+no `v`, no suffix.
 
 ## `cut`, in order
 
