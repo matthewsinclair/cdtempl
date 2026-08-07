@@ -12,12 +12,14 @@ Two venture contact addresses were redacted before publication. **Do not reintro
 
 ## Picked up, and mid-flight
 
-ST0003 "Post-release 0.1.0 clean-up" is **WIP**, 1 of 8 work packages done.
+ST0003 "Post-release 0.1.0 clean-up" is **WIP**, 2 of 8 work packages moved.
 
 **Next, and both unblocked:**
 
-- **WP-07 -- integrate the original four.** Hold Lamplight's `ref`: it is the one open ruling that could still move paths.
+- **WP-07 -- the rest of the original four.** **Gyre & Gymble is done** (6 Aug), and its premise was wrong: it was already integrated, and what was missing was a check that its theme still agrees with its kit. **Ask the same of Baize and snorkeltoast before recording that they build against nothing.** Hold Lamplight's `ref`: it is the one open ruling that could still move paths.
 - **WP-08 -- housekeeping and small gaps.**
+
+**The rename is finished for real.** It had missed `Sites/gyreandgymble`, `Sites/snorkeltoast` and this repo's gitignored `templates/_test/Acme/`. All at zero; ST0004 stays closed with a post-close note.
 
 **Blocked on hv, and do not start one by guessing at its ruling:** WP-02 (two rule-4 rulings), WP-05 (`cdsync.json`'s home, `spec_version` for a new asset), WP-06 (round three's seven rulings), WP-03 (partly on WP-05), WP-04 (transport, which only hv can decide to send).
 

@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: dc81d7ec-8e40-4353-8410-71d6499122ed
-heartbeat_at: 2026-08-06T11:47Z
+heartbeat_at: 2026-08-07T16:40Z
 status: active
-focus: "0.1.0 RELEASED and the repo is PUBLIC. ST0003 WIP, WP-01 closed 8/8; WP-07 and WP-08 unblocked and next. 335 tests, CI green all three jobs, all remotes at ahead=0. Localfolded for a compact -- session continues after the bounce"
+focus: "0.1.0 released, repo PUBLIC. ST0003 WIP: WP-01 closed 8/8, WP-07 done for G&G. The rename's two missed repositories are finished. 335 tests, all remotes ahead=0. Localfolded and holding for the globalfold"
 claims: [ST0003]
 ---
 
@@ -17,19 +17,21 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 
 ## Where things stand
 
-**ST0003 is in flight, 1 of 8 work packages done.** ST0001 (16/16), ST0002 (12/12), ST0004 (11/11) and ST0003/WP-01 (8/8) all closed through the gate.
+**ST0003 is in flight, 2 of 8 work packages moved.** ST0001 (16/16), ST0002 (12/12), ST0004 (11/11) and ST0003/WP-01 (8/8) all closed through the gate.
 
 **0.1.0 is released and the repository is PUBLIC.** Tag `v0.1.0`, GitHub release published, the published asset downloaded and run to verify it. Published from a single root commit; the 135-commit history is retained privately on the mirror's `archive/pre-public-20260806` and in a bundle beside it.
 
-**Next, both unblocked: WP-07 (integrate the original four, holding Lamplight's `ref`) and WP-08 (housekeeping).** Resuming after a compact, at hv's direction.
+**The rename is finished for real.** It had missed `Sites/gyreandgymble` and `Sites/snorkeltoast` entirely, plus this repository's own gitignored `templates/_test/Acme/`. All three are at zero now and ST0004 carries a post-close note; the thread stays closed, because the boundary is what failed and a close is not where scope is relitigated.
 
-**The 6 August globalfold collapsed the live docs to one home per thing.** The rulings had been restated in four documents and the watch-outs in three -- the drift hazard this board keeps naming, committed by this board's own siblings. **`## Watch-outs` and `## Decisions` below are now the only copies.** `intent/wip.md` and `intent/restart.md` point here and do not restate.
+**WP-07 is done for Gyre & Gymble**, and its premise was wrong for that project -- it was already integrated. **Baize and snorkeltoast remain on WP-07** and Lamplight still waits on WP-06's `ref` ruling. **WP-08 is untouched and unblocked.**
+
+**Narrative for 6 August is in `.history/20260806/`, two files.** This board carries live state plus the two standing lists and nothing else. `intent/wip.md` and `intent/restart.md` point here and do not restate.
 
 ## TODO
 
 **All of it lives in ST0003, "Post-release 0.1.0 clean-up"** -- `intent/st/ST0003/`, eight work packages, each with its own `info.md` stating what blocks it. **The ordering is in `intent/restart.md`.** This board carries no second copy.
 
-**Done:** WP-01, cut the release. **Unblocked:** WP-07 integrate the original four, WP-08 housekeeping.
+**Done:** WP-01 cut the release; WP-07's Gyre & Gymble. **Unblocked and next:** WP-07's Baize and snorkeltoast (both integrate by reading), WP-08 housekeeping.
 
 ## Wants hv
 
@@ -68,7 +70,7 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 - **`cmd | tail; echo $?` captures `tail`'s exit code, never `cmd`'s.** It reported shellcheck exit 0 over eight live findings.
 - **A path constructed rather than found.** **`find` the file, then grep it.**
 - **A case-sensitive `grep`** missing `Sixteen`, and a pattern requiring `` `--flag` `` unable to match `` `--target PATH` ``.
-- **A POSITIVE CONTROL VALIDATES THE INSTRUMENT, NOT THE SAMPLING FRAME.** ST0004 renamed the tool across five repositories and every one of its criteria verified with a paired control -- each proving its probe could hit *inside the repository it was pointed at*. Two repositories were missing from the list entirely, carrying 54 occurrences, because the survey that drew the list up enumerated `~/Devel/prj/*` and never saw `~/Devel/prj/Sites/*`. **Every control was sound and the answer was still wrong. Ask separately what enumerated the set they were run over** -- and note the contract said "the four siblings *that carried the name*", which is a claim about the world, not about the five repositories it then checked.
+- **A POSITIVE CONTROL VALIDATES THE INSTRUMENT, NOT THE SAMPLING FRAME.** Every control ST0004 ran was sound and the answer was still wrong: they proved each probe could hit *inside the repository it was pointed at*, and nothing asked what enumerated the repositories. Two were missing, carrying 54 occurrences. **Ask separately what chose the set.** A phrase like "the four siblings *that carried the name*" is a claim about the world, not about the four it then checks.
 
 ### Mutation testing has two failure modes, not one
 
@@ -140,6 +142,8 @@ Settled and not to be re-opened. Full reasoning in `intent/st/ST0001/design.md`.
 - (2026-08-06) **There is no forcing a close, and hv's authority is spent writing the contract rather than skipping it.** `wp done` offers only "define the criteria" or "declare `acceptance: exempt`", and exempt means deliberately AC-free -- applying it to real engineering would write a false label into the record. WP-01 closed 8/8 on a contract written at close from evidence measured before the criteria were phrased, which is what 4a1c3ff did for ST0001 and ST0002.
 - (2026-08-06) **The tool is called Cdsync, and the former name survives nowhere it can be read.** 1420 occurrences here and 149 across four siblings, all gone, verified in every repository against a positive control equal to that repository's own pre-mutation baseline. **The former name is recoverable from git history, which is where superseded names belong** -- so nothing outside history preserves it, including ST0004's own documents, which name the outcome and the mechanism rather than both names. A thread titled after both cannot survive its own rename.
 - (2026-08-06) **A rename is safe to do as a plain substitution only after enumerating what is adjacent to every match.** Not a word-boundary regex chosen on faith -- the actual set of preceding and following characters, checked. Here no alphanumeric ever touched a match, which is what made a bare replace provably unable to corrupt a neighbour. **Establish that first or the mechanism is a guess.**
+- (2026-08-06) **A closed thread whose BOUNDARY turns out to be too narrow stays closed, and the completion is a post-close note on its contract.** ST0004 did what it declared; the declaration is what was wrong. Reopening would relitigate scope at a close, and a new thread for the same work would split its record in two. **The note names what the boundary missed and why no criterion in the file could have caught it** -- otherwise the next reader inherits the wrong bar from a contract that reads as satisfied.
+- (2026-08-06) **A check that an application still agrees with its design system belongs to the APPLICATION.** Corollary of Cdsync having no application-side check: `design/system/` is specification, and the gap between a specification and an app is expected rather than a defect. It also follows that **a drop's own drift record cannot see a consumer outside the drop** -- G&G's kit correctly names the pitch deck as a second copy of the palette and structurally cannot know the site theme is a third. **The repo builds the check the drop cannot.**
 - (2026-08-06) **Substitute over a superset, verify with a different probe than the one that chose the files.** A file list built from a probe inherits that probe's blind spots. In this repo the target set was every tracked text file; in the siblings, where sessions were live and needless mtime churn was the greater risk, it was the match-list -- and the verification was an independent disk-level sweep rather than the same `git grep`.
 
 - (2026-08-02) **The wrapper descent stops at drop CONTENT, not at a depth.** An exporter may wrap a tree to any depth, and two drops the same morning proved it. Descend while the directory is a wrapper; stop the moment it names something the drop contract owns. Depth alone cannot terminate safely; content alone would not move off an empty wrapper.

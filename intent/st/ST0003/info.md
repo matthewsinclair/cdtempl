@@ -27,11 +27,13 @@ Two things are worth knowing before picking anything up.
 
 **The naming stopped being aspirational on 6 August.** WP-01 closed 8/8: `v0.1.0` is tagged, packaged, pushed and published, so this really is post-release clean-up now. Running `cdsync release` for real found two defects in it, neither visible from reading the code -- see WP-01's `info.md`.
 
+**A work package's stated premise is not evidence.** WP-07 opened on "none has been built against" and that was false for the first project it named. **Check the world before recording what it is** -- and if a premise turns out wrong, correct it in the WP rather than working around it.
+
 ## The work packages
 
 | WP | Title | Blocked on |
 | -- | ----- | ---------- |
-| WP-01 | Cut the 0.1.0 release | **Nothing** |
+| WP-01 | Cut the 0.1.0 release | **Done 6 Aug, 8/8** |
 | WP-02 | Rule 4 -- two rulings and what follows | hv |
 | WP-03 | Grow the spec library, and repair its text | Partly WP-05 |
 | WP-04 | Transport, and the conversion round behind it | **hv transport** |
@@ -40,7 +42,7 @@ Two things are worth knowing before picking anything up.
 | WP-07 | Integrate the original four | **Nothing**, except Lamplight on WP-06 |
 | WP-08 | Housekeeping and small gaps | Nothing |
 
-**Three of the eight are unblocked right now**: WP-01, WP-07 and WP-08.
+**Unblocked right now**: the rest of WP-07 (Baize and snorkeltoast; G&G is done) and all of WP-08.
 
 ## Acceptance
 
