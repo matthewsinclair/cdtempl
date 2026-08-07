@@ -1,20 +1,20 @@
 ---
-verblock: "06 Aug 2026:v1.0: Matthew Sinclair - Globalfold: ST0004 renamed the tool to Cdsync across five repositories, and the live docs collapsed to one home per thing"
+verblock: "07 Aug 2026:v1.1: Matthew Sinclair - Globalfold: the rename finished across two more repositories, WP-07 done for G&G, and the restated watch-outs cut back to one home"
 ---
 
 # Work In Progress
 
-Project-wide snapshot, folded at the end of 6 August. The live per-session channel is `intent/whiteboard/cc/wip.md`; this is the settled version. **Orientation, canon and the unblocked-work ordering are in `intent/restart.md` and are not restated here.**
+Project-wide snapshot, folded at the end of 6 August's work. The live per-session channel is `intent/whiteboard/cc/wip.md`; this is the settled version. **Orientation, canon and the unblocked-work ordering are in `intent/restart.md` and are not restated here.**
 
 ## Where the project stands
 
-**Cdsync v1 is released and public.** **Ten commands** -- `new`, `init`, `brief`, `bootstrap`, `install`, `import`, `check`, `site`, `release`, plus `doctor`. **335 tests, 0 failures.** Shellcheck silent at default severity. **CI green on hygiene, ubuntu-latest and macos-latest.** A spec library of 27 against a 52-slug taxonomy, plus 7 bundles. `README.md` and `LICENSE.md` (MIT).
+**Cdsync v1 is released and public.** **Ten commands** -- `new`, `init`, `brief`, `bootstrap`, `install`, `import`, `check`, `site`, `release`, plus `doctor`. **335 tests, 0 failures.** Shellcheck silent at default severity. **CI success on hygiene, ubuntu-latest and macos-latest**, read per job. `README.md` and `LICENSE.md` (MIT). **Read the spec-library numbers from `cdsync doctor`, not from prose here** -- it prints specs, taxonomy slugs and bundles, and a hand-copied count is how this project has drifted before.
 
-**The repository is public as of 6 August**, published from a single root commit. The 135-commit development history was truncated and retained privately at the Dropbox mirror on `archive/pre-public-20260806`, with a bundle beside it. **Everything committed here is now published on push.**
+**The repository is public as of 6 August**, published from a single root commit. The 135-commit development history was truncated and retained privately at the Dropbox mirror on `archive/pre-public-20260806`, with a bundle beside it. **Everything committed here is published on push.**
 
-**ST0003 is in flight**, 1 of 8 work packages done. All five repositories are pushed and at `ahead=0` on every remote.
+**ST0003 is in flight**, 2 of 8 work packages moved. Every repository touched is clean and at `ahead=0` on every remote.
 
-**Six projects hold a design system tree.** matthewsinclair and geodica completed round one on 2 August; the original four -- Lamplight, Baize, snorkeltoast, Gyre & Gymble -- are from round three and await integration. **hv is rolling both new design systems out in Laksa and fixing forward**; implementation is not this project's thread.
+**Six projects hold a design system tree.** matthewsinclair and geodica completed round one on 2 August. Of the original four from round three, **Gyre & Gymble is integrated and now checked**; Baize and snorkeltoast are open, and Lamplight waits on WP-06's `ref` ruling. **hv is rolling both new design systems out in Laksa and fixing forward**; implementation is not this project's thread.
 
 **0.1.0 is released.** Tag `v0.1.0` on `e54ebbc`, annotated; GitHub release published with `cdsync-0.1.0.tar.gz` (474,181 bytes, 140 entries). Verified by downloading the published asset, confirming its sha256 matched the local build byte for byte, extracting it and running it. `VERSION` stays `0.1.0` and is now a **released** version, so the next cut moves off it.
 
@@ -24,33 +24,28 @@ Project-wide snapshot, folded at the end of 6 August. The live per-session chann
 | -- | ----- | ------ | ---- |
 | ST0001 | Harvest template v0 from the three Claude Design projects | Completed | 16/16 |
 | ST0002 | Port four established projects to the Cdsync shape | Completed | 12/12 |
-| ST0004 | Rename the tool to Cdsync | Completed | 11/11 |
-| ST0003 | Post-release 0.1.0 clean-up | **WIP** | WP-01 closed 8/8; 7 remain |
+| ST0004 | Rename the tool to Cdsync | Completed | 11/11, plus a post-close note |
+| ST0003 | Post-release 0.1.0 clean-up | **WIP** | WP-01 closed 8/8; WP-07 part done |
 
 Each close went through `intent st done`, which refuses while a contract is BLOCKED, so each had to earn its number. `intent st list` shows nothing by default -- use `--status Completed`.
 
-**ST0001 and ST0002 both state their boundary explicitly and carry the remainder forward** rather than dropping it. ST0001's bar was never "all 52 slugs specified" -- the library is designed to grow one order at a time, and 27 are written. ST0002's was never "all four pass `check`" -- three carry a pre-Cdsync convention the checker cannot read, and converting them is its own round by ruling. **Read `acceptance.md` in either before assuming something was skipped.**
+**All three closed threads state a boundary and carry the remainder forward** rather than dropping it. ST0001's bar was never "all 52 slugs specified" -- the library grows one order at a time. ST0002's was never "all four pass `check`" -- three carry a pre-Cdsync convention the checker cannot read. **ST0004's boundary was simply wrong**, and its contract now says so. **Read `acceptance.md` in any of them before assuming something was skipped.**
 
-**ST0003 holds everything carried forward** -- eight work packages, most blocked on a ruling rather than on effort. **WP-01, WP-07 and WP-08 are unblocked.** Its contract is deliberately unwritten: an empty contract reads as BLOCKED, which is the gate working.
+**ST0003 holds everything carried forward** -- eight work packages, most blocked on a ruling rather than on effort. Its contract is deliberately unwritten: an empty contract reads as BLOCKED, which is the gate working.
 
-## What ST0004 did, 6 August
+## The rename, finished 6 August
 
-The tool was renamed to Cdsync across **five repositories** -- this one plus Utilz, Laksa, Lamplight and Baize. **1569 occurrences and 8 filenames, zero remnant anywhere it can be read**, each repository verified against a positive control equal to its own pre-mutation baseline. It was free: no tag existed and nothing had ever been released, so no published artefact carried the old name.
+The tool was renamed to Cdsync. ST0004 closed 11/11 on a stated bar of **five repositories** and every criterion was satisfied as written. **The bar was wrong.** `Sites/gyreandgymble` and `Sites/snorkeltoast` also carried the name, and so did this repository's own gitignored `templates/_test/Acme/` -- where the stale filename was a live defect, because the tool resolves through `cdsync.json` now.
 
-Three things it taught, all now standing watch-outs on the board:
+**Seven repositories carry the name today and all are at zero**, tracked, on disk and in filenames. Three on-disk occurrences remain deliberately: a dated backup, Laksa's `_build/` output, and base64 image data in a vendored dependency that matches only a case-insensitive probe.
 
-- **A rename is safe as a plain substitution only after enumerating what is adjacent to every match** -- the actual character set, not a word-boundary regex chosen on faith.
-- **The first substitution pass applied nothing at all** and the loop ran to completion looking fine. BSD `xargs` has no `-a`. The before/after counters caught it.
-- **A generator pointed at the wrong root reports an empty tree with total confidence.** It did not error; it produced a well-formed document falsely claiming Lamplight has no assets.
+**The one lesson worth carrying, and it is on the board rather than repeated here: a positive control validates the instrument, not the sampling frame.** Every control ST0004 ran was sound and the answer was still wrong.
 
-## What WP-01 did, 6 August
+**ST0004 stays closed.** The completion is a post-close note on its contract -- reopening would relitigate scope at a close, and a new thread would split the record.
 
-**0.1.0 is cut and shipped, and getting there needed two fixes to the release command itself.** Neither was visible from reading it; both showed up the first time anyone tried to release anything.
+## What the work packages found
 
-- **`cut` could not tag the version a project is on.** It took only `major|minor|patch`, all of which move forward -- so the version a first release needs was unreachable, for every project. Both verbs now also take a bare semver. Equality with the current version is allowed deliberately; whether a version has been *released* is a question about tags, answered by the gate that finds the tag already exists.
-- **The ceremony then died one step later.** Cutting the version already in `VERSION` writes the same bytes, so `git commit` had nothing to commit. Every gate went green and step 3 failed. The tag now goes on the commit that is already the release rather than on an empty one manufactured beside it.
-
-**Three reasons nothing caught the second one, all of them on the board's watch-out list:** a dry run stops before writing; the six new unit tests asserted one layer above where it lived; and the ceremony is untestable end to end here on purpose, because `release_gates` refuses to run inside bats.
+**Not restated here.** WP-01's two defects in `release` itself are in `intent/st/ST0003/WP/01/info.md`; WP-07's finding that its own premise was false for Gyre & Gymble is in `WP/07/info.md`. **The standing hazards they taught are on the board, in one copy** -- this file previously carried a second, which is the drift it keeps naming.
 
 ## Structural guards, cumulative
 
@@ -62,6 +57,7 @@ Three things it taught, all now standing watch-outs on the board:
 - No tracked file may carry an absolute home directory path.
 - No test may hang on the install prompt.
 - A release archive carries the tool and not how it is made, checked through `git archive` against the real `.gitattributes` rather than a restated list.
+- Every acceptance contract in the repository, live or completed, must name tests that exist.
 
 ## Context for LLM
 

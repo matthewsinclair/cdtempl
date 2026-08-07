@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: dc81d7ec-8e40-4353-8410-71d6499122ed
-heartbeat_at: 2026-08-07T16:40Z
-status: active
-focus: "0.1.0 released, repo PUBLIC. ST0003 WIP: WP-01 closed 8/8, WP-07 done for G&G. The rename's two missed repositories are finished. 335 tests, all remotes ahead=0. Localfolded and holding for the globalfold"
+heartbeat_at: 2026-08-07T16:52Z
+status: paused
+focus: "Day closed. 0.1.0 released and public; ST0003 WIP with WP-01 closed 8/8 and WP-07 done for G&G; the rename finished across the two repositories it had missed. Next: WP-07 Baize + snorkeltoast, and WP-08"
 claims: [ST0003]
 ---
 
