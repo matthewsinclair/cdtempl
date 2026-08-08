@@ -41,14 +41,13 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 
 **Raised 8 August and unanswered:**
 
-- **`~/Downloads/baize-design-drops/` is gone, and it was the one that was to stay.** It held the only copy of a superseded drop generation git never tracked. **Cleared deliberately, moved, or lost -- and nothing acts on it either way until hv says.** Full statement in WP-08.
 - **Baize's 96%/95% divergence wants an addendum in Baize**, which is hv's to release: nothing was written into that repository this session.
 - **The stale-document rule should be ordered or declined**, not carried a sixth time. Its reach is now a settled question either way -- WP-08 has it.
 
 **Belonging to no WP:**
 
 - **Transport of the six unsent documents** is WP-04, but the *decision* to send is hv's alone and nothing in the tool can prompt it.
-- **Downloads housekeeping is WP-08's, and it moved without anyone recording it** -- the state is there, including what is now escalated. **The one live hazard: of the six spent `_inbox/` directories, the two newest hold the Laksa theme packs, which exist nowhere else.** Do not clear those two until Laksa has taken them.
+- **Downloads housekeeping is DONE.** All five directories cleared by hv deliberately, `baize-design-drops/` included -- **the standing "it stays" instruction is withdrawn, not softened.** **The one live hazard is elsewhere: of the six spent `_inbox/` directories, the two newest hold the Laksa theme packs, which exist nowhere else.** Do not clear those two until Laksa has taken them.
 - **No `hv` node here, by hv's ruling -- `cc` is the whole roster**, so rulings arrive in conversation and land in `## Decisions`. The whiteboard `README.md` roster stays deferred.
 
 ## Watch-outs

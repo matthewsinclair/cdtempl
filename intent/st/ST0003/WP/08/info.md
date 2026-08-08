@@ -79,13 +79,13 @@ All optional and **none of it vestigial** -- this is the 31 July consolidation, 
 | `baize-repo-snapshots-202606-202607/` | 233M | Gone |
 | **`baize-design-drops/`** | **441M** | **Gone, and it was to STAY** |
 
-**The four superseded ones going is the item being done**, whoever did it. `baize-design-drops/` is the one that matters.
+**Escalated to hv on 8 August and ruled the same day: all five were cleared deliberately, `baize-design-drops/` included. This item is DONE.**
 
-**It held a generation of a drop that exists nowhere else.** Baize's own whiteboard history (`intent/whiteboard/vc/.history/20260730/wip.md:30`) records that the two delivery zips moved there at 219MB + 222MB when `design/.gitignore` was deleted, and that the superseded 09:49 zip was **archived rather than discarded specifically because git never held that generation.** The current one was proved redundant first -- all 437 files were already tracked -- so **only the superseded generation was unique, and only it is unrecoverable.**
+**The instruction that it stays is withdrawn, and is deleted rather than softened wherever it appeared** -- on the board and here. It was written on 31 July when that directory was the off-repo home for two delivery zips (219MB + 222MB), and it outlived the reason for it. **A standing "do not delete" left lying around after its owner has deleted the thing is worse than no note at all**: the next reader finds an instruction contradicted by the world and cannot tell which one is stale.
 
-**This is hv's to answer and has been escalated:** cleared deliberately, moved elsewhere, or lost. **Nothing here should act on it either way.**
+For the record of what went, since nothing else now holds it: Baize's own whiteboard history (`intent/whiteboard/vc/.history/20260730/wip.md:30`) records that the zips moved there when `design/.gitignore` was deleted, that the current generation was proved redundant first -- **all 437 files already tracked** -- and that the superseded 09:49 generation was kept because git never held it. **That superseded generation is the only thing that was unique, and it is gone by decision.**
 
-Correction while here: the board called that directory *"the off-repo home named in Baize's own root `.gitignore`"*. The `.gitignore` carries the residual-risk narrative; **the path itself is named only in that whiteboard history.** Two documents, one slightly wrong, exactly as the standing watch-out predicts.
+Correction while here: the board called that directory *"the off-repo home named in Baize's own root `.gitignore`"*. The `.gitignore` carries the residual-risk narrative; **the path itself was named only in that whiteboard history.** Two documents, one slightly wrong, exactly as the standing watch-out predicts.
 
 **Six spent `_inbox/` directories, and the count reconciles exactly** -- Baize, Lamplight, gyreandgymble, geodica, snorkeltoast, matthewsinclair, one apiece under `design/system/`. All gitignored and local-only, and the two newest hold the Laksa theme packs, **which exist nowhere else** -- do not clear those two until Laksa has taken them.
 
@@ -105,7 +105,7 @@ Where the six stand after the 8 August re-measurement:
 | Two gaps in `cdsync brief` | **The only real tool work left here.** Untouched, unblocked, not started |
 | Stale-document rule | **Ordered or declined by hv.** Its reach is now a settled question either way |
 | Intent's absolute path | Stands as written. Upstream report, not a per-project patch |
-| Downloads | Four done. **The fifth is escalated to hv and nothing acts on it** |
+| Downloads | **Done.** All five cleared by hv deliberately; the "stays" instruction is withdrawn |
 | Whiteboard roster | Deliberately deferred, and still correctly so |
 
 ## Dependencies
