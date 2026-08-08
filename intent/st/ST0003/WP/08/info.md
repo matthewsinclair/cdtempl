@@ -1,5 +1,5 @@
 ---
-verblock: "08 Aug 2026:v0.3: matts - Re-measured against the world: three items had drifted, one is an escalation"
+verblock: "08 Aug 2026:v0.4: matts - Re-measured; Downloads closed, repackaging round built, second brief gap found blocked"
 wp_id: WP-08
 title: "Housekeeping and small gaps"
 scope: Small
