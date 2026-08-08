@@ -41,4 +41,4 @@ Two items came *off* this list rather than being settled, and are recorded so th
 
 ## Notes
 
-The Lamplight `ref` ruling gates WP-07 for Lamplight only. The rest of WP-07 is unblocked.
+The Lamplight `ref` ruling gates WP-07 for Lamplight only -- and since 8 August that is the *whole* of what is left in WP-07, because the other three projects turned out to be integrated already. **This ruling is now the only thing between WP-07 and its close.**

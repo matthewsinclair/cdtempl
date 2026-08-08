@@ -56,20 +56,10 @@ cdsync site       target                 -> a microsite to look at it
 
 ## Decision Log
 
-Canon, above every entry here: `intent/docs/design-system-lifecycle.md`.
+**It is not here. Every ruling lives in `intent/whiteboard/cc/wip.md` `## Decisions`, and canon outranks all of them: `intent/docs/design-system-lifecycle.md`.**
 
-| Date | Decision | Rationale |
-| ---------- | -------- | --------- |
-| 2026-07-29 | Shell, not another language; not yq | Every field the tool decides on is a scalar |
-| 2026-07-29 | Cdsync never writes into the application | The target is the entire output boundary |
-| 2026-07-29 | `assets/` is flat | Grouping is an order in disguise, and eight asset types are genuinely both design and venture |
-| 2026-07-29 | Neutrality is a spec, not an instruction | Remove the failure mode instead of asking for restraint; `blanks` is computed, never declared |
-| 2026-07-30 | Two install paths and no third | An as-is export *is* the whole tree, so `install` replaces; a converted drop is a subset, so `import` merges. Hand-unzipping is never correct |
-| 2026-07-30 | No backup directory | The tree is tracked in full, so git already holds every prior state. The job is to prove git's copy is complete -- hence the refusal over uncommitted content |
-| 2026-07-30 | Classification is its own axis, and rule 6 is advisory | It governs where material may be shown, never whether it is committed; blocking would make it the delivery filter the ruling forbids |
-| 2026-07-30 | `addenda/` is repo-authored and no install path may overwrite it | A name declared both owned and protected is an unsatisfiable contract, so both paths refuse rather than pick |
-| 2026-07-31 | `design/system/` is the SSOT; Claude Design is clamp-on | Decides the target boundary, the drop contract, and the direction of truth |
-| 2026-07-31 | The drop is tracked in full, `_inbox/` excluded | Delivery archives are ephemeral transport; the exclusion is a platform limit, not a policy |
-| 2026-07-31 | `spec_version` is the library's stamp, not a per-drop counter | A number each side increments on its own schedule cannot measure a distance, because it never disagrees for a reason |
-| 2026-07-31 | The generated document carries the numbers, not just their meaning | Claude Design holds a delivery and cannot read the library, so "copy the specification's version" is unusable alone |
-| 2026-07-31 | Seven things a drop may not deliver, all unconditional | What matters is usually in Claude Design's tree, which this side cannot see -- a detector is worthless against material we cannot look at |
+This file carried a dated table of thirteen decisions until 8 August, and **it was not a duplicate of the board so much as a fork of it.** Twelve of the thirteen restated a board ruling; the thirteenth -- no backup directory -- existed only here. Four rows had drifted into carrying *different* reasoning from the board's version of the same decision, each side holding something the other had lost. And the table's last entry was 31 July while the board had gone on ruling for another week, so the copy a reader met first was the stale one.
+
+**That is the predicted failure, arrived at exactly as predicted:** two descriptions of one thing disagree, and the terse one survives. Everything unique to the table was merged onto the board before the table was removed, which is the only reason removing it was safe.
+
+**Architecture decisions are rulings.** They belong where the rulings are, and there is no second list here to fall behind.

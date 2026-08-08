@@ -8,21 +8,23 @@ Created 2 August at the close-out of ST0001 and ST0002, to hold what those threa
 
 ## Start here, if picking this up cold
 
-**Unblocked right now: the rest of WP-07, and all of WP-08.** Everything else waits on a ruling from hv or on transport, and **guessing at a ruling is how this project has generated its worst work.**
+**Nothing here is unblocked.** As of 8 August every remaining item waits on an hv ruling or on transport, and **guessing at a ruling is how this project has generated its worst work.**
 
 ## Tasks
 
-### Unblocked
+### Done
 
 - [x] **WP-01 -- Cut 0.1.0.** Done 6 Aug, 8/8. Running it for real found two defects in `release` itself
-- [x] **WP-07 -- Gyre & Gymble.** Done 6 Aug. **Already integrated**; what was missing was a check that the theme still agrees with the kit. 61 of 62 tokens, zero disagreements
-- [ ] **WP-07 -- Baize and snorkeltoast**, both by reading. `check` refuses on both because their tokens sit outside `kit/`; expected, not a blocker
-- [ ] **WP-08 -- Commit Baize's regenerated `BOOTSTRAP-CD.md`** once that repository's own uncommitted work is clear
-- [ ] **WP-08 -- Report Intent's baked absolute path** in `.claude/settings.json` upstream
-- [ ] **WP-08 -- Decide on the stale-document advisory rule.** Unasked scope, so it needs asking for or declining on the record. **Now earned four times, not two**
-- [ ] **WP-08 -- The two gaps recorded against `brief`:** it cannot express a repackaging round, and it cannot order a slug the library does not hold
+- [x] **WP-07 -- Gyre & Gymble, Baize and snorkeltoast.** All three were **already integrated**, in three different idioms. The premise was false in every project it could be checked against
+- [x] **WP-08 -- Downloads.** All five directories cleared deliberately; hv ruled 8 Aug and the "it stays" instruction is withdrawn
+- [x] **WP-08 -- `brief` cannot express a repackaging round.** Closed by `round_job` plus a measured list of which ordered assets the target already holds
+- [x] **WP-08 -- The taxonomy count in `brief`'s refusal.** It said fifty-one against a taxonomy of 52; computed now, and stated in no prose anywhere
 
 ### Waiting on a ruling from hv
+
+- [ ] **WP-08 -- `brief` cannot order a slug the library does not hold.** **Blocked on WP-05**, not unblocked as this file said until 8 Aug: the round must be told what `spec_version` to stamp on an asset it is creating
+- [ ] **WP-08 -- Decide on the stale-document advisory rule.** Unasked scope, so it needs asking for or declining on the record. **Its reach is already settled either way** -- scoped to the design tree it reports clean on a provably stale document
+- [ ] **WP-08 -- Baize's `BOOTSTRAP-CD.md`.** Not the commit it once needed -- it was swept into the rename commit and has gone stale again. **Needs a decision, because regenerating by hand is what did not hold**
 
 - [ ] **WP-02 -- Rule 4, twice:** the hex-approximation question, and a colour named in order to forbid it
 - [ ] **WP-05 -- Where a venture's `cdsync.json` lives**, and **`spec_version` for a NEW asset**. Asked by four projects in four shapes
@@ -35,9 +37,13 @@ Created 2 August at the close-out of ST0001 and ST0002, to hold what those threa
 - [ ] **WP-04 -- Install the three conversions** once they return, then clear the vestigial paths
 - [ ] **WP-05 -- Regenerate every `BOOTSTRAP-CD.md`** after any generator change from the rulings above
 
+### Not on this list
+
+- **WP-08 -- Report Intent's baked absolute path** in `.claude/settings.json`. **An upstream issue against Intent, not work in this thread**, and it will sit here forever if it stays on a Cdsync list
+
 ### The library
 
-- [ ] **WP-03 -- Write specs as orders need them.** 25 of 52 slugs unspecified
+- [ ] **WP-03 -- Write specs as orders need them.** **`cdsync doctor` prints how many are unspecified; this line does not**
 - [ ] **WP-03 -- `pattern-library`: the spec AND the exemplar re-pointed in one change**, or library text goes false and a test goes red
 - [ ] **WP-03 -- Repair the three library-text inconsistencies together**, behind a `spec_library_version` bump
 - [ ] **WP-03 -- Decide what a library-version bump means** for drops already stamped against the old one
@@ -45,12 +51,16 @@ Created 2 August at the close-out of ST0001 and ST0002, to hold what those threa
 ## Dependencies
 
 ```
-WP-01, WP-08                    ->  independent
+WP-01                           ->  independent, and done
 WP-07  --(Lamplight only)-->        WP-06 ruling
+WP-08  --(one gap only)-->          WP-05 spec_version ruling
+WP-08  --(two items)-->             hv, to order or decline
 WP-03  --(ordering mechanism)-->    WP-05
 WP-04  --(transport)-->             hv
 WP-02, WP-05, WP-06  -->            hv rulings
 ```
+
+**`WP-01, WP-08 -> independent` is what this graph said until 8 August, and WP-08 was not.** Its `brief` gap needs the round told what `spec_version` to stamp on an asset it is creating, which is WP-05's ruling exactly. **Nothing had traced it**, so the item read as unblocked for six days. **A dependency nobody has followed is not an absent dependency** -- and this graph is the place that was supposed to know.
 
 ## Task Notes
 

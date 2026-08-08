@@ -3,21 +3,21 @@ node: cc
 name: Control Claude
 role: control
 session_id: a0b5335d-40c5-456d-9f8b-9da1d5202a79
-heartbeat_at: 2026-08-08T11:04Z
-status: active
-focus: "WP-07's premise was false in all three checkable projects -- Baize and snorkeltoast were already integrated too. WP-08 re-measured, three of six items had drifted, one is an escalation. Next: WP-08's two brief gaps, the only unblocked engineering left"
+heartbeat_at: 2026-08-08T15:01Z
+status: paused
+focus: "Day closed. WP-07's premise was false in all three checkable projects; WP-08 re-measured and its last gap found blocked on WP-05. Nothing in ST0003 is unblocked any more -- everything waits on an hv ruling"
 claims: [ST0003]
 ---
 
 # Control Claude (cc)
 
-Completed narrative is archived per day at `.history/`; 6 August is the most recent. **This board is live state plus the two standing lists below, and nothing else.**
+Completed narrative is archived per day at `.history/`; 8 August is the most recent. **This board is live state plus the two standing lists below, and nothing else.**
 
 **Read `intent/docs/design-system-lifecycle.md` first. It is canon and outranks everything here.** Then `intent/restart.md`.
 
 ## Where things stand
 
-**ST0003 is in flight, 2 of 8 work packages moved.** ST0001 (16/16), ST0002 (12/12), ST0004 (11/11) and ST0003/WP-01 (8/8) all closed through the gate.
+**ST0003 is in flight, and nothing left in it is unblocked.** ST0001 (16/16), ST0002 (12/12), ST0004 (11/11) and ST0003/WP-01 (8/8) all closed through the gate. **No count of the moved work packages is kept here** -- this board carried "2 of 8" for two days after it stopped being true, which is the hand-maintained-number hazard it warns about, on itself, again.
 
 **0.1.0 is released and the repository is PUBLIC.** Tag `v0.1.0`, GitHub release published, the published asset downloaded and run to verify it. Published from a single root commit; the 135-commit history is retained privately on the mirror's `archive/pre-public-20260806` and in a bundle beside it.
 
@@ -25,7 +25,7 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 
 **WP-07's premise was false for every project it could be checked against** -- Gyre & Gymble on 6 August, Baize and snorkeltoast on 8 August, **three of three already integrated.** Only Lamplight is unchecked and it waits on WP-06's `ref` ruling, so the WP is WIP and cannot close. **WP-08 was re-measured before being worked from and three of its six items had drifted**; it is WIP, and three items now need a ruling rather than effort. **Both WPs carry their own findings -- this board does not restate them.**
 
-**Narrative for 6 August is in `.history/20260806/`, two files.** This board carries live state plus the two standing lists and nothing else. `intent/wip.md` and `intent/restart.md` point here and do not restate.
+**Day narrative lives in `.history/`, one directory per day.** `intent/wip.md` and `intent/restart.md` point here and do not restate.
 
 ## TODO
 
@@ -44,7 +44,7 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 **Raised 8 August and unanswered:**
 
 - **Baize's 96%/95% divergence wants an addendum in Baize**, which is hv's to release: nothing was written into that repository this session.
-- **The stale-document rule should be ordered or declined**, not carried a sixth time. Its reach is now a settled question either way -- WP-08 has it.
+- **The stale-document rule should be ordered or declined**, rather than carried again. Its reach is now a settled question either way -- WP-08 has it, and it keeps earning itself.
 
 **Belonging to no WP:**
 
@@ -78,6 +78,7 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 - **A path constructed rather than found.** **`find` the file, then grep it.** 8 Aug: Baize's app CSS is at `apps/rack/assets/`, so a root-level `find assets -name '*.css'` returns **nothing at all** -- a clean empty answer to the wrong question. Its handoff document names the real path. **When a drop carries a `handoff/`, read the path out of it rather than guessing where an app keeps its assets.**
 - **ONE PROBE PER PROJECT, for anything written in a notation.** 8 Aug: the hex-literal probe that confirmed snorkeltoast at 41 of 41 reports a confident **`0/0` on Baize**, whose theme blocks are `oklch()` exclusively and hold **zero hex literals**. Same question, same family of artefact, same author -- and an instrument that answers one and is silent on the other **without ever erroring.** **Establish the notation before choosing the probe, and never reuse a colour probe across projects on the strength of it having worked.**
 - **A case-sensitive `grep`** missing `Sixteen`, and a pattern requiring `` `--flag` `` unable to match `` `--target PATH` ``.
+- **A SWEEP OVER A DIRECTORY LIST NOBODY CHOSE DELIBERATELY, AND THEN A CORRECTION MADE THE SAME WAY.** 8 Aug, *inside the fix for the drift hazard above*. The hunt for hand-written taxonomy counts searched `bin/`, `lib/` and `help/`, found four, and reported no figure left in shipped text. **`specs/` and `templates/` were never searched.** The correction then announced "a fifth copy survives" -- **also wrong**, because it counted rather than swept. **The real answer was three files, and they are the ones that travel**: `specs/kit.md` is inlined into every brief, and two under `templates/claude_design/templprj/` are scaffolded into every venture `cdsync new` creates. **Sweep every tracked file and name what you find. A count of wrong counts is still a count**, and this one was wrong twice before a `git grep` over the whole repository settled it.
 - **A POSITIVE CONTROL VALIDATES THE INSTRUMENT, NOT THE SAMPLING FRAME.** Every control ST0004 ran was sound and the answer was still wrong: they proved each probe could hit *inside the repository it was pointed at*, and nothing asked what enumerated the repositories. Two were missing, carrying 54 occurrences. **Ask separately what chose the set.** A phrase like "the four siblings *that carried the name*" is a claim about the world, not about the four it then checks.
 
 ### Mutation testing has two failure modes, not one
@@ -100,11 +101,14 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 
 **Every version component compares as a NUMBER.** Sorted as strings, `0.10.0` falls below `0.9.0` -- a bug that stays invisible for nine minor releases.
 
-### A local pass does not predict CI, and both misses were shell-version deep
+### A local pass does not predict CI, and every miss has been shell-version deep
+
+**Deliberately uncounted.** This heading said "both" while `.claude/restart.md` said "four" -- one count, two documents, two answers, neither checked. The shapes below are what matter.
 
 - **GitHub runs `shell: bash -e`.** `out="$(cmd)"` exits the whole script the moment cmd returns non-zero. Wrap the assignment in `if`. **The same class bit inside the tool on 2 August**: `kit_colours="$(each_kit_colour ...)"` killed `check` outright when the kit held no colour the scanner read.
 - **macOS runners use bash 3.2, whose `-nt` compares whole SECONDS.** Anything choosing "the newest file" is undefined for same-second ties there.
 - **`LC_ALL` overrides `LC_COLLATE`.** **Sort at the point of use.**
+- **The interactive shell here is zsh and CI is bash, so a CI script cannot be rehearsed by pasting it.** 8 Aug: the hygiene job's own `check()` helper dies immediately under zsh -- **`status` is a read-only variable there** -- so running it locally proved nothing about the thing being tested. **Run a CI recipe under `bash` explicitly**, and prefer running the workflow's exact command over an approximation of it.
 - **A test that does not control its own stdin asserts the ambient environment.** One hung the whole suite at test 183 for hv running bats from a terminal. **Reproduce with `script -q /dev/null bats ...`.**
 - **Two of my own tools bit back.** `git reset --hard` discarded an unstaged edit; `pkill -f` reached another session. Both recovered; neither should have happened.
 
@@ -175,14 +179,15 @@ Settled and not to be re-opened. Full reasoning in `intent/st/ST0001/design.md`.
 - (2026-07-31) **Seven things a drop may not deliver**, all unconditional: `addenda/`, `_inbox/`, the project's own `intent/` documents, Cdsync's protocol material, `.gitignore`, `BOOTSTRAP-CD.md` with its covering note, and **`scratch/` or any working directory of Claude Design's own**.
 - (2026-07-31) **The project's `intent/` documents retire from the drop once actioned -- never more than one go-around.**
 - (2026-07-31) **Cdsync never repairs a drop.** Record the gap in `addenda/` or refuse.
-- (2026-07-31) **`spec_version` is the library's stamp, not a per-drop counter.** An asset's own progress is `status` and `coverage`.
-- (2026-07-31) **The generated document carries the numbers, not just their meaning** -- and says to leave the field out where the library has no entry.
+- (2026-07-31) **`spec_version` is the library's stamp, not a per-drop counter.** An asset's own progress is `status` and `coverage`. **A number each side increments on its own schedule cannot measure a distance, because it never disagrees for a reason.**
+- (2026-07-31) **The generated document carries the numbers, not just their meaning** -- and says to leave the field out where the library has no entry. **Claude Design holds a delivery and cannot read the library**, so "copy the specification's version" is an instruction it has no way to follow.
 - (2026-07-31) **Removing the value from `audience` is part of declaring `classification`.** **`public` stays.**
 - (2026-07-31) **Cold bootstrap is one generator with two outputs**, regenerated on every sync -- **across syncs only.**
 - (2026-07-31) **A conversion is its own round and arrives with its own brief.**
-- (2026-07-30) **Three classifications, an axis of their own:** `public` / `internal` / `confidential`. Governs where material may be shown, never whether it is committed. **Therefore rule 6 is advisory.**
+- (2026-07-30) **Three classifications, an axis of their own:** `public` / `internal` / `confidential`. Governs where material may be shown, never whether it is committed. **Therefore rule 6 is advisory** -- blocking on it would make classification the delivery filter this ruling exists to say it is not.
 - (2026-07-31) **`public` is a legitimate audience as well as a classification.**
-- (2026-07-30) **`addenda/` is repo-authored and no install path may overwrite it.** An addendum retires when a drop carries its content -- **verified by reading, never by receipt.**
+- (2026-07-30) **`addenda/` is repo-authored and no install path may overwrite it.** An addendum retires when a drop carries its content -- **verified by reading, never by receipt.** **A name declared both owned and protected is an unsatisfiable contract**, so both install paths refuse rather than pick a winner.
+- (2026-07-30) **There is no backup directory, by design.** The tree is tracked in full, so **git already holds every prior state** and a second copy would only be a state nothing verifies. The job is therefore to prove git's copy is complete before replacing anything -- which is exactly what `install`'s refusal over uncommitted or untracked content does. **The refusal is the backup.**
 - (2026-07-30) **A drop's library-side spec and its drop-side `spec.md` are different documents.**
 - (2026-07-30) **`print-collateral` is taxonomy 52, `cms-rollout-plan` 53, `go-to-market-plan` 54.** **The number is identity.**
 - (2026-07-30) **`venture/` stays out of round one.** **`check` does not cross-reference `index.md`.**

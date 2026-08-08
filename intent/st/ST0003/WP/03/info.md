@@ -10,7 +10,7 @@ status: Not Started
 
 ## Objective
 
-**25 of 52 taxonomy slugs have no spec.** That is not debt from ST0001 -- the ratified model is that the specs are a library and a brief is an order against it, so a spec gets written when an order needs one. This WP is where those orders get served.
+**Most of the taxonomy has no spec** -- **`cdsync doctor` prints both figures, and this file states neither**, because a count copied into prose stops tracking the table it describes. That gap is not debt from ST0001: the ratified model is that the specs are a library and a brief is an order against it, so a spec gets written when an order needs one. This WP is where those orders get served.
 
 It also carries three known inconsistencies in library *text* that were deliberately left alone, and the reason they were left alone is the reason they need doing together rather than piecemeal.
 
@@ -24,7 +24,8 @@ So `pattern-library` is a two-part job: write the spec, and simultaneously re-po
 
 **Do not fix these individually.** Editing library text silently changes what its `spec_version` means, so every one of them needs a `spec_library_version` bump and a decision about what that does to already-stamped drops.
 
-- `specs/kit.md` says **"fifty-one artefacts"** against a 52-slug taxonomy.
+- `specs/kit.md:72` says **"fifty-one artefacts"** against a 52-slug taxonomy. **8 August: the copies in `lib/` and `help/` were replaced by a computed figure, and this one could not be, because library text cannot move piecemeal.** It is also the copy that matters most -- **the kit spec is inlined into every brief whether or not the kit was ordered**, so this number has gone to the supplier every round.
+- **And it is not alone.** `templates/claude_design/templprj/kit/kit.md:9,11` and `templates/claude_design/templprj/brief.md:15` say the same thing, and **`cdsync new` scaffolds both into every venture it creates.** Whether those two move with the library bump or separately is part of this WP's decision: they are not library text and carry no `spec_library_version`, **but a template that contradicts the library is the same defect one step further out.**
 - `specs/library.md` says **"32 of the 50"**, where the truth is 27 of 52.
 - The `positioning` and `pricing` entries disagree with each other in a way recorded on the board.
 

@@ -142,9 +142,22 @@ each_taxonomy_slug() {
 #
 # A count restated in prose is a count that drifts from the thing it describes,
 # and that is on the standing watch-out list by name -- so there is now one
-# function, two callers, and no figure written out anywhere in shipped text.
-# Prose that wants the number says to run `cdsync doctor`, which is the same
-# ruling already taken for the spec-library counts.
+# function, two callers, and no figure written out in `lib/` or `help/`. Prose
+# that wants the number says to run `cdsync doctor`, which is the same ruling
+# already taken for the spec-library counts.
+#
+# COPIES SURVIVE OUTSIDE THIS TREE, AND THEY ARE THE ONES THAT TRAVEL:
+# `specs/kit.md`, `templates/claude_design/templprj/kit/kit.md` and
+# `templates/claude_design/templprj/brief.md` all still say "fifty-one". The
+# first is inlined into EVERY brief; the other two are scaffolded into every
+# venture `cdsync new` creates. They are not fixed here -- library text cannot
+# move piecemeal, because changing it changes what its `spec_library_version`
+# means. WP-03 owns them and names the files rather than counting them.
+#
+# THE SWEEP THAT FOUND THE FOUR IN THIS TREE SEARCHED `bin/`, `lib/` and
+# `help/`, and nothing asked what had chosen those three directories. The first
+# correction then said "one copy survives" and that was wrong too. **A count of
+# wrong counts is still a count**, which is why the line above names files.
 taxonomy_count() {
   each_taxonomy_slug | grep -c . || true
 }

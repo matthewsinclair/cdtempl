@@ -39,10 +39,10 @@ Two things are worth knowing before picking anything up.
 | WP-04 | Transport, and the conversion round behind it | **hv transport** |
 | WP-05 | Make scope durable: `cdsync.json` and `spec_version` | hv |
 | WP-06 | Settle round three's outstanding rulings | hv |
-| WP-07 | Integrate the original four | **Nothing**, except Lamplight on WP-06 |
-| WP-08 | Housekeeping and small gaps | Nothing |
+| WP-07 | Integrate the original four | **WIP.** Three done; Lamplight on WP-06 |
+| WP-08 | Housekeeping and small gaps | **WIP.** Three items on hv; one gap on WP-05 |
 
-**Unblocked right now**: the rest of WP-07 (Baize and snorkeltoast; G&G is done) and all of WP-08.
+**Unblocked right now: nothing.** That became true on 8 August, when WP-07's remaining projects turned out to be integrated already and WP-08's last piece of engineering turned out to depend on WP-05. **Read the table above as a waiting list, not a work queue.**
 
 ## Acceptance
 

@@ -58,7 +58,19 @@ Beside it the brief now states, **measured rather than declared, which ordered a
 
 **The second half earns its place in every round, not just a repackaging one.** A supplier who orders a slug that already exists and is not told will build it from scratch, and **what it delivers replaces what is there** -- so the rebuild silently discards whatever the existing asset carried, with neither side seeing it happen.
 
-**What was done instead, because it was in the refusal message this item is about:** the message told users *"the taxonomy names fifty-one assets"* and the taxonomy names 52. The figure was hand-written in four places across `lib/` and `help/` and disagreed **three ways** -- fifty-one, fifty-two, and fifty in a test comment. It is computed from the manifest now, by one function with two callers, and no count is written out in shipped prose. **A count restated in prose drifts from the table it describes**, which is on the watch-out list by name.
+**What was done instead, because it was in the refusal message this item is about:** the message told users *"the taxonomy names fifty-one assets"* and the taxonomy names 52. The figure was hand-written in four places across `lib/` and `help/` and disagreed **three ways** -- fifty-one, fifty-two, and fifty in a test comment. It is computed from the manifest now, by one function with two callers, and no count is written out in `lib/` or `help/`. **A count restated in prose drifts from the table it describes**, which is on the watch-out list by name.
+
+**COPIES SURVIVE, AND THEY ARE THE ONES THAT TRAVEL.** Named rather than counted, because counting them is what went wrong twice:
+
+| File | How it travels |
+| ---- | -------------- |
+| `specs/kit.md:72` | Ships in the tarball, and **the kit spec is inlined into every brief whether or not the kit was ordered** |
+| `templates/claude_design/templprj/kit/kit.md:9,11` | Scaffolded into every venture `cdsync new` creates |
+| `templates/claude_design/templprj/brief.md:15` | Same, and it says it twice in one sentence |
+
+**None is fixed here.** Library text cannot move piecemeal -- changing it changes what its `spec_library_version` means -- so the known inconsistencies go together behind one bump. **WP-03 owns them.**
+
+**How this was missed, and then missed again.** The sweep that found the four in `lib/` and `help/` searched `bin/`, `lib/` and `help/`, and **nothing asked what had chosen those three directories** -- the sampling-frame error the board already names, committed inside the fix for the drift hazard it also names. The first correction then announced *"a fifth copy survives"*, which was also wrong, because it counted instead of sweeping. **A count of wrong counts is still a count.** The sweep that finally worked ran over every tracked file and named the results.
 
 ### Should a stale generated document be detectable?
 

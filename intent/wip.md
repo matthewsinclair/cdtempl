@@ -4,7 +4,7 @@ verblock: "08 Aug 2026:v1.2: Matthew Sinclair - WP-07's premise false in all thr
 
 # Work In Progress
 
-Project-wide snapshot, folded at the end of 6 August's work. The live per-session channel is `intent/whiteboard/cc/wip.md`; this is the settled version. **Orientation, canon and the unblocked-work ordering are in `intent/restart.md` and are not restated here.**
+Project-wide snapshot, folded at the end of 8 August's work. The live per-session channel is `intent/whiteboard/cc/wip.md`; this is the settled version. **Orientation, canon and the waiting list are in `intent/restart.md` and are not restated here.**
 
 ## Where the project stands
 
