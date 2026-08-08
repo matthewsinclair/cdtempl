@@ -1,45 +1,54 @@
 ---
-verblock: "02 Aug 2026:v0.2: matts - Filled from the ST0001/ST0002 close-out carry-forward"
+verblock: "08 Aug 2026:v0.3: matts - Premise corrected: three of three checkable projects were already integrated"
 wp_id: WP-07
 title: "Integrate the original four"
 scope: Medium
-status: Not Started
+status: WIP
 ---
 
 # WP-07: Integrate the original four
 
 ## Objective
 
-Lamplight, Baize, snorkeltoast and Gyre & Gymble each hold a design-system record and **none has been built against.** matthewsinclair and geodica went from cold tree to rollout in Laksa inside two days; these four have had a record since 31 July and nothing downstream.
+This work package opened on a premise: that Lamplight, Baize, snorkeltoast and Gyre & Gymble each hold a design-system record and **none has been built against.**
 
-**6 August: that premise was false for Gyre & Gymble, and the correction is the finding.** Its site was already built against its design system -- `theme/theme.css` carries the entire Oat & Olive palette and `theme/layout.liquid:92` loads the compiled result. **The objective above was written from the drop's side of the boundary**, where an integration is invisible unless the drop can see it, and a drop cannot see an application. **Check what the application does before recording that it does nothing.** Ask the same question of the other three rather than inheriting this paragraph.
+**The premise was false, and not once but in every project it could be checked against.** Gyre & Gymble on 6 August, then Baize and snorkeltoast on 8 August: **three of three already integrated.** Only Lamplight is unchecked, and it is held on WP-06.
 
-**Integration is unblocked and independent of everything else in this thread.** It does not wait on the conversion round, on the rulings, or on the release.
+**The objective was written from the drop's side of a boundary the drop cannot see across.** An integration is invisible from there -- a drop cannot see an application -- so "nothing downstream" was a statement about what the evidence could reach, read as a statement about the world. Three projects then contradicted it in three different idioms. **Check what the application does before recording that it does nothing.**
 
-## What each one needs
+**The deliverable of this WP is therefore the finding, not four integrations performed.** What remains is Lamplight, and it waits on a ruling.
 
-| Project | State | How it integrates |
-| ------- | ----- | ----------------- |
-| **Gyre & Gymble** | Cdsync-shaped, `kit/tokens.json`, `check` clean at 17 assets | **Unreservedly.** Nothing in the way |
-| **Lamplight** | `check` clean at 4 assets | By reading. **Hold until the `ref` classification ruling lands** -- WP-06 -- because it is the one open ruling that could move paths |
-| **Baize** | `check` refuses, `0 assets checked` | By reading. Tokens sit outside `kit/`, so the checker cannot see it |
-| **snorkeltoast** | `check` refuses, `0 assets checked` | By reading |
+## What was actually found
 
-**Reading is a legitimate integration path.** `check` is a check on a drop's shape, and three of these carry a convention older and more elaborate than anything Cdsync models. **Cdsync has no application-side check, by design** -- the tree is an end-state view, and a gap between it and the app is expected and never a defect.
+| Project | `check` says | What the application does | Verdict |
+| ------- | ------------ | ------------------------- | ------- |
+| **Gyre & Gymble** | Clean at 17 assets | `theme/theme.css` carries the whole Oat & Olive palette; `theme/layout.liquid:92` loads the compiled result | **Integrated** (6 Aug) |
+| **snorkeltoast** | Refuses, `0 assets checked` | 41 of 41 hex literals in `design/system/brand/tokens/colors.css` are in `theme/theme.css`, which states its own provenance at line 9; `theme/layout.liquid:94` loads the build | **Integrated** (8 Aug) |
+| **Baize** | Refuses, `0 assets checked` | 45 of 46 `oklch()` values in `design/system/handoff/app.css.theme-blocks.css` are in `apps/rack/assets/css/app.css`, both theme blocks named at `:438` and `:489`, and the non-colour claims land too | **Integrated** (8 Aug) |
+| **Lamplight** | Clean at 4 assets | Unchecked | **Held** on WP-06's `ref` ruling |
 
-`index.md` landed in all four on 31 July, and **two had no manifest of any kind before it**. That is the entry point.
+**`check` refusing says nothing about whether a project is integrated.** It refused on both projects checked on 8 August and both were integrated. It is a check on a drop's *shape*, and three of these carry a convention older and more elaborate than anything Cdsync models. **Cdsync has no application-side check, by design** -- the tree is an end-state view, and a gap between it and the app is expected and never a defect.
+
+**Baize's one divergence is deliberate, not drift.** The handoff specifies `oklch(96% 0.006 150)` for the gaffer theme's `--color-base-200` and `--color-secondary-content`; the app carries `oklch(95% 0.006 150)` for both. One percentage point of lightness, moved consistently in both places it appears. **The app refined the specification.** By canon that is not a defect -- but it is what `addenda/` exists to carry back, and it is unwritten.
+
+**No two of these could be checked with the same probe.** G&G and snorkeltoast are hex; Baize is `oklch()` exclusively, with **zero hex literals**, so the probe that answered snorkeltoast reports a confident `0/0` on Baize. **A colour probe is per-project until proven otherwise.**
 
 ## Deliverables
 
-- Each of the four building against its design system, in whatever way suits that project.
-- G&G first, since it has nothing in the way and will surface any process problem cheaply.
-- Anything the integration *finds* about the design system recorded in `addenda/` -- **repo-authored, protected from every install path, and it flows back to Claude Design to retire when a later drop absorbs it.**
+- **Done:** each of the three checkable projects asked what its application does, by content and never by filename, with the probe validated in both directions before its answer was believed.
+- **Done:** the premise corrected here rather than worked around.
+- **Open, and hv's to release:** Baize's 96%/95% divergence recorded in **Baize's** `design/system/addenda/`. Nothing was written into that repository this session -- it carries hv's own uncommitted work.
+- **Open:** Lamplight, once WP-06 rules on `ref`.
 
 ## Dependencies
 
-Lamplight waits on WP-06's `ref` ruling. **The other three wait on nothing.**
+Lamplight waits on WP-06's `ref` ruling. **The other three waited on nothing and are resolved.**
+
+**This WP cannot close while Lamplight is held.** Its criteria stay unwritten until then, and they will not be written to match what happens to have been done.
 
 ## Notes
 
-- **The app never reads from `design/system/`.** It is specification, not running code. Anything the application needs at runtime is delivered separately, exactly as the two Laksa theme packs were.
+- **The app never reads from `design/system/`.** It is specification, not running code. Anything the application needs at runtime is delivered separately, exactly as the two Laksa theme packs were -- and in Baize's case as `handoff/app.css.theme-blocks.css`, which is a drop-in for a file the app owns.
 - After touching `addenda/`, **regenerate `BOOTSTRAP-CD.md` by hand.** Regeneration fires on sync only, so a repo-side edit has nothing to hang it on.
+- **`handoff/` is where an integration leaves its fingerprints, when there is one.** **Two of the three carry one -- Baize and snorkeltoast. Gyre & Gymble has none and is integrated anyway**, so a handoff directory is evidence of an integration and never a requirement for one. Where it exists it names the application-side path the drop itself could not reach: Baize's names `apps/rack/assets/css/app.css`, one level deeper than the repository root suggests. **Read the handoff for the path rather than constructing it** -- a root-level `find assets -name '*.css'` on Baize returns nothing at all.
+- **Three projects, three integration idioms.** G&G hex with no handoff; snorkeltoast hex with a handoff naming its provenance in the file itself; Baize `oklch()` with a handoff written as a drop-in for a file the app owns. **Nothing about the shape of one predicted the next.**

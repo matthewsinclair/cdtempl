@@ -2,10 +2,10 @@
 node: cc
 name: Control Claude
 role: control
-session_id: dc81d7ec-8e40-4353-8410-71d6499122ed
-heartbeat_at: 2026-08-07T16:52Z
-status: paused
-focus: "Day closed. 0.1.0 released and public; ST0003 WIP with WP-01 closed 8/8 and WP-07 done for G&G; the rename finished across the two repositories it had missed. Next: WP-07 Baize + snorkeltoast, and WP-08"
+session_id: a0b5335d-40c5-456d-9f8b-9da1d5202a79
+heartbeat_at: 2026-08-08T11:04Z
+status: active
+focus: "WP-07's premise was false in all three checkable projects -- Baize and snorkeltoast were already integrated too. WP-08 re-measured, three of six items had drifted, one is an escalation. Next: WP-08's two brief gaps, the only unblocked engineering left"
 claims: [ST0003]
 ---
 
@@ -23,7 +23,7 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 
 **The rename is finished for real.** It had missed `Sites/gyreandgymble` and `Sites/snorkeltoast` entirely, plus this repository's own gitignored `templates/_test/Acme/`. All three are at zero now and ST0004 carries a post-close note; the thread stays closed, because the boundary is what failed and a close is not where scope is relitigated.
 
-**WP-07 is done for Gyre & Gymble**, and its premise was wrong for that project -- it was already integrated. **Baize and snorkeltoast remain on WP-07** and Lamplight still waits on WP-06's `ref` ruling. **WP-08 is untouched and unblocked.**
+**WP-07's premise was false for every project it could be checked against** -- Gyre & Gymble on 6 August, Baize and snorkeltoast on 8 August, **three of three already integrated.** Only Lamplight is unchecked and it waits on WP-06's `ref` ruling, so the WP is WIP and cannot close. **WP-08 was re-measured before being worked from and three of its six items had drifted**; it is WIP, and three items now need a ruling rather than effort. **Both WPs carry their own findings -- this board does not restate them.**
 
 **Narrative for 6 August is in `.history/20260806/`, two files.** This board carries live state plus the two standing lists and nothing else. `intent/wip.md` and `intent/restart.md` point here and do not restate.
 
@@ -31,7 +31,7 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 
 **All of it lives in ST0003, "Post-release 0.1.0 clean-up"** -- `intent/st/ST0003/`, eight work packages, each with its own `info.md` stating what blocks it. **The ordering is in `intent/restart.md`.** This board carries no second copy.
 
-**Done:** WP-01 cut the release; WP-07's Gyre & Gymble. **Unblocked and next:** WP-07's Baize and snorkeltoast (both integrate by reading), WP-08 housekeeping.
+**Done:** WP-01 cut the release; WP-07 for all three checkable projects. **The only unblocked engineering left in the thread is WP-08's two `cdsync brief` gaps** -- the repackaging round it cannot express, and the slug it cannot order. **Everything else is waiting on a ruling**, including three items inside WP-08 that were not waiting on one when it was written.
 
 ## Wants hv
 
@@ -39,10 +39,16 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 
 **Off the list rather than settled, so do not re-open:** rule 5 shipped 1 August; rule 3 came off because its residual is mostly TRUE positives.
 
+**Raised 8 August and unanswered:**
+
+- **`~/Downloads/baize-design-drops/` is gone, and it was the one that was to stay.** It held the only copy of a superseded drop generation git never tracked. **Cleared deliberately, moved, or lost -- and nothing acts on it either way until hv says.** Full statement in WP-08.
+- **Baize's 96%/95% divergence wants an addendum in Baize**, which is hv's to release: nothing was written into that repository this session.
+- **The stale-document rule should be ordered or declined**, not carried a sixth time. Its reach is now a settled question either way -- WP-08 has it.
+
 **Belonging to no WP:**
 
 - **Transport of the six unsent documents** is WP-04, but the *decision* to send is hv's alone and nothing in the tool can prompt it.
-- **Downloads housekeeping** -- four superseded drop directories, ~3G. **`baize-design-drops/` 441M stays**, the off-repo home named in Baize's own root `.gitignore`. **Six spent `_inbox/` directories**, and the two newest hold the Laksa theme packs, **which exist nowhere else**. Do not clear those two until Laksa has taken them.
+- **Downloads housekeeping is WP-08's, and it moved without anyone recording it** -- the state is there, including what is now escalated. **The one live hazard: of the six spent `_inbox/` directories, the two newest hold the Laksa theme packs, which exist nowhere else.** Do not clear those two until Laksa has taken them.
 - **No `hv` node here, by hv's ruling -- `cc` is the whole roster**, so rulings arrive in conversation and land in `## Decisions`. The whiteboard `README.md` roster stays deferred.
 
 ## Watch-outs
@@ -68,7 +74,8 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 - **A search whose reach is narrower than the thing it is searching for.**
 - **A summary probe turning a hard refusal into a clean bill.** `grep -c 'rule-[0-9]'` counted zero findings on two trees that had ERRORED with `0 assets checked`.
 - **`cmd | tail; echo $?` captures `tail`'s exit code, never `cmd`'s.** It reported shellcheck exit 0 over eight live findings.
-- **A path constructed rather than found.** **`find` the file, then grep it.**
+- **A path constructed rather than found.** **`find` the file, then grep it.** 8 Aug: Baize's app CSS is at `apps/rack/assets/`, so a root-level `find assets -name '*.css'` returns **nothing at all** -- a clean empty answer to the wrong question. Its handoff document names the real path. **When a drop carries a `handoff/`, read the path out of it rather than guessing where an app keeps its assets.**
+- **ONE PROBE PER PROJECT, for anything written in a notation.** 8 Aug: the hex-literal probe that confirmed snorkeltoast at 41 of 41 reports a confident **`0/0` on Baize**, whose theme blocks are `oklch()` exclusively and hold **zero hex literals**. Same question, same family of artefact, same author -- and an instrument that answers one and is silent on the other **without ever erroring.** **Establish the notation before choosing the probe, and never reuse a colour probe across projects on the strength of it having worked.**
 - **A case-sensitive `grep`** missing `Sixteen`, and a pattern requiring `` `--flag` `` unable to match `` `--target PATH` ``.
 - **A POSITIVE CONTROL VALIDATES THE INSTRUMENT, NOT THE SAMPLING FRAME.** Every control ST0004 ran was sound and the answer was still wrong: they proved each probe could hit *inside the repository it was pointed at*, and nothing asked what enumerated the repositories. Two were missing, carrying 54 occurrences. **Ask separately what chose the set.** A phrase like "the four siblings *that carried the name*" is a claim about the world, not about the four it then checks.
 
@@ -115,7 +122,7 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 ### Standing
 
 - **A generated document is not a report -- it is an instruction the other side obeys.** **Read every generated document against the tree before it is sent.**
-- **`BOOTSTRAP-CD.md` regenerates on sync and on nothing else.** Regenerate by hand after touching `addenda/` -- or after changing the generator, which stales every copy at once with no local symptom. **Four copies are now known stale, not the two WP-08 records.** Baize's steel-thread high-water; and on 6 August G&G's (inventory missing `business/`, and it embeds a *superseded revision* of its own addendum) and snorkeltoast's (`docs/` 92 against 93, `email/` 3 against 7, one whole section absent). **Assume stale and diff, rather than reading it.** The advisory staleness rule in WP-08 has now been earned four times over.
+- **`BOOTSTRAP-CD.md` regenerates on sync and on nothing else.** Regenerate by hand after touching `addenda/` -- or after changing the generator, which stales every copy at once with no local symptom. **Assume stale and diff, rather than reading it.** **A hand-regeneration does not hold, either**: Baize's went stale again inside a day, because the fix is a snapshot and the tree keeps moving. **Which copies, and how the rule that would catch them must be scoped, live in WP-08** -- this board deliberately carries no count of them.
 - **Two descriptions of one thing will disagree, and the terse one tends to survive.** **Structural tests now guard help files, the rule count, and every colour form the scanner reads.**
 - **What matters is usually in Claude Design's tree, which this side cannot see.**
 - **NEVER kill a process this session did not start.** Background jobs I start have task IDs; TaskStop is what they are for.

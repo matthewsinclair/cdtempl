@@ -11,8 +11,8 @@ generator: intent todo
   - [ ] 04: Transport, and the conversion round behind it
   - [ ] 05: Make scope durable: cdsync.json and spec_version
   - [ ] 06: Settle round three's outstanding rulings
-  - [ ] 07: Integrate the original four
-  - [ ] 08: Housekeeping and small gaps
+  - [-] 07: Integrate the original four
+  - [-] 08: Housekeeping and small gaps
 
 ## TODO
 
