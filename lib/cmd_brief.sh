@@ -192,6 +192,7 @@ compose_brief() {
 
   brief_header "$venture"
   brief_venture_facts "$venture"
+  brief_round_job "$slugs" "$target"
   brief_order "$slugs" "$omitted"
   brief_prerequisites "$slugs" "$target"
   brief_structure
@@ -210,6 +211,7 @@ brief_header() {
   brief_field one_liner '.one_liner'
   brief_field stage '.stage'
   brief_field round '.round'
+  brief_field round_job '.round_job'
   echo "spec_library_version: $(library_get spec_library_version)"
   echo "target_structure_version: $(library_get target_structure_version)"
   echo "kit_version: $(library_get kit_version)"
@@ -310,6 +312,92 @@ brief_venture_facts() {
   echo "**visibly marked in the artefact**, not merely understood in conversation --"
   echo "\`cdsync check\` enforces that, so an unmarked number fails the drop rather"
   echo "than reaching a reader."
+  echo ""
+}
+
+# State what this round is FOR, and what it already has to work from.
+#
+# THE GAP THIS CLOSES. Every brief this tool had ever written said "build these",
+# in that voice, with no way to say anything else. A repackaging round -- one
+# whose job is to reshape what already exists rather than make something new --
+# could not be expressed at all, so the only way to order one was to order a
+# build and explain the difference out of band. Which is exactly the shape this
+# project keeps finding: the document explains a field and never supplies its
+# value, and the supplier reasonably does the one thing the document describes.
+#
+# TWO HALVES, AND THEY ARE DIFFERENT KINDS OF FACT.
+#
+# `round_job` is DECLARED, because a round's purpose is not derivable from the
+# tree. An asset already existing does not say whether this round repackages it,
+# revises it, extends it or corrects it -- four different jobs with one
+# filesystem signature. Free text rather than an enum, matching `effort` and
+# `inherits_from`, because nobody has ordered a vocabulary and inventing one here
+# would be this tool deciding what kinds of round exist.
+#
+# What is already in the target is MEASURED, and it is worth stating in every
+# round rather than only in repackaging ones. The brief could always see it --
+# `brief_prerequisites` has tested that same path all along -- and never said so,
+# so a supplier ordered a slug that already existed had no way to know it was not
+# starting from nothing. That is a rebuild-and-replace waiting to happen, and it
+# is silent when it happens.
+brief_round_job() {
+  local slugs="$1"
+  local target="$2"
+  local job slug present=""
+
+  while IFS= read -r slug; do
+    if [[ -z "$slug" ]]; then continue; fi
+    if [[ -d "$target/assets/$slug" ]]; then
+      present="$present$slug"$'\n'
+    fi
+  done < <(printf '%s\n' "$slugs")
+
+  present="${present%$'\n'}"
+  job="$(config_get '.round_job' || true)"
+
+  if [[ -z "$job" && -z "$present" ]]; then
+    return 0
+  fi
+
+  echo "## What this round is for"
+  echo ""
+
+  if [[ -n "$job" ]]; then
+    echo "$job"
+    echo ""
+  else
+    echo "_The venture did not say. Treat it as a build unless something below_"
+    echo "_contradicts that, and say in \`RETURN.md\` if the material suggested_"
+    echo "_otherwise._"
+    echo ""
+  fi
+
+  if [[ -z "$present" ]]; then
+    echo "**Nothing you have been ordered is in the target yet.** Every asset below"
+    echo "is being made for the first time."
+    echo ""
+    return 0
+  fi
+
+  echo "**Already in the target, and ordered again:**"
+  echo ""
+
+  while IFS= read -r slug; do
+    if [[ -z "$slug" ]]; then continue; fi
+    # Literal markdown backticks -- a list item, not command substitution.
+    # shellcheck disable=SC2016
+    printf -- '- `%s`\n' "$slug"
+  done < <(printf '%s\n' "$present")
+
+  echo ""
+  echo "**These exist. Work from them rather than starting again**, unless the job"
+  echo "above says otherwise. What you deliver replaces what is there, so an asset"
+  echo "rebuilt from scratch silently discards whatever the existing one had that"
+  echo "you did not know to reproduce -- and neither side would see it happen."
+  echo ""
+  echo "If reworking one turns out to be the wrong call, say so in \`RETURN.md\` and"
+  echo "deliver the rebuild. **The point is that it be a decision rather than a"
+  echo "default.**"
   echo ""
 }
 

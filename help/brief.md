@@ -45,6 +45,7 @@ without checking.
 | `one_liner` | What it does, one sentence, for whom |
 | `stage` | `pre-seed` / `seed` / `series-a` / `scaling` |
 | `round` | Which drop this is |
+| `round_job` | What this round is *for* — build, repackage, revise, extend. Free text |
 | `order.bundles` | Bundle names — `seed-set`, `product-set`, … |
 | `order.assets` | Individual slugs, beyond the bundles |
 | `fixed` | Decided. Do not re-invent |
@@ -62,6 +63,24 @@ without checking.
 this class of work is one of two things: something was invented that had already
 been decided, or a blank was left where invention was expected. Those two lists
 close both, and everything else is hygiene by comparison.
+
+## What this round is for
+
+Every brief this tool wrote used to say "build these", in that voice, with no way
+to say anything else — so a **repackaging round**, one whose job is to reshape what
+already exists, could not be expressed and had to be explained out of band.
+
+`round_job` is free text, not an enum, matching `effort` and `inherits_from`.
+Nobody has ordered a vocabulary of round types, and inventing one here would be the
+tool deciding what kinds of round exist.
+
+Beside it the brief states, **measured rather than declared, which of the ordered
+assets are already in the target**. That is worth saying in every round, not only a
+repackaging one: a supplier who orders a slug that already exists and is not told
+will rebuild it from scratch, and the rebuild silently discards whatever the
+existing one carried. The two facts are different in kind — a round's purpose is
+not derivable from the tree, since revise, extend, repackage and correct all look
+identical on disk.
 
 `spec_library_version`, `target_structure_version` and `kit_version` are stamped by
 the tool from the library, not declared here. That is what makes staleness

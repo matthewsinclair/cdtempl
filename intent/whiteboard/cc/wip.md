@@ -31,7 +31,9 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 
 **All of it lives in ST0003, "Post-release 0.1.0 clean-up"** -- `intent/st/ST0003/`, eight work packages, each with its own `info.md` stating what blocks it. **The ordering is in `intent/restart.md`.** This board carries no second copy.
 
-**Done:** WP-01 cut the release; WP-07 for all three checkable projects. **The only unblocked engineering left in the thread is WP-08's two `cdsync brief` gaps** -- the repackaging round it cannot express, and the slug it cannot order. **Everything else is waiting on a ruling**, including three items inside WP-08 that were not waiting on one when it was written.
+**Done:** WP-01 cut the release; WP-07 for all three checkable projects; WP-08's repackaging round, and the taxonomy count that was wrong in the message users read.
+
+**There is now no unblocked engineering left in ST0003.** WP-08's second `brief` gap turned out to be **blocked on WP-05's `spec_version` ruling** -- ordering a slug the library has no spec for means telling the round what version to stamp on the asset it is creating, which is that ruling exactly. WP-08 had recorded itself as depending on nothing. **Everything remaining in the thread waits on hv.**
 
 ## Wants hv
 
@@ -66,7 +68,7 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 
 - A probe answering about one corner, read as a verdict on the whole tree.
 - **Two probes each assuming the other reported it**, so between them a thing vanishes.
-- **A hand-maintained list drifting from its sibling.** **When a file carries two lists of the same kind of thing, that is the bug, not the style.** 2 August: the colour pattern was written out twice, once per scanner, and the gap existed on both sides because of it.
+- **A hand-maintained list drifting from its sibling.** **When a file carries two lists of the same kind of thing, that is the bug, not the style.** 2 August: the colour pattern was written out twice, once per scanner, and the gap existed on both sides because of it. **8 August, the same shape in a NUMBER and it reached users**: the taxonomy's size was written out by hand in four places and disagreed three ways, and the copy inside `brief`'s refusal message -- the one a user actually reads -- was among the wrong ones. **Computed now, one function, two callers.** A count restated in prose has no way to notice the table moved.
 - **A uniform zero is a broken probe until proven otherwise -- real data is lumpy.**
 - **A GENERATOR pointed at the wrong root reports an empty tree with total confidence.** 6 Aug: `bootstrap --stdout --target <repo>/design` said Lamplight had no assets; it has four, each with its `spec.md`, one level down at `design/system/`. The output was a well-formed document making a false claim, not an error. **Before believing a regenerated document, check it found something.**
 - **A probe that cannot tell ABSENT from EMPTY.** `grep -c . || echo NONE` prints `0` *and* exits 1; `|| true` is the correct form.
@@ -83,6 +85,8 @@ Completed narrative is archived per day at `.history/`; 6 August is the most rec
 **1. The mutation does not apply, and the test reports the reassuring answer.** Four times on 1 August: `sed 's|...||...|'` against a pattern containing `||`; `perl \Q...$var...\E` interpolating before quoting; `grep -v` on a literal, twice. **A fifth on 6 August, and it was the tool not the pattern: BSD `xargs` has no `-a`**, so a three-pass rename loop ran to completion having changed zero bytes while printing a tidy summary. **Print proof it landed.** `awk -v n="$LN" 'NR!=n'` by line number has not lied yet, and a before/after counter round the whole loop caught the `xargs` case immediately.
 
 **2. The mutation applies perfectly and the test still passes, because it asserts at a layer the bug cannot reach.** New on 2 August, and it is the subtler one. Three colour tests piped straight into `normalise_colours`, whose fall-through `print value` passes an unrecognised string along unchanged -- so they produced the right answer with the bug still in place. The gap was one layer up, in the grep. **Check the test actually exercises the changed code path, not just that the mutation landed.**
+
+**8 August, and the cleanest example yet: a test that ASKS THE CODE UNDER TEST FOR ITS OWN EXPECTED VALUE cannot fail.** Three new tests took the taxonomy count from `taxonomy_count()` and then asserted the message matched it. Replacing that function's whole body with `echo 99` left all three green -- they were pinning consistency, which was never in doubt, rather than correctness. **Derive the expected value by a different probe than the one under test**, which is the sampling-frame rule applied to one's own tests. Both rewritten tests fail against the mutant and pass clean.
 
 **My own tests have been wrong rather than the code more often than the reverse.**
 
@@ -142,6 +146,8 @@ Settled and not to be re-opened. Full reasoning in `intent/st/ST0001/design.md`.
 
 **CANON, above every Decision below: `intent/docs/design-system-lifecycle.md`.**
 
+- (2026-08-08) **A round's PURPOSE is declared and what the target already holds is MEASURED, and the two must not be collapsed.** `round_job` is free text, matching `effort` and `inherits_from`, because repackage, revise, extend and correct are four different jobs with **one filesystem signature** -- no amount of looking at the tree distinguishes them. What is already present is the opposite: the tool can see it, so asking the venture to declare it would be asking for something it can get wrong. **Free text rather than an enum, because nobody ordered a vocabulary of round types and inventing one would be the tool deciding what kinds of round exist.**
+- (2026-08-08) **A count belongs in one function, never in prose.** The taxonomy's size was hand-written in four places, disagreed three ways, and the wrong copy was the one in a message users read. Prose that wants a number says to run `cdsync doctor`. **This extends the existing ruling about the spec-library counts to every count the tool knows.**
 - (2026-08-06) **0.1.0 is released, and the repository is public.** Published from a single root commit on hv's ruling; the full history is retained privately rather than rewritten in place, because a force-push does not scrub what GitHub keeps reachable through a PR ref. The repository was deleted and recreated to make it genuinely unreachable.
 - (2026-08-06) **A release may land on an explicit version, and it may equal the current one.** All three bump parts move forward, which made the first release of any project unreachable. Whether a version has been RELEASED is a question about tags, not about `VERSION`, so it stays with the gate that finds the tag already exists rather than moving into the arithmetic.
 - (2026-08-06) **When `VERSION` does not change, the tag goes on the commit that is already the release.** No empty commit is manufactured to sit beside it. `--allow-empty` would have silenced the failure and left a second commit claiming to be the same thing.

@@ -2778,6 +2778,64 @@ EOF
   [ "$status" -eq 0 ]
 }
 
+@test "a repackaging round can be expressed at all" {
+  # The gap: every brief said "build these", in that voice, with no way to say
+  # anything else. The round's purpose is declared rather than measured, because
+  # repackage, revise, extend and correct are four different jobs with one
+  # filesystem signature.
+  echo '{"venture":"acme","round_job":"Repackage the existing deck for a partner audience. Do not redesign it.","order":{"assets":["investor-update"]}}' \
+    > "$TESTDIR/cdsync.json"
+  run "$CDSYNC_BIN" brief
+  [ "$status" -eq 0 ]
+
+  run bash -c "cat '$TESTDIR/design/brief.md'"
+  assert_contains "What this round is for"
+  assert_contains "Repackage the existing deck for a partner audience"
+  # Also in the header, so a machine reading the front matter sees it too.
+  assert_contains "round_job:"
+}
+
+@test "the brief states which ordered assets are already in the target" {
+  # Measured, not declared, and worth saying in every round. A supplier ordered
+  # a slug that already exists and not told will rebuild it, and the rebuild
+  # discards whatever the existing one carried -- silently, on both sides.
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  mkdir -p "$TESTDIR/design/assets/investor-update"
+  run "$CDSYNC_BIN" brief
+  [ "$status" -eq 0 ]
+
+  run bash -c "sed -n '/What this round is for/,/The order/p' '$TESTDIR/design/brief.md'"
+  assert_contains "Already in the target, and ordered again"
+  assert_contains "investor-update"
+  assert_contains "Work from them rather than starting again"
+}
+
+@test "an ordered asset absent from the target is not claimed to be present" {
+  # The negative half. Without this, a section that always says "already in the
+  # target" would pass the test above while being wrong every time.
+  echo '{"venture":"acme","round_job":"Build the first set.","order":{"assets":["investor-update"]}}' \
+    > "$TESTDIR/cdsync.json"
+  run "$CDSYNC_BIN" brief
+  [ "$status" -eq 0 ]
+
+  run bash -c "cat '$TESTDIR/design/brief.md'"
+  assert_contains "Nothing you have been ordered is in the target yet"
+  refute_contains "Already in the target, and ordered again"
+}
+
+@test "the round-job section is absent entirely when there is nothing to say" {
+  # No job declared and nothing already present. An empty section headed "What
+  # this round is for" would train its reader to skim the part of the document
+  # that matters most, which is the same reason brief_field omits empty keys.
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  run "$CDSYNC_BIN" brief
+  [ "$status" -eq 0 ]
+
+  run bash -c "cat '$TESTDIR/design/brief.md'"
+  refute_contains "What this round is for"
+  refute_contains "round_job:"
+}
+
 @test "a dependency already in the target is not declared unmet" {
   echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/cdsync.json"
   mkdir -p "$TESTDIR/design/assets/colour-system"

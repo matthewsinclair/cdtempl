@@ -47,7 +47,16 @@ Follow the chain and it ends on a ruling that has not been made:
 
 **So building this would mean choosing WP-05's answer by implementing it**, which is the one thing this thread says not to do. The refusal stays until WP-05 rules.
 
-**The first gap is genuinely unblocked** and stays here: a repackaging round reshapes assets that already exist, so every one of them already has a spec and a `spec_version`, and step 4 never arises.
+**The first gap is genuinely unblocked** -- a repackaging round reshapes assets that already exist, so every one of them already has a spec and a `spec_version`, and step 4 never arises. **It is now closed.**
+
+`cdsync.json` takes an optional **`round_job`**: free text, one line, what this round is *for*. Free text rather than an enum, matching `effort` and `inherits_from`, **because nobody ordered a vocabulary of round types and inventing one would be the tool deciding what kinds of round exist.**
+
+Beside it the brief now states, **measured rather than declared, which ordered assets are already in the target.** Two different kinds of fact, and the distinction is the design:
+
+- **A round's purpose is not derivable from the tree.** Repackage, revise, extend and correct are four different jobs with one filesystem signature.
+- **What is already present is not worth asking the venture to declare**, because the tool can see it -- `brief_prerequisites` has tested that same path all along and simply never said so.
+
+**The second half earns its place in every round, not just a repackaging one.** A supplier who orders a slug that already exists and is not told will build it from scratch, and **what it delivers replaces what is there** -- so the rebuild silently discards whatever the existing asset carried, with neither side seeing it happen.
 
 **What was done instead, because it was in the refusal message this item is about:** the message told users *"the taxonomy names fifty-one assets"* and the taxonomy names 52. The figure was hand-written in four places across `lib/` and `help/` and disagreed **three ways** -- fifty-one, fifty-two, and fifty in a test comment. It is computed from the manifest now, by one function with two callers, and no count is written out in shipped prose. **A count restated in prose drifts from the table it describes**, which is on the watch-out list by name.
 
@@ -118,7 +127,7 @@ Where the six stand after the 8 August re-measurement:
 | Item | State |
 | ---- | ----- |
 | Baize's `BOOTSTRAP-CD.md` | **Needs a decision, not a regeneration.** Regenerating it by hand is what did not hold |
-| Two gaps in `cdsync brief` | **The only real tool work left here.** Untouched, unblocked, not started |
+| Two gaps in `cdsync brief` | **Repackaging round: DONE** (`round_job` plus the measured already-present list). **Ordering an unspecified slug: BLOCKED on WP-05** |
 | Stale-document rule | **Ordered or declined by hv.** Its reach is now a settled question either way |
 | Intent's absolute path | Stands as written. Upstream report, not a per-project patch |
 | Downloads | **Done.** All five cleared by hv deliberately; the "stays" instruction is withdrawn |
