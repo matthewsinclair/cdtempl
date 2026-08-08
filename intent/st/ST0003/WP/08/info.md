@@ -35,6 +35,22 @@ Both recorded against `brief` and neither addressed:
 - **It cannot express a repackaging round** -- a round whose job is to reshape what already exists rather than build something new.
 - **It cannot order a slug the library does not hold.** Correct as a refusal, but it means a genuinely new asset type cannot be ordered at all until WP-03 writes its spec, which is a chicken-and-egg for anything novel.
 
+**8 August: the second one is BLOCKED, and this WP said the whole package depended on nothing.** That was written before anyone traced it.
+
+Follow the chain and it ends on a ruling that has not been made:
+
+1. Order a slug the library has no spec for.
+2. The brief must still carry everything the round needs, so it carries the `spec.md` contract -- which `brief_spec_contract` already emits, so far so good.
+3. That contract requires `spec_version: <n>`, described in the brief as *"copied from the specification below"*.
+4. **For a new asset there is no specification below.** So what does the round stamp?
+5. **That is WP-05 section 2, word for word** -- and four ventures have now asked it, with matthewsinclair's thirteen assets sitting at `spec_version: unassigned` because the supplier correctly refused to invent one.
+
+**So building this would mean choosing WP-05's answer by implementing it**, which is the one thing this thread says not to do. The refusal stays until WP-05 rules.
+
+**The first gap is genuinely unblocked** and stays here: a repackaging round reshapes assets that already exist, so every one of them already has a spec and a `spec_version`, and step 4 never arises.
+
+**What was done instead, because it was in the refusal message this item is about:** the message told users *"the taxonomy names fifty-one assets"* and the taxonomy names 52. The figure was hand-written in four places across `lib/` and `help/` and disagreed **three ways** -- fifty-one, fifty-two, and fifty in a test comment. It is computed from the manifest now, by one function with two callers, and no count is written out in shipped prose. **A count restated in prose drifts from the table it describes**, which is on the watch-out list by name.
+
 ### Should a stale generated document be detectable?
 
 An advisory rule comparing `BOOTSTRAP-CD.md`'s mtime against the newest file in the tree.

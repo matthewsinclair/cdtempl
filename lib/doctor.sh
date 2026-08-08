@@ -104,7 +104,7 @@ EOF
       error "the spec library holds no specs -- nothing can be briefed"
       issues=$((issues + 1))
     else
-      success "$specs specs, $(each_taxonomy_slug | grep -c . || true) taxonomy slugs, $(each_bundle | grep -c . || true) bundles"
+      success "$specs specs, $(taxonomy_count) taxonomy slugs, $(each_bundle | grep -c . || true) bundles"
       info "library version $(library_get spec_library_version || echo '?'), structure $(library_get target_structure_version || echo '?'), kit $(library_get kit_version || echo '?')"
     fi
   fi

@@ -112,11 +112,13 @@ each_bundle() {
 
 # Emit every slug named anywhere in the taxonomy tables, deduplicated.
 #
-# Wider than each_spec: the taxonomy is the menu of fifty-one, the library holds
-# specs for the eleven written so far. A slug can be legitimately named -- as a
+# Wider than each_spec: the taxonomy is the whole menu, the library holds specs
+# for the ones written so far. A slug can be legitimately named -- as a
 # dependency, or in a bundle -- long before anyone specifies it, which is why
 # `component-library` depending on `grid-and-layout` is correct rather than
 # broken.
+#
+# NEITHER SIZE IS STATED IN PROSE ANYWHERE, deliberately. See taxonomy_count.
 each_taxonomy_slug() {
   awk '
     /^\|[[:space:]]*[0-9]+[[:space:]]*\|/ {
@@ -129,6 +131,22 @@ each_taxonomy_slug() {
       }
     }
   ' "$(spec_library_manifest)"
+}
+
+# How many assets the taxonomy names. Computed, never remembered.
+#
+# THE NUMBER WAS WRITTEN OUT BY HAND IN FOUR PLACES AND DISAGREED THREE WAYS:
+# `fifty-one` in this file's own comment and in `brief`'s refusal message, which
+# users read; `fifty-two` in two help files; and `fifty` in a test comment. The
+# true answer is what the table says, and only one of the four had it right.
+#
+# A count restated in prose is a count that drifts from the thing it describes,
+# and that is on the standing watch-out list by name -- so there is now one
+# function, two callers, and no figure written out anywhere in shipped text.
+# Prose that wants the number says to run `cdsync doctor`, which is the same
+# ruling already taken for the spec-library counts.
+taxonomy_count() {
+  each_taxonomy_slug | grep -c . || true
 }
 
 taxonomy_has() {

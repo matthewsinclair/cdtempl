@@ -113,7 +113,7 @@ cmd_brief() {
     echo "  The library holds a spec for each of these:" >&2
     each_spec | sed 's/^/    /' >&2
     echo "" >&2
-    echo "  The taxonomy names fifty-one assets; only the specified ones can be" >&2
+    echo "  The taxonomy names $(taxonomy_count) assets; only the specified ones can be" >&2
     echo "  briefed, because a brief carries the specification itself." >&2
     return 2
   fi

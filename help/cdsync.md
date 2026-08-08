@@ -123,9 +123,10 @@ you assert a state the tree contradicts.
 
 ## The spec library
 
-`specs/` holds the definition of done for each asset, plus the taxonomy of fifty-two
-types and the seven bundles. `brief` assembles from it; `check` compares a drop against
-it.
+`specs/` holds the definition of done for each asset, plus the asset taxonomy and the
+bundles. `brief` assembles from it; `check` compares a drop against it. **`cdsync doctor`
+prints the counts** — specs, taxonomy slugs and bundles — so they are not written out
+here, where they would drift from the tables they describe.
 
 A drop carries a stamped copy of each spec it delivers. The library here is the
 source of truth, and the version difference between the two is what makes staleness

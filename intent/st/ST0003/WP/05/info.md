@@ -1,5 +1,5 @@
 ---
-verblock: "02 Aug 2026:v0.2: matts - Filled from the ST0001/ST0002 close-out carry-forward"
+verblock: "08 Aug 2026:v0.3: matts - The spec_version ruling now blocks WP-08's second brief gap as well"
 wp_id: WP-05
 title: "Make scope durable: cdsync.json and spec_version"
 scope: Medium
@@ -31,6 +31,10 @@ That is the right behaviour from the supplier and the wrong state to leave the f
 - A declared convention that `unassigned` is the correct permanent answer until the library gains an entry.
 
 **Three suppliers asking the same question is one defect in the document, not three mistakes by them.** It is four now.
+
+**8 August: a fifth asker, and it is the tool rather than a supplier.** WP-08 carries a gap -- `brief` cannot order a slug the spec library does not hold, so a genuinely new asset type cannot be commissioned at all. Building that requires the brief to tell the round what `spec_version` to stamp on the asset it is creating, **which is exactly the question above.** So this ruling now blocks a second work package, and WP-08 recorded itself as depending on nothing until the chain was traced.
+
+**Whatever is ruled here should be phrased so the generator can state it**, not only so a human can apply it. The recurring shape in this project is a document that explains a field and never supplies its value, and an answer that lives only in a ruling would be the fifth instance rather than the fix.
 
 ## Deliverables
 

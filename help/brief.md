@@ -70,8 +70,11 @@ detectable.
 ## Refusals
 
 An ordered slug with no entry in the spec library is a refusal, not a warning. The
-taxonomy names fifty-two assets; only the specified ones can be briefed, because a
-brief carries the specification itself.
+taxonomy names many more assets than the library specifies, and only the specified
+ones can be briefed, because a brief carries the specification itself. The refusal
+prints the real figure, and `cdsync doctor` prints all three counts — neither is
+written out here, because a count restated in prose drifts from the table it
+describes.
 
 ## Why the write is atomic
 

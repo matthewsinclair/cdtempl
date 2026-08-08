@@ -2610,6 +2610,51 @@ EOF
   assert_contains "ordered by name but not in the spec library"
 }
 
+@test "the refusal states the taxonomy's real size rather than a remembered one" {
+  # The size was hand-written in four places and disagreed THREE ways: fifty-one
+  # in lib/specs.sh and in this very refusal, fifty-two in two help files, fifty
+  # in a test comment. The one users read was among the wrong ones.
+  #
+  # DERIVED BY A DIFFERENT PROBE THAN THE ONE UNDER TEST, deliberately. Asking
+  # taxonomy_count for the expected value and then asserting the message matches
+  # it passes for ANY value the function returns -- proved by mutation: replacing
+  # its body with `echo 99` left all of these green. That is the second mutation
+  # failure mode on the board, where the mutation lands perfectly and the test
+  # asserts at a layer the bug cannot reach. Counting the manifest directly here
+  # is what makes this able to fail.
+  local expected
+  expected="$(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$CDSYNC_HOME/specs/library.md" \
+    | grep -oE '`[a-z0-9-]+`' | sort -u | grep -c . || true)"
+  [ "$expected" -gt 0 ]
+
+  echo '{"venture":"acme","order":{"assets":["hiring-plan"]}}' > "$TESTDIR/cdsync.json"
+  run "$CDSYNC_BIN" brief
+  [ "$status" -eq 2 ]
+  assert_contains "The taxonomy names $expected assets"
+}
+
+@test "doctor and brief report the same taxonomy size" {
+  # Two callers, one function. They disagreed before it existed, and the only
+  # way that recurs is someone counting inline again. Independent derivation as
+  # above, for the same reason.
+  local expected
+  expected="$(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$CDSYNC_HOME/specs/library.md" \
+    | grep -oE '`[a-z0-9-]+`' | sort -u | grep -c . || true)"
+
+  run "$CDSYNC_BIN" doctor
+  assert_contains "$expected taxonomy slugs"
+}
+
+@test "the help files that carried a stale taxonomy count state no count at all" {
+  # Scoped to the two that were wrong, deliberately. The same pattern run over
+  # all of bin/lib/help matches a dozen legitimate sentences -- "ten assets",
+  # "eight asset types", "0 assets checked" -- so a repo-wide version of this
+  # guard would be a false-positive machine and would be switched off within a
+  # month. Narrow and precise beats broad and ignored.
+  run bash -c "grep -niE '([0-9]+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(-(one|two|three|four|five|six|seven|eight|nine))?)[[:space:]]+(assets|asset types|taxonomy slugs|slugs|types)' '$CDSYNC_HOME/help/brief.md' '$CDSYNC_HOME/help/cdsync.md' || true"
+  [ -z "$output" ]
+}
+
 @test "brief refuses when nothing the order reached is specified" {
   # No shipped bundle is entirely unspecified, so the library is stood in for
   # here. This is the guard against composing a brief with no specifications in
