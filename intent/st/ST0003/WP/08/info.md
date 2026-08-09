@@ -28,6 +28,8 @@ Steel-thread high-water 23 against a tree at 24. **Not noise** -- the other proj
 
 **That is the whole argument for the item below**, and it is now a stronger one than when it was written: the objection to an advisory staleness rule was that a hand-regeneration fixes the problem. **It does not. It fixes the problem once, and the tree keeps moving.**
 
+**9 August: ruled and done.** hv ruled that a stale document is never accepted -- regenerate. Regenerated against the live tree and committed in Baize as `7211fc1`, via explicit pathspec with hv's uncommitted `mix.lock` left untouched. The regeneration caught what the 8 August measurement had not: **the ADR series had drifted too**, recorded 0030 against a tree at 0035 -- a second series moving on a list whose whole lesson is that lists rot. Whether staleness becomes *detectable* is the rule item below.
+
 ### Two gaps in `cdsync brief`
 
 Both recorded against `brief` and neither addressed:
@@ -104,6 +106,8 @@ The generator already reads outside the design tree -- the numbering scan roots 
 
 **Re-measured 8 August and unchanged:** Cdsync 0, Baize 2, Lamplight 2. **This item stands exactly as written**, which is worth saying out loud on a list where three neighbours had drifted.
 
+**9 August: reported upstream on hv's instruction -- Intent issue `0016`** (`intent/issues/OPEN/0016/` in the Intent repository), carrying the measurement, the root cause (`lib/templates/.claude/settings.json:9,21` substituted at install time), and a runtime-resolution fix proposed. Baize's and Lamplight's copies stay as they are until Intent ships it; no per-project patching.
+
 ### Downloads housekeeping
 
 All optional and **none of it vestigial** -- this is the 31 July consolidation, not junk. **8 August: every one of these is now absent from `~/Downloads`, including the one that was to stay.**
@@ -138,13 +142,13 @@ Where the six stand after the 8 August re-measurement:
 
 | Item | State |
 | ---- | ----- |
-| Baize's `BOOTSTRAP-CD.md` | **Needs a decision, not a regeneration.** Regenerating it by hand is what did not hold |
-| Two gaps in `cdsync brief` | **Repackaging round: DONE** (`round_job` plus the measured already-present list). **Ordering an unspecified slug: BLOCKED on WP-05** |
-| Stale-document rule | **Ordered or declined by hv.** Its reach is now a settled question either way |
-| Intent's absolute path | Stands as written. Upstream report, not a per-project patch |
+| Baize's `BOOTSTRAP-CD.md` | **Done 9 Aug.** hv ruled stale is never accepted; regenerated and committed in Baize (`7211fc1`), which also caught the ADR series at 0035 against a recorded 0030 |
+| Two gaps in `cdsync brief` | **Repackaging round: DONE** (`round_job` plus the measured already-present list). **Ordering an unspecified slug: BLOCKED on WP-05**, whose rulings landed 9 Aug and are being made precise |
+| Stale-document rule | **Reach ruled 9 Aug** -- repository-scoped, because clean-on-stale is the wrong answer. Whether the rule is built awaits hv's word |
+| Intent's absolute path | **Done 9 Aug.** Reported upstream as Intent issue `0016` |
 | Downloads | **Done.** All five cleared by hv deliberately; the "stays" instruction is withdrawn |
 | Whiteboard roster | Deliberately deferred, and still correctly so |
 
 ## Dependencies
 
-None -- **but three of the six now need an hv ruling rather than effort**, which was not true when this WP was written.
+None -- what is left here waits on two words from hv: whether the stale-document rule is built, and WP-05's `spec_version` reading, which unblocks the unspecified-slug gap.

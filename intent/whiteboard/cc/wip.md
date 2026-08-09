@@ -2,10 +2,10 @@
 node: cc
 name: Control Claude
 role: control
-session_id: a0b5335d-40c5-456d-9f8b-9da1d5202a79
-heartbeat_at: 2026-08-08T15:01Z
-status: paused
-focus: "Day closed. WP-07's premise was false in all three checkable projects; WP-08 re-measured and its last gap found blocked on WP-05. Nothing in ST0003 is unblocked any more -- everything waits on an hv ruling"
+session_id: e2036be7-6243-4da5-97a5-985cfaddc2bc
+heartbeat_at: 2026-08-09T09:43Z
+status: active
+focus: "9 Aug: rulings landing. Wind-back recorded, cdsync.json home ruled, Baize bootstrap regenerated (7211fc1), Intent 0016 filed. Awaiting: spec_version precision, the wind-back map, stale-rule order, WP-02 words"
 claims: [ST0003]
 ---
 
@@ -37,19 +37,18 @@ Completed narrative is archived per day at `.history/`; 8 August is the most rec
 
 ## Wants hv
 
-**Every ruling is held in ST0003 with its evidence** -- WP-02 (the two rule-4 rulings), WP-05 (`cdsync.json`'s home, `spec_version` for a new asset), WP-06 (round three's seven rulings plus finding 5).
+**Off the list rather than settled, so do not re-open:** rule 5 shipped 1 August; rule 3 came off because its residual is mostly TRUE positives. **Ruled 9 August and now in `## Decisions`:** the delivered-projects wind-back, `cdsync.json`'s home, stale-is-never-accepted, and the Baize divergence ("leave it").
 
-**Off the list rather than settled, so do not re-open:** rule 5 shipped 1 August; rule 3 came off because its residual is mostly TRUE positives.
+**Awaiting hv, raised 9 August:**
 
-**Raised 8 August and unanswered:**
+- **The `spec_version` precise reading** -- per-slug `unassigned` for a new asset, plus the round-level `spec_library_version` stamp the brief already carries, all stated by the generator. Confirm before it goes into the generator; it is the last thing between WP-05 and implementation.
+- **The wind-back's consequence map** -- WP-04 closes, WP-06 dissolves to two survivors, WP-07 closes on its finding, the sibling regeneration sweep retires. On confirm the WPs move and the state files follow.
+- **Whether the stale-document rule is built** -- its reach is ruled (repository-scoped; clean-on-stale is wrong); the order itself awaits the word.
+- **WP-02's three rule-4 rulings** -- explained 9 August with recommendations; one word each suffices, or "park".
 
-- **Baize's 96%/95% divergence wants an addendum in Baize**, which is hv's to release: nothing was written into that repository this session.
-- **The stale-document rule should be ordered or declined**, rather than carried again. Its reach is now a settled question either way -- WP-08 has it, and it keeps earning itself.
+**Standing:**
 
-**Belonging to no WP:**
-
-- **Transport of the six unsent documents** is WP-04, but the *decision* to send is hv's alone and nothing in the tool can prompt it.
-- **Downloads housekeeping is DONE.** All five directories cleared by hv deliberately, `baize-design-drops/` included -- **the standing "it stays" instruction is withdrawn, not softened.** **The one live hazard is elsewhere: of the six spent `_inbox/` directories, the two newest hold the Laksa theme packs, which exist nowhere else.** Do not clear those two until Laksa has taken them.
+- **Of the six spent `_inbox/` directories, the two newest hold the Laksa theme packs, which exist nowhere else.** Do not clear those two until Laksa has taken them.
 - **No `hv` node here, by hv's ruling -- `cc` is the whole roster**, so rulings arrive in conversation and land in `## Decisions`. The whiteboard `README.md` roster stays deferred.
 
 ## Watch-outs
@@ -150,6 +149,10 @@ Settled and not to be re-opened. Full reasoning in `intent/st/ST0001/design.md`.
 
 **CANON, above every Decision below: `intent/docs/design-system-lifecycle.md`.**
 
+- (2026-08-09) **The delivered projects are delivered, and the loop does not run back to Claude Design for them.** The cdsync process earns its keep for a few rounds while a design system beds down; after that the tree is a **record of what was asked for**, not a living document. Further rounds are rare, project-specific and as-needed; rollout is the project's own work, and nothing in the four delivered projects needs anything more from here. The map of what this dissolves in ST0003 awaits hv's confirm before any WP moves.
+- (2026-08-09) **`cdsync.json` lives at the design tree root, always -- one home for `new` ventures and `init` projects alike.** The WP-05 framing had invented a choice; hv's answer is that there is nowhere else it could sensibly live. Consequences carried into implementation: the file joins `CDSYNC_DROP_PROTECTED_PATHS`, a drop may never deliver it, and its `.target` field retires as circular once the file sits inside the tree it points at.
+- (2026-08-09) **A stale generated document is never accepted -- regenerate it.** And a staleness check that reports clean on a provably stale document is the wrong check, so any such check scopes to the repository, matching the generator's own reach.
+- (2026-08-09) **Baize's 96%/95% refinement stays unrecorded -- "leave it."** No addendum. Consistent with integration being the application's business, and with the wind-back above.
 - (2026-08-08) **A round's PURPOSE is declared and what the target already holds is MEASURED, and the two must not be collapsed.** `round_job` is free text, matching `effort` and `inherits_from`, because repackage, revise, extend and correct are four different jobs with **one filesystem signature** -- no amount of looking at the tree distinguishes them. What is already present is the opposite: the tool can see it, so asking the venture to declare it would be asking for something it can get wrong. **Free text rather than an enum, because nobody ordered a vocabulary of round types and inventing one would be the tool deciding what kinds of round exist.**
 - (2026-08-08) **A count belongs in one function, never in prose.** The taxonomy's size was hand-written in four places, disagreed three ways, and the wrong copy was the one in a message users read. Prose that wants a number says to run `cdsync doctor`. **This extends the existing ruling about the spec-library counts to every count the tool knows.**
 - (2026-08-06) **0.1.0 is released, and the repository is public.** Published from a single root commit on hv's ruling; the full history is retained privately rather than rewritten in place, because a force-push does not scrub what GitHub keeps reachable through a PR ref. The repository was deleted and recreated to make it genuinely unreachable.
