@@ -507,3 +507,63 @@ each_metric_in_file() {
   ' "$file" 2>/dev/null \
     | grep -oE '(\$|£|€|¥)[0-9][0-9,.]*[kmbKMB]?|[0-9][0-9,.]*%|[0-9]+(\.[0-9]+)?x\b|[0-9]{1,3}(,[0-9]{3})+'
 }
+
+# ============================================================================
+# THE GENERATED-DOCUMENT STALENESS PROBE
+# ============================================================================
+
+# Advisory line when BOOTSTRAP-CD.md is older than the repository it describes.
+# Ordered by hv on 9 Aug 2026, shape (a): a warning, never blocking, and never
+# a numbered check rule -- the six rules judge what Claude Design delivered,
+# and this judges Cdsync's own output.
+#
+# REPOSITORY-scoped, matching the generator's own reach. Scoped to the design
+# tree it reports clean on the provable case: what stales the document -- a new
+# steel thread, an ADR -- usually lives outside that tree, and Baize's stale
+# snapshot was the newest file in its own tree when it was 1.3 days behind the
+# repository. The dangerous direction is always the clean report.
+#
+# TRACKED AND UNTRACKED-UNIGNORED FILES ONLY, via git. An mtime sweep of the
+# disk would compare against _build/ churn and cry wolf forever, and a guard
+# people learn to ignore is worse than no guard. Outside a repository the walk
+# falls back to the target tree, which is then the whole visible world.
+#
+# One definition, two callers -- doctor and check -- because two hand-rolled
+# copies of one probe is how this project's scanners have drifted before.
+report_bootstrap_staleness() {
+  local target="$1"
+  local doc="$target/BOOTSTRAP-CD.md"
+  local repo file count=0 example=""
+
+  if [[ ! -f "$doc" ]]; then
+    return 0
+  fi
+
+  repo="$(git -C "$target" rev-parse --show-toplevel 2>/dev/null)" || repo=""
+
+  if [[ -n "$repo" ]]; then
+    while IFS= read -r -d '' file; do
+      [[ -z "$file" ]] && continue
+      [[ "$repo/$file" -nt "$doc" ]] || continue
+      count=$((count + 1))
+      if [[ -z "$example" ]]; then example="$file"; fi
+    done < <(git -C "$repo" ls-files -z --cached --others --exclude-standard 2>/dev/null)
+  else
+    while IFS= read -r -d '' file; do
+      [[ "$file" -ef "$doc" ]] && continue
+      [[ "$file" -nt "$doc" ]] || continue
+      count=$((count + 1))
+      if [[ -z "$example" ]]; then example="${file#"$target"/}"; fi
+    done < <(find "$target" -type f ! -name '.DS_Store' -print0 2>/dev/null)
+  fi
+
+  if [[ "$count" -eq 0 ]]; then
+    return 0
+  fi
+
+  warn "BOOTSTRAP-CD.md is older than $count file(s) in the repository -- eg $example"
+  echo "  A stale snapshot hands Claude Design numbers the tree has moved past," >&2
+  echo "  and the last collision cost a full export cycle. Regenerate before" >&2
+  echo "  sending:  cdsync bootstrap --target $target" >&2
+  return 0
+}

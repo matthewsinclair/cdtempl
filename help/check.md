@@ -60,6 +60,19 @@ becomes an advisory — rebuild against the new specification — the day it gai
 one. A number on a library-less asset is flagged as a number nobody issued, and a
 stamp that is neither a number nor `unassigned` is named rather than compared.
 
+## The document staleness advisory
+
+Before any rule runs — and even when the tree refuses the asset walk — `check`
+warns if the target's `BOOTSTRAP-CD.md` is older than the repository it
+describes. **Repository-scoped**, because what stales the document (a new steel
+thread, an ADR) usually lives outside the design tree; over **tracked and
+untracked-unignored files only**, so build churn cannot make it cry wolf. It is
+a warning and never blocks, and it is deliberately not a numbered rule: the six
+rules judge what Claude Design delivered, this judges Cdsync's own output.
+`doctor` prints the same line. The remedy is always to regenerate — a stale
+snapshot hands Claude Design numbers the tree has moved past, and the last such
+collision cost a full export cycle.
+
 **Rule 6 cannot block, and that is forced rather than chosen.** Classification governs
 where material may be shown, never whether it is committed, and it "is not a delivery
 filter and must not be used as one" — so a blocking rule here would refuse a drop on the

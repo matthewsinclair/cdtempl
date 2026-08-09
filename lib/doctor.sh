@@ -119,6 +119,9 @@ EOF
     if [[ ! -d "$target" ]]; then
       info "does not exist yet -- cdsync import will create it"
     fi
+    # Advisory, not an issue: a stale generated document is worth a warning at
+    # every touchpoint and a failure at none.
+    report_bootstrap_staleness "$target"
   else
     error "could not resolve a target"
     issues=$((issues + 1))

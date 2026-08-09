@@ -12,7 +12,7 @@ Project-wide snapshot, updated 9 August. The live per-session channel is `intent
 
 **The repository is public as of 6 August**, published from a single root commit. The 135-commit development history was truncated and retained privately at the Dropbox mirror on `archive/pre-public-20260806`, with a bundle beside it. **Everything committed here is published on push.**
 
-**ST0003 is nearly done, and the 9 August wind-back is why.** hv ruled the delivered projects delivered -- the loop does not run back to Claude Design for them; the tree is a record of what was asked for. Five of eight WPs are closed (WP-01 on 6 Aug; WP-04, 05, 06, 07 on 9 Aug), WP-02 is parked, and WP-08 waits on one word: the stale-document rule, built or declined. **WP-05's rulings landed and were built the same day** -- `cdsync.json` at the design tree root for every project, and `spec_version: unassigned` for an asset ordered ahead of the library.
+**ST0003 is nearly done, and the 9 August wind-back is why.** hv ruled the delivered projects delivered -- the loop does not run back to Claude Design for them; the tree is a record of what was asked for. Six of eight WPs are closed (WP-01 on 6 Aug; WP-04 through WP-08 on 9 Aug), WP-02 is parked, and **WP-03 is the one live remainder**, with every question it needs already ruled. **The day's builds**: `cdsync.json` at the design tree root for every project; `spec_version: unassigned` and ordering ahead of the library; the staleness advisory in `doctor` and `check` (shape (a) -- a warning, never blocking).
 
 **Six projects hold a design system tree.** matthewsinclair and geodica completed round one on 2 August. Of the original four from round three, **three are integrated and were already integrated before anyone checked** -- Gyre & Gymble, Baize and snorkeltoast, in three different idioms. **Lamplight is unchecked by design** -- integration is the application's business, and nothing here needs the answer. **hv is rolling both new design systems out in Laksa and fixing forward**; implementation is not this project's thread.
 
@@ -25,7 +25,7 @@ Project-wide snapshot, updated 9 August. The live per-session channel is `intent
 | ST0001 | Harvest template v0 from the three Claude Design projects | Completed | 16/16 |
 | ST0002 | Port four established projects to the Cdsync shape | Completed | 12/12 |
 | ST0004 | Rename the tool to Cdsync | Completed | 11/11, plus a post-close note |
-| ST0003 | Post-release 0.1.0 clean-up | **WIP** | Five WPs closed, WP-02 parked, WP-08 on one hv word; contract still deliberately unwritten |
+| ST0003 | Post-release 0.1.0 clean-up | **WIP** | Six WPs closed, WP-02 parked, WP-03 live; contract still deliberately unwritten until the scope is real |
 
 Each close went through `intent st done`, which refuses while a contract is BLOCKED, so each had to earn its number. `intent st list` shows nothing by default -- use `--status Completed`.
 

@@ -416,6 +416,10 @@ cmd_check() {
   source="$(target_source "$flag_target" "$PWD")" || return 2
 
   describe_target "$target" "$source" "$PWD"
+
+  # BEFORE the shape gate, deliberately: the poster cases for a stale document
+  # are exactly the trees the asset walk refuses.
+  report_bootstrap_staleness "$target"
   echo ""
 
   if ! drop_looks_valid "$target"; then

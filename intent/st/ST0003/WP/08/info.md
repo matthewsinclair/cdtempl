@@ -3,7 +3,7 @@ verblock: "08 Aug 2026:v0.4: matts - Re-measured; Downloads closed, repackaging 
 wp_id: WP-08
 title: "Housekeeping and small gaps"
 scope: Small
-status: WIP
+status: Done
 ---
 
 # WP-08: Housekeeping and small gaps
@@ -94,6 +94,8 @@ An advisory rule comparing `BOOTSTRAP-CD.md`'s mtime against the newest file in 
 
 Cheap to build. **Still not built, because it is unasked scope**, and this project has a standing preference for not inventing rules nobody ordered. **It should be ordered or declined rather than carried a sixth time.**
 
+**9 August, ordered and BUILT -- shape (a), hv's word after the explanation finally landed.** A warning, never blocking, and deliberately not a numbered rule (the six rules judge what Claude Design delivered; this judges Cdsync's own output). `report_bootstrap_staleness` in `lib/scan.sh` -- one definition, two callers: `doctor`'s target section and `check`'s preamble, **before the shape gate**, because the poster cases for staleness are exactly the trees the asset walk refuses. Repository-scoped per the reach ruling below; **tracked and untracked-unignored files only**, so `_build/` churn cannot make it cry wolf. Four tests, the probe's direction mutation-proven -- and the mutation itself refused to land twice first, once on the sed-`||` watch-out and once on `$` read as a regex anchor, both already on the board. The (b) shape -- `check` regenerating as a byproduct -- was offered and declined. **This item is DONE.**
+
 **One design constraint, found by testing the proposal against the case above rather than assuming it.** *"The newest file in the tree"* is the wrong reach, and it fails in the dangerous direction:
 
 - Baize's `BOOTSTRAP-CD.md` is 6 Aug 09:46. **It is the newest file in `design/system/`** -- tied with `index.md` and `RETURN.md`, which the same sync wrote.
@@ -146,11 +148,15 @@ Where the six stand after the 8 August re-measurement:
 | ---- | ----- |
 | Baize's `BOOTSTRAP-CD.md` | **Done 9 Aug.** hv ruled stale is never accepted; regenerated and committed in Baize (`7211fc1`), which also caught the ADR series at 0035 against a recorded 0030 |
 | Two gaps in `cdsync brief` | **Both DONE.** Repackaging round 8 Aug (`round_job` plus the measured already-present list); ordering an unspecified slug 9 Aug, with WP-05's `unassigned` ruling |
-| Stale-document rule | **Reach ruled 9 Aug** -- repository-scoped, because clean-on-stale is the wrong answer. Whether the rule is built awaits hv's word |
+| Stale-document rule | **Done 9 Aug.** Built as shape (a): advisory in `doctor` and `check`, repository-scoped, tracked-and-unignored files, mutation-proven |
 | Intent's absolute path | **Done 9 Aug.** Reported upstream as Intent issue `0016` |
 | Downloads | **Done.** All five cleared by hv deliberately; the "stays" instruction is withdrawn |
 | Whiteboard roster | Deliberately deferred, and still correctly so |
 
 ## Dependencies
 
-None -- the one thing left waiting on hv is whether the stale-document rule is built. The roster item stays deliberately deferred.
+None.
+
+## Closed 9 August
+
+**All six items done, or declined on the record -- which is this WP's own bar.** Baize's document regenerated and committed upstream; both `brief` gaps built; the staleness advisory built as shape (a); the Intent defect reported upstream as issue `0016`; Downloads closed by hv's deliberate clearing; the whiteboard roster deliberately deferred, which is a decline with its reason. The one standing hazard outlives the WP and stays on the board: the two newest `_inbox/` directories hold the Laksa theme packs, which exist nowhere else.

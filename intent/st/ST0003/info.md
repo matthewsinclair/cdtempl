@@ -40,9 +40,9 @@ Two things are worth knowing before picking anything up.
 | WP-05 | Make scope durable: `cdsync.json` and `spec_version` | **Done 9 Aug** -- both ruled and built the same day |
 | WP-06 | Settle round three's outstanding rulings | **Done 9 Aug** -- dissolved to two survivors; the record stands as delivered |
 | WP-07 | Integrate the original four | **Done 9 Aug** -- closed on the finding; Lamplight unchecked by design |
-| WP-08 | Housekeeping and small gaps | **WIP.** One item on hv: the stale-document rule, built or declined |
+| WP-08 | Housekeeping and small gaps | **Done 9 Aug** -- all six items done or declined on the record; the staleness advisory built as shape (a) |
 
-**The 8 August state -- nothing unblocked, everything on hv -- lasted one day.** On 9 August hv ruled the wind-back (the delivered projects are delivered; the loop does not run back to Claude Design for them), ruled `cdsync.json`'s home and `spec_version`'s answer, parked WP-02, and the thread collapsed from a waiting list to two live edges: WP-03's library work, and WP-08's last question.
+**The 8 August state -- nothing unblocked, everything on hv -- lasted one day.** On 9 August hv ruled the wind-back (the delivered projects are delivered; the loop does not run back to Claude Design for them), ruled `cdsync.json`'s home, `spec_version`, the staleness advisory and `formats_required`, and parked WP-02. **Six of eight WPs are closed; what remains live is WP-03 alone** -- the library version-bump pass, with every question it needs already answered -- plus parked WP-02. When WP-03 lands, this thread writes its contract from the evidence and closes.
 
 ## Acceptance
 

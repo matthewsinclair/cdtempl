@@ -4233,6 +4233,68 @@ EOF
   assert_contains "This is a cold start"
 }
 
+# ============================================================================
+# THE GENERATED DOCUMENT KNOWS WHEN IT HAS GONE STALE
+# ============================================================================
+#
+# Ordered by hv on 9 Aug 2026, shape (a): an advisory line, never blocking.
+# REPOSITORY-scoped, because what stales the document usually lives outside the
+# design tree -- Baize's snapshot was staled by a steel thread two directories
+# away while remaining the newest file in its own tree. Tracked and
+# untracked-unignored files only, so build noise cannot make it cry wolf.
+
+@test "check warns when BOOTSTRAP-CD.md is older than the repository" {
+  mkdir -p "$TESTDIR/proj/design/system/assets" && git -C "$TESTDIR/proj" init -q .
+  echo "# doc" > "$TESTDIR/proj/design/system/BOOTSTRAP-CD.md"
+  touch -t 202601010000 "$TESTDIR/proj/design/system/BOOTSTRAP-CD.md"
+  mkdir -p "$TESTDIR/proj/intent/st/ST0999"
+  echo "# newer, outside the design tree" > "$TESTDIR/proj/intent/st/ST0999/info.md"
+
+  # The tree refuses the asset walk (nothing in the Cdsync shape), and the
+  # advisory must fire anyway -- the poster cases for staleness are exactly
+  # the trees check cannot walk.
+  run "$CDSYNC_BIN" check --target "$TESTDIR/proj/design/system"
+  assert_contains "BOOTSTRAP-CD.md is older"
+  assert_contains "ST0999"
+  assert_contains "cdsync bootstrap --target"
+}
+
+@test "the staleness warning is silent when the document is current" {
+  mkdir -p "$TESTDIR/proj/design/system/assets" && git -C "$TESTDIR/proj" init -q .
+  mkdir -p "$TESTDIR/proj/intent/st/ST0999"
+  echo "# older" > "$TESTDIR/proj/intent/st/ST0999/info.md"
+  touch -t 202601010000 "$TESTDIR/proj/intent/st/ST0999/info.md"
+  echo "# doc, newest" > "$TESTDIR/proj/design/system/BOOTSTRAP-CD.md"
+
+  run "$CDSYNC_BIN" check --target "$TESTDIR/proj/design/system"
+  refute_contains "BOOTSTRAP-CD.md is older"
+}
+
+@test "an ignored file cannot stale the document" {
+  mkdir -p "$TESTDIR/proj/design/system/assets" && git -C "$TESTDIR/proj" init -q .
+  printf '_build/\n' > "$TESTDIR/proj/.gitignore"
+  touch -t 202601010000 "$TESTDIR/proj/.gitignore"
+  echo "# doc" > "$TESTDIR/proj/design/system/BOOTSTRAP-CD.md"
+  touch -t 202601020000 "$TESTDIR/proj/design/system/BOOTSTRAP-CD.md"
+  mkdir -p "$TESTDIR/proj/_build"
+  echo "churn" > "$TESTDIR/proj/_build/artifact"
+
+  run "$CDSYNC_BIN" check --target "$TESTDIR/proj/design/system"
+  refute_contains "BOOTSTRAP-CD.md is older"
+}
+
+@test "doctor reports the stale document too" {
+  mkdir -p "$TESTDIR/proj/design/assets" && git -C "$TESTDIR/proj" init -q .
+  echo "# doc" > "$TESTDIR/proj/design/BOOTSTRAP-CD.md"
+  touch -t 202601010000 "$TESTDIR/proj/design/BOOTSTRAP-CD.md"
+  echo "# newer" > "$TESTDIR/proj/newer.md"
+
+  cd "$TESTDIR/proj"
+  run "$CDSYNC_BIN" doctor
+  assert_contains "BOOTSTRAP-CD.md is older"
+  assert_contains "newer.md"
+}
+
 # The project is the one that OWNS the target, not the one you are standing in.
 # Rooting on $PWD is right whenever the command runs inside the project and
 # silently wrong the moment it does not: generating a document for another

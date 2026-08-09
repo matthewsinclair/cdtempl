@@ -17,7 +17,7 @@ Takes no options. It reads and reports; it writes nothing, anywhere.
 | 3 | `cdsync` is reachable on `$PATH` | Only a convenience -- everything still works by full path |
 | 4 | `jq`, `unzip` and `python3` are available | Each is named with what it is for, so a missing one tells you which command will break |
 | 5 | The spec library: how many specs, taxonomy slugs and bundles, and the library, structure and kit versions | A count of zero means the library did not resolve, not that it is empty |
-| 6 | Target resolution: which target, where it came from, and whether it versions with the project | A target outside the repository does not version with the project |
+| 6 | Target resolution: which target, where it came from, and whether it versions with the project | A target outside the repository does not version with the project. Also warns, advisory, when the target's `BOOTSTRAP-CD.md` is older than the repository it describes |
 
 ## Why it reports the target's provenance
 

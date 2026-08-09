@@ -41,6 +41,11 @@ continuous, because an unexercised guarantee is a claim. Exercise it occasionall
 against a real project, or the first time it is needed will be the first time it
 is tried.
 
+Between syncs the repository keeps moving and the document silently falls behind
+— so **`doctor` and `check` both warn when it is older than the repository it
+describes** (advisory, repository-scoped, tracked and unignored files only).
+A stale document is never accepted: regenerate it (hv, 9 Aug 2026).
+
 ## The inventory lists everything, and that is load-bearing
 
 The document tells Claude Design to export every path it names, so a path it
