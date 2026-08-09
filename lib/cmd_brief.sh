@@ -745,6 +745,19 @@ brief_spec_contract() {
   echo "computes them and writes them in. Every hand-counted figure ever delivered here"
   echo "was wrong, which is why counting stopped being anyone's job."
   echo ""
+  # STATED BECAUSE THE FIELD WAS EXPLAINED WITHOUT ITS VALUE, WHICH IS THE
+  # DOCUMENT-AS-INSTRUMENT FAILURE ON THE BOARD. Two suppliers independently
+  # read `formats_required` as part of the definition of done and held finished
+  # assets back for a rendering nobody was blocking on; hv ruled it advisory on
+  # 9 Aug 2026. The expensive reading is one-directional, so the brief says
+  # which one is right rather than leaving the supplier to infer it.
+  echo "**\`formats_required\` in the header above is advisory.** It says which"
+  echo "renderings this venture would like to end up with. It is **not part of the"
+  echo "definition of done**, and no rule in \`cdsync check\` reads it. An asset is"
+  echo "complete when its specification is satisfied and its blanks are closed -- a"
+  echo "missing PDF does not hold it open. Say what you did not render and why, and"
+  echo "mark the asset on its own merits."
+  echo ""
   echo "\`index.md\` is a manifest and a convenience. It is not where state lives: a"
   echo "status recorded only there is a status the checker cannot see."
   echo ""

@@ -2,7 +2,7 @@
 asset: pitch-deck
 name: Pitch deck
 taxonomy: [42]
-spec_version: 1
+spec_version: 2
 kit_version: 1
 form: C
 tier: 1
@@ -18,8 +18,8 @@ inputs_missing:
   - "team facts: names, roles, headshots or a licence to hatch them"
 depends_on:
   hard_facts: [round-size, use-of-funds, traction, team]
-  hard_assets: [positioning, colour-system, typography-system, logo-suite]
-  reciprocal: [positioning, venture-thesis]
+  hard_assets: [positioning-icp-personas, colour-system, typography-system, logo-suite]
+  reciprocal: [positioning-icp-personas, venture-thesis]
 bundles: [seed-set]
 ---
 # Pitch deck — specification

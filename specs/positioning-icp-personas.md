@@ -2,7 +2,7 @@
 asset: positioning-icp-personas
 name: Positioning, ICP and personas
 taxonomy: [1, 3, 4]
-spec_version: 2
+spec_version: 3
 kit_version: 1
 form: A
 tier: 1
@@ -16,7 +16,7 @@ inputs_missing:
 depends_on:
   hard_facts: [category-claim, customer-evidence]
   hard_assets: []
-  reciprocal: [pitch-deck, landing-page, pricing, venture-thesis]
+  reciprocal: [pitch-deck, landing-page, pricing-and-packaging, venture-thesis]
 bundles: [founding-set]
 ---
 # Positioning, ICP and personas — specification

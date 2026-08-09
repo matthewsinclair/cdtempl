@@ -648,7 +648,10 @@ EOF
 @test "the taxonomy is wider than the library" {
   # A slug can be legitimately named as a dependency long before it is
   # specified. pattern-library is real, declared by component-library, and
-  # unwritten -- 32 of the 50 taxonomy slugs are in that state.
+  # unwritten -- most of the taxonomy is in that state, and `cdsync doctor` is
+  # what says how much of it. No figure here: this comment carried "32 of the
+  # 50" while the table said otherwise, which is the drift the guard below
+  # exists to stop.
   #
   # grid-and-layout held this role until it was specified on 30 Jul, which is
   # why the exemplar moved. The invariant is the point, not the example: pick a
@@ -2792,6 +2795,58 @@ EOF
   [ -z "$output" ]
 }
 
+@test "the shipped library states no taxonomy-wide count either" {
+  # THE SWEEP THAT BUILT THE GUARD ABOVE SEARCHED bin/, lib/ and help/, AND
+  # NOTHING ASKED WHAT HAD CHOSEN THOSE THREE. specs/ was never searched, and it
+  # was the copy that mattered most: specs/kit.md is inlined into EVERY brief,
+  # so its wrong figure went to the supplier every round for six weeks while the
+  # guard above reported the number settled. A positive control validates the
+  # instrument, not the sampling frame -- this test is the frame widened.
+  #
+  # NARROWER THAN THE GUARD ABOVE, and deliberately. specs/library.md carries
+  # two legitimate subset counts -- "founding-set is four slugs" and "Eight
+  # assets are genuinely both design and venture" -- which the broad pattern
+  # matches. What was ever wrong here is a count of the taxonomy AS A WHOLE, so
+  # that is what this rejects: a number modifying `artefacts`, an `N of the M`
+  # claim, and the spelled-out fifty-family figures that disagreed four ways.
+  #
+  # templates/claude_design/ is OUT OF SCOPE ON PURPOSE. templprj is a delivered
+  # drop stamped spec_library_version 2, and a drop keeps the edition it was
+  # ordered against; its "fifty-one" is a record, not a claim. Its README says so.
+  run bash -c "grep -rniE '(^|[^a-z-])(fifty|fifty-(one|two|three|four))([^a-z-]|\$)|([0-9]+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty)[[:space:]]+(artefacts|artifacts|asset types|taxonomy slugs)|[0-9]+ of the [0-9]+' '$CDSYNC_HOME/specs' '$CDSYNC_HOME/templates/venture' || true"
+  [ -z "$output" ]
+}
+
+@test "every dependency the spec library names is a slug the taxonomy holds" {
+  # THE LIBRARY HAD NO GUARD OF ITS OWN. rule 2 catches a dangling depends_on in
+  # a DROP, so three of them sat in the library itself from July until 9 Aug --
+  # `pitch-deck` naming `positioning` twice and `positioning-icp-personas`
+  # naming `pricing` -- and went out inside every brief that carried those
+  # specs. The library recorded them as known-and-deliberate, which is why
+  # nothing chased them: a finding parked for a round that the wind-back then
+  # cancelled. Repaired at edition 4; this is what stops the fourth.
+  #
+  # hard_facts IS EXCLUDED, matching rule_dependencies. Those are venture facts
+  # -- `round-size`, `mark-exists`, `target-stack` -- not slugs. The first
+  # version of this probe flattened all three fields together and reported
+  # essentially the whole library as dangling, which is the instrument lying in
+  # the reassuring-looking direction of "lots found, must be working".
+  run run_lib '
+    for spec in "$CDSYNC_HOME"/specs/*.md; do
+      slug="$(basename "$spec" .md)"
+      if [ "$slug" = "library" ]; then continue; fi
+      for field in depends_on.hard_assets depends_on.reciprocal; do
+        while IFS= read -r dep; do
+          if [ -z "$dep" ]; then continue; fi
+          taxonomy_has "$dep" || echo "DANGLING $slug ${field#depends_on.} -> $dep"
+        done < <(fm_list "$spec" "$field")
+      done
+    done
+  '
+  [ "$status" -eq 0 ]
+  [ -z "$output" ]
+}
+
 @test "brief refuses when nothing the order reached is specified" {
   # No shipped bundle is entirely unspecified, so the library is stood in for
   # here. This is the guard against composing a brief with no specifications in
@@ -2907,10 +2962,33 @@ EOF
 }
 
 @test "a bad dependency slug is declared as outside the taxonomy" {
-  # pitch-deck names 'positioning', which is not a taxonomy slug. It must not
-  # read as a real asset somebody forgot to order.
+  # A dependency naming a slug the taxonomy does not hold must read as exactly
+  # that, and never as a real asset somebody forgot to order.
+  #
+  # THIS TEST USED THE SHIPPED LIBRARY'S OWN DEFECT AS ITS FIXTURE. pitch-deck
+  # really did name `positioning`, so the assertion passed on live data -- and
+  # could only pass for as long as the library stayed broken. Repairing the
+  # library at edition 4 turned it red, which is the test reporting the fixture
+  # it was silently depending on rather than the behaviour it is named for.
+  # Same family as asking the code under test for its own expected value: green
+  # for a reason nobody chose.
+  #
+  # The behaviour is pinned against a doctored library now, so it survives the
+  # data being correct.
+  mkdir -p "$TESTDIR/fakehome/specs"
+  ln -s "$CDSYNC_HOME/lib" "$TESTDIR/fakehome/lib"
+  cp "$CDSYNC_HOME/specs/library.md" "$TESTDIR/fakehome/specs/library.md"
+  # Every brief carries the kit, so the library needs one or the
+  # broken-installation guard fires instead of the path under test.
+  cp "$CDSYNC_HOME/specs/kit.md" "$TESTDIR/fakehome/specs/kit.md"
+  sed 's/^  hard_assets: \[positioning-icp-personas,/  hard_assets: [positioning,/' \
+    "$CDSYNC_HOME/specs/pitch-deck.md" > "$TESTDIR/fakehome/specs/pitch-deck.md"
+  # The doctoring must have landed, or this asserts nothing: a sed that quietly
+  # matched nothing would leave a correct spec and a green test.
+  grep -q 'hard_assets: \[positioning,' "$TESTDIR/fakehome/specs/pitch-deck.md"
+
   echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  env CDSYNC_HOME="$TESTDIR/fakehome" "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "grep 'positioning.*not in the taxonomy' '$TESTDIR/design/brief.md'"
   [ "$status" -eq 0 ]
 }
@@ -3004,6 +3082,25 @@ EOF
   assert_contains "must open with a YAML front-matter"
   assert_contains "Do not copy that shape back"
   assert_contains "status: <spec-only|draft|partial|complete>"
+}
+
+@test "brief tells the supplier that formats are advisory" {
+  # Two suppliers independently read `formats_required` as part of the
+  # definition of done and held otherwise-finished assets back for a rendering
+  # nobody was blocking on. hv ruled it advisory on 9 Aug 2026 -- and a ruling
+  # that never reaches the supplier changes nothing, which is the whole shape of
+  # the failure: the header states the field and the document never stated its
+  # meaning. Fourth time in this project that a field was explained without its
+  # value, and the expensive misreading is one-directional.
+  echo '{"venture":"acme","formats_required":["pdf"],"order":{"assets":["investor-update"]}}' \
+    > "$TESTDIR/design/cdsync.json"
+  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  run bash -c "cat '$TESTDIR/design/brief.md'"
+  # The header must still carry what was asked for -- advisory is not ignored.
+  assert_contains "formats_required: [pdf]"
+  assert_contains "in the header above is advisory"
+  assert_contains "not part of the"
+  assert_contains "missing PDF does not hold it open"
 }
 
 @test "brief forbids declaring the counts the tool computes" {

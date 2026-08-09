@@ -1,5 +1,5 @@
 ---
-verblock: "09 Aug 2026:v1.3: Matthew Sinclair - The wind-back lands: WP-05 ruled and built, five WPs closed, WP-02 parked"
+verblock: "09 Aug 2026:v1.4: Matthew Sinclair - ST0003 closes 20/20 at library edition 4; every steel thread is Completed"
 ---
 
 # Work In Progress
@@ -12,7 +12,11 @@ Project-wide snapshot, updated 9 August. The live per-session channel is `intent
 
 **The repository is public as of 6 August**, published from a single root commit. The 135-commit development history was truncated and retained privately at the Dropbox mirror on `archive/pre-public-20260806`, with a bundle beside it. **Everything committed here is published on push.**
 
-**ST0003 is nearly done, and the 9 August wind-back is why.** hv ruled the delivered projects delivered -- the loop does not run back to Claude Design for them; the tree is a record of what was asked for. Six of eight WPs are closed (WP-01 on 6 Aug; WP-04 through WP-08 on 9 Aug), WP-02 is parked, and **WP-03 is the one live remainder**, with every question it needs already ruled. **The day's builds**: `cdsync.json` at the design tree root for every project; `spec_version: unassigned` and ordering ahead of the library; the staleness advisory in `doctor` and `check` (shape (a) -- a warning, never blocking).
+**ST0003 closed 20/20 on 9 August, and the wind-back is why it could.** hv ruled the delivered projects delivered -- the loop does not run back to Claude Design for them; the tree is a record of what was asked for. That dissolved three work packages rather than executing them, hv parked a fourth, and the last live edge closed the same day. **The thread's bar was that every work package reached a terminal state on the record, not that every one was built** -- the alternative would have been this contract overruling the owner at a close.
+
+**The day's builds**: `cdsync.json` at the design tree root for every project; `spec_version: unassigned` and ordering ahead of the library; the staleness advisory in `doctor` and `check` (shape (a) -- a warning, never blocking); and **the spec library at edition 4** -- three dangling dependencies repaired, every count out of library prose, `formats_required` written up as advisory in the library and in the brief the supplier reads. **A library edition bump restamps nothing**: a drop keeps the edition it was ordered against, and staleness is per asset via `spec_version`.
+
+**Nothing is open.** What was carried forward, and the condition that would re-open each item, is in `intent/restart.md`.
 
 **Six projects hold a design system tree.** matthewsinclair and geodica completed round one on 2 August. Of the original four from round three, **three are integrated and were already integrated before anyone checked** -- Gyre & Gymble, Baize and snorkeltoast, in three different idioms. **Lamplight is unchecked by design** -- integration is the application's business, and nothing here needs the answer. **hv is rolling both new design systems out in Laksa and fixing forward**; implementation is not this project's thread.
 
@@ -25,13 +29,13 @@ Project-wide snapshot, updated 9 August. The live per-session channel is `intent
 | ST0001 | Harvest template v0 from the three Claude Design projects | Completed | 16/16 |
 | ST0002 | Port four established projects to the Cdsync shape | Completed | 12/12 |
 | ST0004 | Rename the tool to Cdsync | Completed | 11/11, plus a post-close note |
-| ST0003 | Post-release 0.1.0 clean-up | **WIP** | Six WPs closed, WP-02 parked, WP-03 live; contract still deliberately unwritten until the scope is real |
+| ST0003 | Post-release 0.1.0 clean-up | Completed | 20/20, closed 9 Aug on a contract written at close from evidence |
 
 Each close went through `intent st done`, which refuses while a contract is BLOCKED, so each had to earn its number. `intent st list` shows nothing by default -- use `--status Completed`.
 
 **All three closed threads state a boundary and carry the remainder forward** rather than dropping it. ST0001's bar was never "all 52 slugs specified" -- the library grows one order at a time. ST0002's was never "all four pass `check`" -- three carry a pre-Cdsync convention the checker cannot read. **ST0004's boundary was simply wrong**, and its contract now says so. **Read `acceptance.md` in any of them before assuming something was skipped.**
 
-**ST0003 holds everything carried forward** -- eight work packages, most blocked on a ruling rather than on effort. Its contract is deliberately unwritten: an empty contract reads as BLOCKED, which is the gate working.
+**ST0003 held everything carried forward** -- eight work packages, most blocked on a ruling rather than on effort. Its contract stayed deliberately unwritten until the scope was real, because an empty contract reads as BLOCKED and that is the gate working; it was then written at close from evidence measured before the criteria were phrased. **All four threads state a boundary and carry their remainder forward**; ST0003's is in `intent/restart.md`, each item with the condition that would re-open it.
 
 ## The rename, finished 6 August
 
@@ -45,7 +49,7 @@ The tool was renamed to Cdsync. ST0004 closed 11/11 on a stated bar of **five re
 
 ## What the work packages found
 
-**Not restated here.** WP-01's two defects in `release` itself are in `intent/st/ST0003/WP/01/info.md`. **WP-07's finding that its own premise was false -- in every project it could be checked against -- is in `WP/07/info.md`**, with its 9 Aug close. WP-05's as-built -- the tree-root `cdsync.json`, the `unassigned` lifecycle, the ordered-ahead brief -- is in `WP/05/info.md`. WP-06's dissolution and its two survivors are in `WP/06/info.md`. **The standing hazards they taught are on the board, in one copy** -- this file previously carried a second, which is the drift it keeps naming.
+**Not restated here.** They are all under `intent/st/COMPLETED/ST0003/WP/*/info.md`. WP-01's two defects in `release` itself are in `WP/01`. **WP-07's finding that its own premise was false -- in every project it could be checked against -- is in `WP/07`**. WP-05's as-built -- the tree-root `cdsync.json`, the `unassigned` lifecycle, the ordered-ahead brief -- is in `WP/05`. WP-06's dissolution and its two survivors are in `WP/06`. **WP-03's is in `WP/03`, and it names two inherited premises that were false**, one of which had been repeated in a source comment and a work package before anyone read the code it described. **The standing hazards they taught are on the board, in one copy** -- this file previously carried a second, which is the drift it keeps naming.
 
 ## Structural guards, cumulative
 
@@ -59,6 +63,9 @@ The tool was renamed to Cdsync. ST0004 closed 11/11 on a stated bar of **five re
 - A release archive carries the tool and not how it is made, checked through `git archive` against the real `.gitattributes` rather than a restated list.
 - Every acceptance contract in the repository, live or completed, must name tests that exist.
 - The taxonomy's size is computed and stated nowhere in prose. `brief`'s refusal and `doctor` must both report it, and the two help files that once carried a stale figure must carry no figure at all.
+- **The shipped spec library states no taxonomy-wide count either.** The guard above searched `bin/`, `lib/` and `help/`, and nothing asked what had chosen those three -- so `specs/` kept shipping the wrong figure inside every brief for six weeks while the guard reported it settled. The frame is widened; `templates/claude_design/` is out of scope by ruling, being a delivery record.
+- **Every dependency the spec library names must resolve in the taxonomy.** `check` catches a dangling `depends_on` in a drop; nothing looked at the library, which is how three sat in it from July.
+- The brief must tell the supplier that `formats_required` is advisory. A ruling that never reaches the supplier changes nothing.
 
 ## Context for LLM
 

@@ -1,5 +1,5 @@
 ---
-verblock: "09 Aug 2026:v1.3: Matthew Sinclair - The wind-back: delivered projects are delivered, WP-05 ruled and built, five WPs closed"
+verblock: "09 Aug 2026:v1.4: Matthew Sinclair - ST0003 closes 20/20 at library edition 4; all four threads are Completed and nothing is open"
 ---
 
 # Restart Context
@@ -15,13 +15,15 @@ The 2 August fold left the rulings restated in four documents and the watch-outs
 | Canon, which outranks every other document | `intent/docs/design-system-lifecycle.md` |
 | Rulings, settled and not to be re-opened | `intent/whiteboard/cc/wip.md` `## Decisions` |
 | Watch-outs, the standing hazards | `intent/whiteboard/cc/wip.md` `## Watch-outs` |
-| What is open, and what blocks each item | `intent/st/ST0003/WP/*/info.md` |
+| What each work package found, now all closed | `intent/st/COMPLETED/ST0003/WP/*/info.md` |
 | What a Claude Design session needs | `intent/docs/claude-design-contract.md` |
 | What a receiving project needs | `intent/docs/receiving-a-design-system.md` |
 
 ## The one-paragraph version
 
-Cdsync has completed a **full cold round trip** -- initialise an empty tree, hand it to Claude Design, take the return back, check it -- for matthewsinclair and geodica. **Both came back Cdsync-shaped, so the cold-start document works.** **Ten commands; the bats suite is green end to end and prints its own count; CI success on hygiene, ubuntu-latest and macos-latest.** **ST0003 is nearly done**: six of eight WPs closed (WP-01 on 6 Aug; WP-04 through WP-08 on 9 Aug under the wind-back and its rulings), WP-02 parked by hv, WP-03 the one live remainder. ST0001 (16/16), ST0002 (12/12) and ST0004 (11/11) closed through the gate, which refuses a BLOCKED contract. **Six projects hold a design system tree** -- two spikes whose implementations hv is rolling out in Laksa, plus the original four, of which **three were already integrated and the fourth is unchecked by design.**
+Cdsync has completed a **full cold round trip** -- initialise an empty tree, hand it to Claude Design, take the return back, check it -- for matthewsinclair and geodica. **Both came back Cdsync-shaped, so the cold-start document works.** **Ten commands; the bats suite is green end to end and prints its own count; CI success on hygiene, ubuntu-latest and macos-latest.** **Every steel thread is Completed and nothing is open**: ST0001 (16/16), ST0002 (12/12), ST0004 (11/11) and ST0003 (20/20, closed 9 Aug), each through the gate, which refuses a BLOCKED contract. **Six projects hold a design system tree** -- two spikes whose implementations hv is rolling out in Laksa, plus the original four, of which **three were already integrated and the fourth is unchecked by design.**
+
+**There is no open thread, so the next piece of work opens one.** That is the honest state rather than an invitation: `intent st new` when hv has something, and read the carried-forward list at the bottom of this file first, because it is where the remainder went.
 
 **The tool was renamed to Cdsync on 6 August.** It was free, and only because it happened before the first release: no tag existed and no published artefact carried the old name. **That window has closed** -- `v0.1.0` is released, so any future rename carries a published artefact with it. **The rename's own contract shipped a boundary that was too narrow and missed two repositories**; that is finished now, and the lesson is on the board.
 
@@ -44,15 +46,13 @@ Cdsync has completed a **full cold round trip** -- initialise an empty tree, han
 
 ## The work, after the 9 August wind-back
 
-**hv ruled the delivered projects delivered.** The cdsync loop earns its keep for a few rounds while a design system beds down; after that the tree is **a record of what was asked for**, not a living document -- no more syncing from here, rare as-needed rounds only, rollout the project's own work. That ruling collapsed ST0003 from a waiting list to a single live edge in one day. Each WP's `info.md` carries its own record; this is the ordering, not a second copy.
+**hv ruled the delivered projects delivered.** The cdsync loop earns its keep for a few rounds while a design system beds down; after that the tree is **a record of what was asked for**, not a living document -- no more syncing from here, rare as-needed rounds only, rollout the project's own work. That ruling collapsed ST0003 from a waiting list to a single live edge, and the edge closed the same day. Each WP's `info.md` carries its own record; this is the ordering, not a second copy.
 
-**Live -- one thing:**
+**Nothing is open, and nothing awaits hv.** ST0003 closed 20/20 on a contract whose bar was *every work package reached a terminal state on the record*, not *every work package was built* -- because the wind-back dissolved three of them and hv parked a fourth, and a contract that demanded they be built would be overruling the owner at a close.
 
-**WP-03, the spec library.** The version-bump pass -- three text inconsistencies, the ruled-advisory `formats_required` text, `pattern-library`'s two-part dance -- plus specs as orders need them. Every question it needs is answered; it runs whenever hv wants the library text moved. **`pattern-library` stays a two-part job**: writing it without re-pointing the library's own exemplar text and its pinning test makes library text false. **`cdsync doctor` prints the counts and this file states none.**
+**Settled 9 August and built the same day -- the full records are in the WPs' own `info.md`:** `cdsync.json` lives at the design tree root for every project, its own location resolving the target and the `.target` field retired; a named in-taxonomy slug orders **ahead of the library** and stamps the literal `unassigned`, with rule 2 asking for a rebuild the day the library gains the entry; `init` writes the stub that makes `brief` runnable for a project Cdsync does not own. The staleness advisory shipped as **shape (a)**: `doctor` and `check` both warn when a target's `BOOTSTRAP-CD.md` is older than the repository it describes -- repository-scoped, tracked-and-unignored files only, never blocking, not a numbered rule.
 
-**The staleness advisory shipped 9 Aug, shape (a)**: `doctor` and `check` both warn when a target's `BOOTSTRAP-CD.md` is older than the repository it describes -- repository-scoped, tracked-and-unignored files only, never blocking, not a numbered rule.
-
-**Settled 9 August and built the same day -- the full record is WP-05's `info.md`:** `cdsync.json` lives at the design tree root for every project, its own location resolving the target and the `.target` field retired; a named in-taxonomy slug orders **ahead of the library** and stamps the literal `unassigned`, with rule 2 asking for a rebuild the day the library gains the entry; `init` writes the stub that makes `brief` runnable for a project Cdsync does not own. Suite green end to end, the core behaviours mutation-proven, Acme migrated and its round-two brief regenerated. **WP-02 is parked** -- rule 4's three noise shapes stay recorded with recommendations until a live venture trips one.
+**The spec library is at edition 4** (WP-03, 9 Aug). Three dangling dependencies repaired, every count removed from library prose, `formats_required` written up as advisory in the library *and in the brief the supplier reads*. **A library edition bump restamps nothing**: a drop keeps the edition it was ordered against, and staleness is per asset via `spec_version`. `specs/library.md` states the rule.
 
 ## Where the work is
 
@@ -66,6 +66,14 @@ Cdsync has completed a **full cold round trip** -- initialise an empty tree, han
 | `.github/workflows/ci.yml` | bats and shellcheck on ubuntu-latest and macos-latest, plus a hygiene job |
 | `.gitattributes` | What a release tarball may not carry, read by `git archive` |
 | `intent/whiteboard/cc/wip.md` | The live board: the rulings and the watch-outs both live there |
+
+## Carried forward, and where each thing waits
+
+**This is where the remainder went when ST0003 closed.** None of it is queued; each names the condition that would re-open it. **Do not pick one up because it is written down** -- that is the mistake the 8 August state existed to prevent, in the other direction.
+
+- **WP-02, rule 4's three noise shapes.** Parked by hv 9 Aug, with the evidence and the recommendations on record in its `info.md`. **Nothing moves until a live venture trips one.**
+- **`pattern-library` is still a two-part job.** No order needs it, and the ratified model is that a spec is written when an order needs one -- so it stays the live exemplar of a slug that is real, in the taxonomy and unwritten. **If an order ever names it: write the spec and re-point the exemplar and its pinning test in the same change**, or the library's description of itself becomes false.
+- **`reciprocal` is not symmetric between `positioning-icp-personas` and `pricing-and-packaging`**, one declares the other and is not declared back. Flagged in `specs/library.md` rather than invented, because writing the missing half would be this library inventing a dependency Claude Design never declared. **No check can see it; a person is the only instrument.**
 
 ## Loose ends
 

@@ -2,7 +2,7 @@
 asset: kit
 name: The neutral kit
 taxonomy: [20]
-spec_version: 3
+spec_version: 4
 kit_version: 1
 form: B
 tier: 1
@@ -69,8 +69,8 @@ inconsistency. It is the only one.
 
 ## Why the kit exists at all
 
-Asking for restraint across fifty-one artefacts is asking someone to fight a
-tendency, and tendencies win. One neutral kit that every template imports turns
+Asking for restraint across a whole taxonomy of artefacts is asking someone to
+fight a tendency, and tendencies win. One neutral kit that every template imports turns
 "is this too charming" into a question about one file rather than a judgement call
 across the whole suite.
 

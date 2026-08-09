@@ -3,10 +3,10 @@ node: cc
 name: Control Claude
 role: control
 session_id: e2036be7-6243-4da5-97a5-985cfaddc2bc
-heartbeat_at: 2026-08-09T13:00Z
+heartbeat_at: 2026-08-09T15:30Z
 status: paused
-focus: "Folded 9 Aug. Six of eight WPs closed in one day; WP-02 parked, WP-03 the only live edge and fully unblocked. Nothing awaits hv. Unpushed: Cdsync x3, Baize x1, Intent x1, Acme x2"
-claims: [ST0003]
+focus: "ST0003 closed 20/20 at library edition 4. All four steel threads Completed; nothing open, nothing awaits hv. The next piece of work opens a thread. Unpushed: Cdsync x5, Baize x1, Intent x1, Acme x2"
+claims: []
 ---
 
 # Control Claude (cc)
@@ -17,27 +17,29 @@ Completed narrative is archived per day at `.history/`; 9 August is the most rec
 
 ## Where things stand
 
-**ST0003 stands at six of eight WPs closed, WP-02 parked, WP-03 the one live edge -- and nothing is awaiting hv.** The 9 August rulings are all in `## Decisions`; every WP carries its own record, and ST0003's `info.md` and `tasks.md` are current. ST0001 (16/16), ST0002 (12/12) and ST0004 (11/11) are closed history, their stories in `intent/wip.md` and the threads themselves.
+**Every steel thread is Completed and nothing is open.** ST0003 closed 20/20 on 9 August at library edition 4, joining ST0001 (16/16), ST0002 (12/12) and ST0004 (11/11) -- each through the gate, which refuses a BLOCKED contract. The 9 August rulings are all in `## Decisions`; every WP carries its own record under `intent/st/COMPLETED/ST0003/WP/`.
+
+**ST0003's bar was that every work package reached a terminal state on the record, not that every one was built.** The wind-back dissolved three and hv parked a fourth. **What was carried forward, with the condition that would re-open each item, is in `intent/restart.md`** -- written down so it is not lost, not so it is picked up.
 
 **0.1.0 is released and the repository is PUBLIC.** Tag `v0.1.0`, GitHub release published, the published asset downloaded and run to verify it. Published from a single root commit; the 135-commit history is retained privately on the mirror's `archive/pre-public-20260806` and in a bundle beside it.
 
-**Unpushed at the 9 August fold:** three commits here (`bcdddb2`, `c92b83b`, `9e6b493`), one in Baize (`7211fc1`), one in Intent (`95f4da2`), two in Acme's nested repository. **Pushing is hv's, and this repository publishes on push.**
+**Unpushed at the 9 August close:** five commits here (`bcdddb2`, `c92b83b`, `9e6b493`, `736dee4`, plus the edition-4 close), one in Baize (`7211fc1`), one in Intent (`95f4da2`), two in Acme's nested repository. **Pushing is hv's, and this repository publishes on push.**
 
 **Day narrative lives in `.history/`, one directory per day.** `intent/wip.md` and `intent/restart.md` point here and do not restate.
 
 ## TODO
 
-**All of it lives in ST0003, "Post-release 0.1.0 clean-up"** -- `intent/st/ST0003/`, whose `info.md` table is current as of 9 Aug. **The ordering is in `intent/restart.md`.** This board carries no second copy.
+**Nothing.** There is no open steel thread, and that is the honest state rather than an invitation. **The next piece of work opens one** (`intent st new`), and `intent/restart.md`'s carried-forward list is what to read first.
 
-**One live edge: WP-03's library pass** -- the version bump (three text inconsistencies plus the ruled `formats_required` text), `pattern-library`'s two-part dance, and specs as orders need them. Every question it needs is answered; it runs whenever hv says. **WP-02 is parked by hv** -- not to be picked up without hv re-opening it.
+**Carried forward, each with the condition that would re-open it** -- stated in `intent/restart.md`, not duplicated here: WP-02 (parked; nothing moves until a live venture trips rule 4's noise); `pattern-library`'s two-part dance (write the spec and re-point the exemplar and its pinning test in one change, the day an order names the slug); the `reciprocal` asymmetry between `positioning-icp-personas` and `pricing-and-packaging` (no check can see it -- a person is the only instrument).
 
-**The 9 August build (WP-05's record):** `cdsync.json` lives at the design tree root, its own location resolving the target; a named in-taxonomy slug orders ahead of the library and stamps the literal `unassigned`; `init` writes the stub that makes `brief` runnable for a project Cdsync does not own; the brief states `hard_facts` and bundle membership per specification. Suite green end to end, shellcheck clean, four core behaviours mutation-proven, Acme migrated.
+**The 9 August builds:** `cdsync.json` at the design tree root, its own location resolving the target; a named in-taxonomy slug orders ahead of the library and stamps the literal `unassigned`; `init` writes the stub that makes `brief` runnable for a project Cdsync does not own; the brief states `hard_facts` and bundle membership per specification; the staleness advisory in `doctor` and `check`; and the spec library at edition 4. Suite 360 green, shellcheck clean, every core behaviour mutation-proven with landing proof.
 
 ## Wants hv
 
 **Off the list rather than settled, so do not re-open:** rule 5 shipped 1 August; rule 3 came off because its residual is mostly TRUE positives. **Ruled 9 August and now in `## Decisions`:** the wind-back and its confirmed map, `cdsync.json`'s home, the `unassigned` lifecycle, stale-is-never-accepted, WP-02 parked, and the Baize divergence ("leave it").
 
-**Nothing is awaiting hv.** Both remaining asks were answered on 9 August -- the staleness advisory is built (shape (a), in `## Decisions`) and `formats_required` is ruled advisory. The next thing that will want hv is WP-03's version-bump pass, whenever hv wants the library text moved -- every question it needs is already answered.
+**Nothing is awaiting hv, and nothing is open to want it.** Every ask was answered on 9 August, and the last of them -- `formats_required` and the staleness advisory -- landed in the same day's builds. **The next thing that will want hv is whatever hv brings next.**
 
 **Standing:**
 
@@ -81,6 +83,10 @@ Completed narrative is archived per day at `.history/`; 9 August is the most rec
 
 **8 August, and the cleanest example yet: a test that ASKS THE CODE UNDER TEST FOR ITS OWN EXPECTED VALUE cannot fail.** Three new tests took the taxonomy count from `taxonomy_count()` and then asserted the message matched it. Replacing that function's whole body with `echo 99` left all three green -- they were pinning consistency, which was never in doubt, rather than correctness. **Derive the expected value by a different probe than the one under test**, which is the sampling-frame rule applied to one's own tests. Both rewritten tests fail against the mutant and pass clean.
 
+**3. The mutation lands, the test is fine, and THE HARNESS MISREADS ITS OWN PROOF.** New on 9 August. `if diff a b; then echo "MUTATION DID NOT LAND"` inverts the check, because **`diff` exits non-zero when the files DIFFER** -- so the harness announced the mutation had not landed while printing the landed diff directly above the claim. Two lines of output contradicting each other, and only the standing "print proof it landed" rule made it a one-read fix instead of a wrong conclusion. **The instrument that validates the instrument is also an instrument.**
+
+**A TEST CAN BE GREEN BECAUSE THE CODE IS RIGHT, OR BECAUSE THE DATA IS WRONG.** 9 August: "a bad dependency slug is declared as outside the taxonomy" used the shipped library's own defect as its fixture -- `pitch-deck` really did name `positioning` -- so it could only pass for as long as the library stayed broken, and **repairing the library turned it red.** A test whose fixture is live data is pinned to that data's defects. Give it a fixture it owns, and assert the doctoring landed.
+
 **My own tests have been wrong rather than the code more often than the reverse.**
 
 ### Where a defect hides when the thing itself cannot be tested
@@ -116,6 +122,8 @@ Completed narrative is archived per day at `.history/`; 9 August is the most rec
 
 **A finding whose only remedy is an instruction nobody wrote** will report the same count every round forever. If a check does not move after a pass that obeyed the document, suspect the document.
 
+**A PREMISE RESTATED OFTEN ENOUGH STARTS READING AS EVIDENCE.** Twice in this thread. WP-07 opened on "none has been built against" and it was false for the first project it named. **9 August, and this one had spread**: `templprj/README.md` claimed `cdsync new` draws from that directory -- true as a round-one *plan*, never true of the as-built -- and the claim was then copied into a work package and into a `lib/specs.sh` comment, so three documents agreed and none of them had opened `cmd_new.sh`. **Agreement between documents is not corroboration when one is the other's source.** Check the claim against the code it describes, not against the sentence.
+
 **A published rule summary that over-promises its own reach.** *"Every colour literal must appear in `kit/tokens.json`"* was the whole description, and it said nothing about which forms are read -- so a kit written outside that set made the rule unrunnable with nothing to explain why. **A rule's reach is part of the rule.**
 
 ### Standing
@@ -131,6 +139,7 @@ Completed narrative is archived per day at `.history/`; 9 August is the most rec
 - **Verify a correction by content, never by filename and never by a receipt.**
 - **`assets/` is a name the drop contract owns, and three of four projects use it for something else.** The marker for an asset is its `spec.md`.
 - **An exporter's wrapping is its habit, not a contract.** Two drops the same morning from the same supplier wrapped the identical tree to different depths.
+- **`cdsync check` IS NOT READ-ONLY.** It recomputes `blanks` and `blanks_unique` and **writes them back into every `spec.md` in the drop it walks** -- by design, since hand-counted figures were always wrong, but the verb does not say so. 9 August: running `check` against `templprj` purely as a *verification probe* silently modified eight tracked files, in the same breath as ruling that directory a delivery record not to be edited. **Caught by `git status` at commit time, not by anything in the run.** Before pointing `check` at a tracked tree you are not intending to change, know that you are changing it -- and check `git status` afterwards. **A probe with a side effect is still a side effect.**
 - **`~/.gitignore_global:16` ignores `*.zip` machine-wide.** **An unanchored `.gitignore` rule matches at any depth.**
 - **`intent critic shell` reports clean on unquoted `rm -rf $1/*` at every severity.** **A pass from the critic is no signal**; `--files` is SPACE-separated.
 - **zsh aborts a whole loop on an unmatched glob** -- use `find`. **Shell cwd persists between tool calls** -- use absolute paths.
@@ -142,6 +151,11 @@ Settled and not to be re-opened. Full reasoning in `intent/st/ST0001/design.md`.
 
 **CANON, above every Decision below: `intent/docs/design-system-lifecycle.md`.**
 
+- (2026-08-09) **A library edition bump restamps nothing and invalidates nothing.** `spec_library_version` is the library's edition, stamped into every round, and a drop keeps the edition it was ordered against -- raising the number afterwards would falsify the one fact the stamp records. **Staleness is per asset and is `spec_version`'s job**: only a spec whose text actually moved raises its own, and `check` then reports only the assets built from it. If an edition bump restamped every drop, one editorial fix would make the whole world stale at once and the signal would mean nothing, which is the two-counters lesson applied to the other number. Stated in `specs/library.md`; edition 4 moved exactly three specs, verified against `templprj` rather than asserted.
+- (2026-08-09) **The library's dangling references are repaired, and the finding is kept in prose rather than in the defect.** They had been left as delivered so they would arrive as findings in a later round; **the wind-back spent that reason**, because no round remains for the finding to reach. A reference that can never resolve, preserved for a report nobody will write, is worse than a repair with the finding recorded.
+- (2026-08-09) **An asymmetry between two delivered specs is flagged, never invented away.** `positioning-icp-personas` declares `pricing-and-packaging` reciprocal and is not declared back; writing the missing half would be this library inventing a dependency Claude Design never declared, which is the drop-repair mistake one level up. **No check can see it -- a person is the only instrument**, which is why it is written where a reader meets it.
+- (2026-08-09) **`templates/claude_design/templprj/` is a delivered drop and is read as a record, not as live text.** Its `spec_library_version: 2` and its taxonomy figure stay as delivered; editing them would falsify the delivery it records. That is the edition-bump ruling applied to the tool's own worked example. **It is also not what `cdsync new` draws from** -- `new` renders `templates/venture/*.tmpl` and no code path reads that directory at all, which its own README had claimed since round one and which two later documents inherited.
+- (2026-08-09) **A spec is written when an order needs one, and `pattern-library` therefore stays unwritten.** No order is coming under the wind-back, so writing it in bulk would contradict the ratified model to satisfy a checklist. It stays the live exemplar of a slug that is real, in the taxonomy and unwritten. **The two-part dance still binds the day an order names it**: write the spec and re-point the exemplar and its pinning test in the same change.
 - (2026-08-09) **The delivered projects are delivered, and the loop does not run back to Claude Design for them.** The cdsync process earns its keep for a few rounds while a design system beds down; after that the tree is a **record of what was asked for**, not a living document. Further rounds are rare, project-specific and as-needed; rollout is the project's own work, and nothing in the four delivered projects needs anything more from here. **The map was confirmed the same day**: WP-04 closed unsent, WP-06 dissolved to its two survivors, WP-07 closed on its finding, the sibling regeneration sweep retired.
 - (2026-08-09) **`spec_version` for a new asset is `unassigned`, stamped by instruction rather than invented by the supplier.** Confirmed by hv on the precise reading: the per-slug field takes the literal `unassigned` when the library holds no specification for the slug; the round already carries `spec_library_version` (the brief stamps every order with it); the generators state both so no supplier has to ask. Rule 2 treats `unassigned` with no library entry as the correct state, and flags the asset for rebuild once the library gains the entry. A library-wide number never goes into the per-slug field -- two unrelated counters colliding is the G&G lesson.
 - (2026-08-09) **A slug the venture names may be ordered without a specification if it is in the taxonomy; outside the taxonomy stays refused.** Implementation boundary under the ruling above: the old refusal existed only because the brief could not say what to stamp, and `unassigned` says it. The taxonomy stays the identity space -- a genuinely new asset TYPE is library work, not an order. Bundle expansion is unchanged: an unspecified bundle member stays declared-absent, because the venture did not name it.

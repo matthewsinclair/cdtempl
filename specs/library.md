@@ -1,5 +1,5 @@
 ---
-spec_library_version: 3
+spec_library_version: 4
 target_structure_version: 2
 kit_version: 1
 bundles:
@@ -42,6 +42,43 @@ exactly why they are the fields a library entry drops. Both readings of the fiel
 shipped simultaneously in July 2026, because nothing on either side had said which
 it was.
 
+## What a library edition bump does, and does not do
+
+`spec_library_version` in the front matter above is the library's **edition**.
+`cdsync brief` stamps it into every round, so a drop records which edition it was
+ordered against. **It is not a staleness measure, and nothing is restamped when it
+moves.**
+
+**A drop stamped against an earlier edition stays correctly stamped.** It was
+ordered against that edition, and raising the number afterwards would falsify the
+one fact the stamp exists to record. `templates/claude_design/templprj` is the
+worked example, and it still reads `spec_library_version: 2` for precisely this
+reason — that is the stamp being right, not the example being stale.
+
+**Staleness is per asset, and it is `spec_version`'s job.** An edition bump makes
+nothing stale by itself. A spec whose *text* moves raises its own `spec_version`,
+and `cdsync check` then reports only the assets built from that spec. Edition 4
+moved three specs — `kit`, `pitch-deck` and `positioning-icp-personas` — so those
+three are what went stale, and nothing else did.
+
+If an edition bump restamped every drop, one editorial fix would make the whole
+world stale at once and the signal would mean nothing. **Two counters that never
+disagree for a reason cannot measure a distance**, which is the lesson recorded
+one section above, applied to the other of the two numbers.
+
+## `formats_required` is advisory, and does not bear on completeness
+
+A brief may carry `formats_required` — `["pdf", "pptx"]` and the like — declaring
+which renderings the venture would like to end up with. **It is a request, not part
+of the definition of done.** An asset is complete when its specification is
+satisfied and its blanks are closed; a missing PDF does not hold it open, and no
+rule in `cdsync check` reads the field.
+
+Ruled 9 Aug 2026, after two suppliers independently read it this way and were right
+to. It is written down because the alternative reading is expensive in one direction
+only: a supplier who believes formats are mandatory holds back an otherwise-finished
+asset, and nothing in the round reveals why.
+
 ## Bundles
 
 Seven, in the front matter above, where they are machine-readable. A bundle is a
@@ -74,11 +111,19 @@ Flagged rather than invented.
 
 ## The taxonomy
 
-Fifty-four types, grouped by **what has to be true before the asset is writable**
-rather than by design-versus-venture. That cut kept failing: a colour system is
-design, a pitch deck is venture, and a messaging framework is both. The
-precondition is what actually clusters, and it implies no order of production,
-because several groups can be worked at once.
+Grouped by **what has to be true before the asset is writable** rather than by
+design-versus-venture. That cut kept failing: a colour system is design, a pitch
+deck is venture, and a messaging framework is both. The precondition is what
+actually clusters, and it implies no order of production, because several groups
+can be worked at once.
+
+**The table below is where the taxonomy's size is recorded, and this document
+writes no figure for it.** Numbers and slugs do not count the same — a number is
+identity, a slug is what gets ordered, and `positioning-icp-personas` is one slug
+covering three numbers. `cdsync doctor` reports both figures. A count restated in
+prose drifts from the table it describes, which is how this very file came to
+contradict its own table twice over — once on the taxonomy's size, and once on how
+much of it had been written.
 
 **For** is the audience — who the asset is written for. **INV** investor,
 **CUS** customer, **TEAM** the venture's own people, **DEV** the people building
@@ -207,26 +252,42 @@ Named rather than picked between: `messaging-framework` (10), `landing-page` (35
 Each is unbuildable without both framings, which is the strongest argument for
 grouping by precondition and for `assets/` staying flat.
 
-## Two known inconsistencies in the specs as delivered
+## Three dangling references, found in the specs as delivered and repaired here
 
-Both are the same fault: a dependency naming a slug that does not exist, so it can
-never resolve. Both are left as delivered rather than silently corrected, because
-they belong in the next round's findings — fixing them here would destroy the
-finding.
+All three were one fault: a dependency naming a slug that does not exist, so it
+could never resolve.
 
-- `pitch-deck` names `positioning` in both `depends_on.hard_assets` and
-  `depends_on.reciprocal`. No such slug exists; the asset is
-  `positioning-icp-personas`.
-- `positioning-icp-personas` names `pricing` in `depends_on.reciprocal`. No such
-  slug exists; the asset is `pricing-and-packaging` (33). **Found 30 Jul 2026** and
-  not previously recorded, which is why this section used to say "one".
+- `pitch-deck` named `positioning` in both `depends_on.hard_assets` and
+  `depends_on.reciprocal`. No such slug; the asset is `positioning-icp-personas`.
+- `positioning-icp-personas` named `pricing` in `depends_on.reciprocal`. No such
+  slug; the asset is `pricing-and-packaging` (33). **Found 30 Jul 2026**, and not
+  recorded until later, which is why this section once said "one".
 
-Distinguish both from a dependency that is legitimately **not built yet**, which is
-correct to declare and reports the same way. `component-library` requires
+**They were left as delivered until 9 Aug 2026, deliberately, so that they would
+arrive as findings in the next round rather than being silently corrected. That
+reason is now spent.** The delivered projects are delivered and the loop does not
+run back to Claude Design for them, so no round remains for the finding to reach.
+A reference that can never resolve, preserved for a report that will never be
+written, is worse than a repair with the finding kept — which is what this section
+now is. The two specs each moved a `spec_version`, so `cdsync check` reports the
+drops built from the old ones as stale, advisory, with the remedy named.
+
+**A fourth thing surfaced during the repair, and is flagged rather than invented.**
+`positioning-icp-personas` declares `pricing-and-packaging` reciprocal, and
+`pricing-and-packaging` does not declare it back. `reciprocal` is symmetric by its
+name, nothing enforces that, and no check can see it — so this is a real
+disagreement between two delivered specs rather than a typo. Writing the missing
+half would be this library inventing a dependency Claude Design never declared,
+which is the drop-repair mistake one level up. Recorded, not resolved.
+
+Distinguish all of these from a dependency that is legitimately **not built yet**,
+which is correct to declare and reports the same way. `component-library` requires
 `pattern-library`: real, in the taxonomy, and unwritten. `cdsync check` reports both
 cases as advisory, which is right — the difference is that one will resolve when the
-spec is written and the other never will.
+spec is written and the other never could.
 
 `grid-and-layout` held that example until it was specified on 30 Jul, along with
 `colour-system`, `typography-system`, `logo-suite`, `print-collateral`,
-`social-and-ad-kit` and `email-templates`. **32 of the 50 slugs remain unwritten.**
+`social-and-ad-kit` and `email-templates`. **Most of the taxonomy is still
+unwritten, and `cdsync doctor` says how much** — no figure is recorded here, for
+the reason given under the taxonomy above.

@@ -168,18 +168,27 @@ each_taxonomy_slug() {
 # that wants the number says to run `cdsync doctor`, which is the same ruling
 # already taken for the spec-library counts.
 #
-# COPIES SURVIVE OUTSIDE THIS TREE, AND THEY ARE THE ONES THAT TRAVEL:
-# `specs/kit.md`, `templates/claude_design/templprj/kit/kit.md` and
-# `templates/claude_design/templprj/brief.md` all still say "fifty-one". The
-# first is inlined into EVERY brief; the other two are scaffolded into every
-# venture `cdsync new` creates. They are not fixed here -- library text cannot
-# move piecemeal, because changing it changes what its `spec_library_version`
-# means. WP-03 owns them and names the files rather than counting them.
+# THE COPIES OUTSIDE THIS TREE ARE SETTLED, at library edition 4 (9 Aug 2026).
+# `specs/kit.md` is inlined into EVERY brief, so its figure went to the supplier
+# every round; it states none now. The two under
+# `templates/claude_design/templprj/` still read "fifty-one" and are RIGHT to:
+# that directory is a worked example of a delivered drop, stamped
+# `spec_library_version: 2`, and a drop is never restamped when the library
+# moves. Editing it would falsify the delivery it records.
+#
+# ITS README CLAIMED `cdsync new` DRAWS FROM IT, AND THAT WAS NEVER TRUE OF THE
+# AS-BUILT: `new` renders `templates/venture/*.tmpl` and nothing else, so those
+# two files reach no venture at all. The claim was inherited into WP-03 and into
+# this comment before anyone opened `cmd_new.sh`. **A premise restated often
+# enough starts reading as evidence**, which this thread has now been bitten by
+# twice.
 #
 # THE SWEEP THAT FOUND THE FOUR IN THIS TREE SEARCHED `bin/`, `lib/` and
 # `help/`, and nothing asked what had chosen those three directories. The first
 # correction then said "one copy survives" and that was wrong too. **A count of
-# wrong counts is still a count**, which is why the line above names files.
+# wrong counts is still a count**, which is why this names files. A test now
+# holds `specs/` to stating no taxonomy-wide figure at all -- the directory the
+# sweep never searched is the one that had shipped the number all along.
 taxonomy_count() {
   each_taxonomy_slug | grep -c . || true
 }

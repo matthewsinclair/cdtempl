@@ -63,7 +63,7 @@ overwrite the file, and a drop may not deliver one.
 | `inherits_from` | `none`, a previous drop, or an existing brand |
 | `locale`, `currency` | `en-AU`, `AUD` |
 | `accessibility_target` | `WCAG 2.2 AA` |
-| `formats_required` | `["pdf", "pptx"]` |
+| `formats_required` | `["pdf", "pptx"]` — advisory; see below |
 | `effort` | `one pass, argue-with-able` or `finished` |
 | `changed_since_last` | What moved since the last round |
 
@@ -93,6 +93,17 @@ identical on disk.
 `spec_library_version`, `target_structure_version` and `kit_version` are stamped by
 the tool from the library, not declared here. That is what makes staleness
 detectable.
+
+`spec_library_version` is the library's **edition**, and a drop keeps the edition it
+was ordered against — it is never restamped when the library moves. Staleness is per
+asset and is `spec_version`'s job. `specs/library.md` states both, and why treating
+the edition as a staleness measure would make the signal mean nothing.
+
+**`formats_required` is advisory.** It says which renderings the venture would like;
+it is not part of the definition of done, and no rule in `cdsync check` reads it. An
+asset is complete when its specification is satisfied and its blanks are closed, so
+a missing PDF does not hold it open. The brief says so to the supplier, because two
+read it the other way and held finished work back.
 
 ## Ordering ahead of the library, and the one refusal left
 

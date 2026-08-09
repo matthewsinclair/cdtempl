@@ -8,15 +8,13 @@ Since 6 August. **Everything committed here is published the moment it is pushed
 
 **The published history is a single root commit and the rest is not recoverable from here.** Why, and where it is kept, is in `intent/restart.md`.
 
-## Picked up: one live edge, and it is unblocked
+## Nothing is open, and that is the finished state
 
-ST0003 "Post-release 0.1.0 clean-up" is **WIP with six of eight WPs closed** -- 9 August was the day hv's wind-back and rulings landed all at once. **The delivered projects are delivered: the loop does not run back to Claude Design for them**, and the tree in each is a record of what was asked for.
+ST0003 closed 20/20 on 9 August, and **every steel thread is now Completed**. Nothing is in flight and nothing awaits hv. **The next piece of work opens a thread** -- `intent st new` -- rather than resuming one.
 
-**The one live thing is WP-03, the spec-library pass, and every question it needs is already ruled** -- it runs when hv says. `intent/st/ST0003/tasks.md` is the flat view; the day's story is `intent/whiteboard/cc/.history/20260809/`.
+**Read `intent/restart.md`'s carried-forward list before starting anything.** Three things are recorded there with the condition that would re-open each: WP-02 is parked by hv, `pattern-library` stays unwritten until an order names it, and one `reciprocal` asymmetry is flagged rather than resolved. **They are written down so they are not lost, not so they are picked up.**
 
-**WP-02 is parked by hv.** Do not pick it up unless hv re-opens it. **Nothing is awaiting hv.**
-
-**Unpushed at the 9 Aug fold**: three commits here, one in Baize, one in Intent, two in Acme's nested repo. Pushing is hv's.
+**Unpushed at the 9 Aug close**: five commits here, one in Baize, one in Intent, two in Acme's nested repository. Pushing is hv's.
 
 ## Where everything else lives
 
@@ -27,15 +25,16 @@ ST0003 "Post-release 0.1.0 clean-up" is **WIP with six of eight WPs closed** -- 
 | Canon, which outranks everything | `intent/docs/design-system-lifecycle.md` |
 | Rulings, settled and not to be re-opened | `intent/whiteboard/cc/wip.md` `## Decisions` |
 | Watch-outs, the standing hazards | `intent/whiteboard/cc/wip.md` `## Watch-outs` |
-| What is open, and its record | `intent/st/ST0003/WP/*/info.md` |
-| Orientation, state, and the live edge | `intent/restart.md`, `intent/wip.md` |
+| What each work package found | `intent/st/COMPLETED/ST0003/WP/*/info.md` |
+| Orientation, state, and what was carried forward | `intent/restart.md`, `intent/wip.md` |
 
 **No count of anything lives in this file.** Tests, work packages, specs, stale documents: every number this file has ever carried went stale, and two of them were being read as fact by the next session. `cdsync doctor` prints the library counts and the suite prints its own.
 
-## The three that will cost you most
+## The four that will cost you most
 
 Stated in full where they live; named here only so you go and read them before acting.
 
 - **`install` replaces and `import` merges.** Choosing wrong is the most destructive thing in the tool. `intent/restart.md` has the table.
 - **A local pass has never predicted CI here**, and every miss has been shell-version deep. Read `gh run view --log-failed` rather than guessing. The board has them.
 - **A check that cannot see a thing does not fail -- it reports clean.** The board's longest section, and it earns another entry most weeks. **Validate the instrument before believing the answer, and in both directions.**
+- **A premise restated often enough starts reading as evidence.** Twice in ST0003, and the second time three documents agreed because one was the source of the other two. **Agreement between documents is not corroboration.** Check the claim against the code it describes.

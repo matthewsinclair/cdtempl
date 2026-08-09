@@ -1,10 +1,10 @@
 ---
 verblock: "02 Aug 2026:v0.2: matts - Filled from the ST0001/ST0002 close-out carry-forward"
 intent_version: 2.18.0
-status: WIP
+status: Completed
 slug: post-release-0-1-0-clean-up
 created: 20260802
-completed:
+completed: 2026-08-09T12:20:51Z
 ---
 
 # ST0003: Post-release 0.1.0 clean-up
@@ -35,14 +35,16 @@ Two things are worth knowing before picking anything up.
 | -- | ----- | ----- |
 | WP-01 | Cut the 0.1.0 release | **Done 6 Aug, 8/8** |
 | WP-02 | Rule 4 -- two rulings and what follows | **Parked by hv, 9 Aug.** Evidence and recommendations on record |
-| WP-03 | Grow the spec library, and repair its text | Open. The version-bump pass, plus `formats_required` from WP-06 |
+| WP-03 | Grow the spec library, and repair its text | **Done 9 Aug, 7/7** -- library edition 4; two inherited premises found false |
 | WP-04 | Transport, and the conversion round behind it | **Done 9 Aug** -- dissolved by the wind-back; nothing was or will be sent |
 | WP-05 | Make scope durable: `cdsync.json` and `spec_version` | **Done 9 Aug** -- both ruled and built the same day |
 | WP-06 | Settle round three's outstanding rulings | **Done 9 Aug** -- dissolved to two survivors; the record stands as delivered |
 | WP-07 | Integrate the original four | **Done 9 Aug** -- closed on the finding; Lamplight unchecked by design |
 | WP-08 | Housekeeping and small gaps | **Done 9 Aug** -- all six items done or declined on the record; the staleness advisory built as shape (a) |
 
-**The 8 August state -- nothing unblocked, everything on hv -- lasted one day.** On 9 August hv ruled the wind-back (the delivered projects are delivered; the loop does not run back to Claude Design for them), ruled `cdsync.json`'s home, `spec_version`, the staleness advisory and `formats_required`, and parked WP-02. **Six of eight WPs are closed; what remains live is WP-03 alone** -- the library version-bump pass, with every question it needs already answered -- plus parked WP-02. When WP-03 lands, this thread writes its contract from the evidence and closes.
+**The 8 August state -- nothing unblocked, everything on hv -- lasted one day.** On 9 August hv ruled the wind-back (the delivered projects are delivered; the loop does not run back to Claude Design for them), ruled `cdsync.json`'s home, `spec_version`, the staleness advisory and `formats_required`, and parked WP-02. Six WPs closed that day, WP-03 the same evening, and **this thread closed 20/20 with it.**
+
+**The bar was that every work package reached a terminal state on the record, not that every one was built.** Three were dissolved by the wind-back rather than executed and hv parked a fourth, so a criterion demanding they be built would have been the contract overruling the owner at a close. `acceptance.md` states that boundary; `intent/restart.md` carries the remainder forward with the condition that would re-open each item.
 
 ## Acceptance
 
