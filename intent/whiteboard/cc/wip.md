@@ -3,43 +3,33 @@ node: cc
 name: Control Claude
 role: control
 session_id: e2036be7-6243-4da5-97a5-985cfaddc2bc
-heartbeat_at: 2026-08-09T15:30Z
+heartbeat_at: 2026-08-09T16:15Z
 status: paused
-focus: "ST0003 closed 20/20 at library edition 4. All four steel threads Completed; nothing open, nothing awaits hv. The next piece of work opens a thread. Unpushed: Cdsync x5, Baize x1, Intent x1, Acme x2"
+focus: "Globalfolded 9 Aug. Every steel thread Completed; nothing open, nothing claimed, nothing awaits hv. The next piece of work opens a thread. Unpushed work in four repositories -- ask git, two remotes disagree"
 claims: []
 ---
 
 # Control Claude (cc)
 
-Completed narrative is archived per day at `.history/`; 9 August is the most recent. **This board is live state plus the two standing lists below, and nothing else.**
+**This board is live state plus the two standing lists below, and nothing else.** Day narrative is archived per day at `.history/`; 9 August is the most recent, and it has two entries.
 
 **Read `intent/docs/design-system-lifecycle.md` first. It is canon and outranks everything here.** Then `intent/restart.md`.
 
 ## Where things stand
 
-**Every steel thread is Completed and nothing is open.** ST0003 closed 20/20 on 9 August at library edition 4, joining ST0001 (16/16), ST0002 (12/12) and ST0004 (11/11) -- each through the gate, which refuses a BLOCKED contract. The 9 August rulings are all in `## Decisions`; every WP carries its own record under `intent/st/COMPLETED/ST0003/WP/`.
+**Nothing is open, nothing is claimed, and nothing awaits hv.** Every steel thread is Completed.
 
-**ST0003's bar was that every work package reached a terminal state on the record, not that every one was built.** The wind-back dissolved three and hv parked a fourth. **What was carried forward, with the condition that would re-open each item, is in `intent/restart.md`** -- written down so it is not lost, not so it is picked up.
+**This board deliberately holds no second copy of the state.** Threads, gates, the release record and the structural guards are in `intent/wip.md`; orientation, the install/import table and what was carried forward are in `intent/restart.md`; each work package's finding is its own `info.md`. **The 9 August rulings are in `## Decisions` below, which is their one home.**
 
-**0.1.0 is released and the repository is PUBLIC.** Tag `v0.1.0`, GitHub release published, the published asset downloaded and run to verify it. Published from a single root commit; the 135-commit history is retained privately on the mirror's `archive/pre-public-20260806` and in a bundle beside it.
-
-**Unpushed at the 9 August close:** five commits here (`bcdddb2`, `c92b83b`, `9e6b493`, `736dee4`, plus the edition-4 close), one in Baize (`7211fc1`), one in Intent (`95f4da2`), two in Acme's nested repository. **Pushing is hv's, and this repository publishes on push.**
-
-**Day narrative lives in `.history/`, one directory per day.** `intent/wip.md` and `intent/restart.md` point here and do not restate.
+**Unpushed work exists here, in Baize (`7211fc1`), in Intent (`95f4da2`) and in Acme's nested repository. Pushing is hv's, and this repository publishes on push.** **No count for this repository is written anywhere** -- the two-remotes watch-out below says why, and what to ask instead.
 
 ## TODO
 
-**Nothing.** There is no open steel thread, and that is the honest state rather than an invitation. **The next piece of work opens one** (`intent st new`), and `intent/restart.md`'s carried-forward list is what to read first.
-
-**Carried forward, each with the condition that would re-open it** -- stated in `intent/restart.md`, not duplicated here: WP-02 (parked; nothing moves until a live venture trips rule 4's noise); `pattern-library`'s two-part dance (write the spec and re-point the exemplar and its pinning test in one change, the day an order names the slug); the `reciprocal` asymmetry between `positioning-icp-personas` and `pricing-and-packaging` (no check can see it -- a person is the only instrument).
-
-**The 9 August builds:** `cdsync.json` at the design tree root, its own location resolving the target; a named in-taxonomy slug orders ahead of the library and stamps the literal `unassigned`; `init` writes the stub that makes `brief` runnable for a project Cdsync does not own; the brief states `hard_facts` and bundle membership per specification; the staleness advisory in `doctor` and `check`; and the spec library at edition 4. Suite 360 green, shellcheck clean, every core behaviour mutation-proven with landing proof.
+**Nothing.** No open thread, and that is the finished state rather than an invitation. **The next piece of work opens one** (`intent st new`), and `intent/restart.md`'s carried-forward list is what to read first -- recorded so it is not lost, which is the opposite of a queue.
 
 ## Wants hv
 
-**Off the list rather than settled, so do not re-open:** rule 5 shipped 1 August; rule 3 came off because its residual is mostly TRUE positives. **Ruled 9 August and now in `## Decisions`:** the wind-back and its confirmed map, `cdsync.json`'s home, the `unassigned` lifecycle, stale-is-never-accepted, WP-02 parked, and the Baize divergence ("leave it").
-
-**Nothing is awaiting hv, and nothing is open to want it.** Every ask was answered on 9 August, and the last of them -- `formats_required` and the staleness advisory -- landed in the same day's builds. **The next thing that will want hv is whatever hv brings next.**
+**Nothing awaits hv, and nothing is open to want it.** Every ask was answered on 9 August. **The next thing that will want hv is whatever hv brings next.**
 
 **Standing:**
 
@@ -52,7 +42,7 @@ Completed narrative is archived per day at `.history/`; 9 August is the most rec
 
 **Everything committed here is published the moment it is pushed** -- `intent/`, the steel threads, this board. There is no private tree to be careless in any more. No key, token, absolute path or real contact address belongs in a tracked file; two venture addresses were redacted immediately before publication and reintroducing one would undo that.
 
-**The published history is a single root commit.** The 135-commit development history lives privately on the mirror's `archive/pre-public-20260806` and in a bundle beside it. **Do not try to recover it from the public repository** -- it is not there, and re-pushing it would undo a deliberate decision.
+**The published history is a single root commit, and the development history before it is not in this repository at all.** **Do not try to recover it from the public repository** -- it is not there, and re-pushing it would undo a deliberate decision. Where it *is* kept is recorded once, in `intent/wip.md`, and see the two-remotes entry below for why that copy is not as current as it looks.
 
 **A window closed here.** The rename was free only because it happened before the first release: no tag existed and no published artefact carried the old name. `v0.1.0` is out now, so the next rename of anything carries a published artefact with it.
 
@@ -139,6 +129,7 @@ Completed narrative is archived per day at `.history/`; 9 August is the most rec
 - **Verify a correction by content, never by filename and never by a receipt.**
 - **`assets/` is a name the drop contract owns, and three of four projects use it for something else.** The marker for an asset is its `spec.md`.
 - **An exporter's wrapping is its habit, not a contract.** Two drops the same morning from the same supplier wrapped the identical tree to different depths.
+- **THERE ARE TWO REMOTES AND THEY ARE NOT AT THE SAME PLACE.** `upstream` is the public GitHub repository, which `main` tracks; `local` is the Dropbox mirror, and **it holds the only copy of the truncated pre-public history**. 9 August: every document had recorded a single hand-written "unpushed" figure, which was right for GitHub and **six commits wrong for the mirror** -- the backup was further behind than the thing it backs up, and nothing said so. **There is also no `origin`**, so the reflexive `origin/main..main` fails outright rather than answering wrongly, which is the one mercy here. **Name the remote, ask both, and never write the answer down:** `git log --oneline upstream/main..main` for the public repository and `git log --oneline local/main..main` for the mirror. `upstream/main` is only as fresh as the last fetch, so a zero there means "nothing since the last fetch", not "nothing".
 - **`cdsync check` IS NOT READ-ONLY.** It recomputes `blanks` and `blanks_unique` and **writes them back into every `spec.md` in the drop it walks** -- by design, since hand-counted figures were always wrong, but the verb does not say so. 9 August: running `check` against `templprj` purely as a *verification probe* silently modified eight tracked files, in the same breath as ruling that directory a delivery record not to be edited. **Caught by `git status` at commit time, not by anything in the run.** Before pointing `check` at a tracked tree you are not intending to change, know that you are changing it -- and check `git status` afterwards. **A probe with a side effect is still a side effect.**
 - **`~/.gitignore_global:16` ignores `*.zip` machine-wide.** **An unanchored `.gitignore` rule matches at any depth.**
 - **`intent critic shell` reports clean on unquoted `rm -rf $1/*` at every severity.** **A pass from the critic is no signal**; `--files` is SPACE-separated.

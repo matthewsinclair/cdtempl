@@ -12,21 +12,22 @@ Since 6 August. **Everything committed here is published the moment it is pushed
 
 ST0003 closed 20/20 on 9 August, and **every steel thread is now Completed**. Nothing is in flight and nothing awaits hv. **The next piece of work opens a thread** -- `intent st new` -- rather than resuming one.
 
-**Read `intent/restart.md`'s carried-forward list before starting anything.** Three things are recorded there with the condition that would re-open each: WP-02 is parked by hv, `pattern-library` stays unwritten until an order names it, and one `reciprocal` asymmetry is flagged rather than resolved. **They are written down so they are not lost, not so they are picked up.**
+**Read `intent/restart.md`'s carried-forward list before starting anything.** It records what ST0003 did not do, each item with the condition that would re-open it. **They are written down so they are not lost, not so they are picked up** -- do not treat that list as a queue.
 
-**Unpushed at the 9 Aug close**: five commits here, one in Baize, one in Intent, two in Acme's nested repository. Pushing is hv's.
+**Unpushed work exists here and in three sibling repositories, and pushing is hv's.** **No count lives in this file, and none should**: two remotes sit at different positions and the board's two-remotes watch-out says what to ask instead.
 
 ## Where everything else lives
 
 **One home per thing. If you are about to restate one of these somewhere, that is the bug.**
 
-| What | Where |
-| ---- | ---- |
-| Canon, which outranks everything | `intent/docs/design-system-lifecycle.md` |
-| Rulings, settled and not to be re-opened | `intent/whiteboard/cc/wip.md` `## Decisions` |
-| Watch-outs, the standing hazards | `intent/whiteboard/cc/wip.md` `## Watch-outs` |
-| What each work package found | `intent/st/COMPLETED/ST0003/WP/*/info.md` |
-| Orientation, state, and what was carried forward | `intent/restart.md`, `intent/wip.md` |
+| What                                              | Where                                         |
+| ------------------------------------------------- | --------------------------------------------- |
+| Canon, which outranks everything                  | `intent/docs/design-system-lifecycle.md`      |
+| Rulings, settled and not to be re-opened          | `intent/whiteboard/cc/wip.md` `## Decisions`  |
+| Watch-outs, the standing hazards                  | `intent/whiteboard/cc/wip.md` `## Watch-outs` |
+| What each work package found                      | `intent/st/COMPLETED/ST0003/WP/*/info.md`     |
+| Orientation, and what was carried forward         | `intent/restart.md`                           |
+| Threads, gates, release record, structural guards | `intent/wip.md`                               |
 
 **No count of anything lives in this file.** Tests, work packages, specs, stale documents: every number this file has ever carried went stale, and two of them were being read as fact by the next session. `cdsync doctor` prints the library counts and the suite prints its own.
 
