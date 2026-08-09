@@ -8,11 +8,11 @@ generator: intent todo
   - [x] 01: Cut the 0.1.0 release
   - [ ] 02: Rule 4 -- two rulings and what follows
   - [ ] 03: Grow the spec library, and repair its text
-  - [ ] 04: Transport, and the conversion round behind it
-  - [ ] 05: Make scope durable: cdsync.json and spec_version
-  - [ ] 06: Settle round three's outstanding rulings
-  - [-] 07: Integrate the original four
-  - [-] 08: Housekeeping and small gaps
+  - [x] 04: Transport, and the conversion round behind it
+  - [x] 05: Make scope durable: cdsync.json and spec_version
+  - [x] 06: Settle round three's outstanding rulings
+  - [x] 07: Integrate the original four
+  - [x] 08: Housekeeping and small gaps
 
 ## TODO
 

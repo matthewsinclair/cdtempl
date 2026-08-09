@@ -3,27 +3,25 @@ node: cc
 name: Control Claude
 role: control
 session_id: e2036be7-6243-4da5-97a5-985cfaddc2bc
-heartbeat_at: 2026-08-09T12:30Z
-status: active
-focus: "9 Aug: six of eight WPs closed. WP-05 built (cdsync.json home, unassigned), WP-08 closed on the staleness advisory (shape a), formats_required ruled advisory. Live: WP-03 only; WP-02 parked. Nothing awaits hv"
+heartbeat_at: 2026-08-09T13:00Z
+status: paused
+focus: "Folded 9 Aug. Six of eight WPs closed in one day; WP-02 parked, WP-03 the only live edge and fully unblocked. Nothing awaits hv. Unpushed: Cdsync x3, Baize x1, Intent x1, Acme x2"
 claims: [ST0003]
 ---
 
 # Control Claude (cc)
 
-Completed narrative is archived per day at `.history/`; 8 August is the most recent. **This board is live state plus the two standing lists below, and nothing else.**
+Completed narrative is archived per day at `.history/`; 9 August is the most recent. **This board is live state plus the two standing lists below, and nothing else.**
 
 **Read `intent/docs/design-system-lifecycle.md` first. It is canon and outranks everything here.** Then `intent/restart.md`.
 
 ## Where things stand
 
-**ST0003 is nearly done: the 9 August wind-back dissolved most of what was waiting, and WP-05 was ruled and built the same day.** ST0001 (16/16), ST0002 (12/12), ST0004 (11/11) and ST0003/WP-01 (8/8) all closed through the gate; ST0003's own `info.md` table is current as of 9 Aug. **No count of the moved work packages is kept here** -- this board carried "2 of 8" for two days after it stopped being true, which is the hand-maintained-number hazard it warns about, on itself, again.
+**ST0003 stands at six of eight WPs closed, WP-02 parked, WP-03 the one live edge -- and nothing is awaiting hv.** The 9 August rulings are all in `## Decisions`; every WP carries its own record, and ST0003's `info.md` and `tasks.md` are current. ST0001 (16/16), ST0002 (12/12) and ST0004 (11/11) are closed history, their stories in `intent/wip.md` and the threads themselves.
 
 **0.1.0 is released and the repository is PUBLIC.** Tag `v0.1.0`, GitHub release published, the published asset downloaded and run to verify it. Published from a single root commit; the 135-commit history is retained privately on the mirror's `archive/pre-public-20260806` and in a bundle beside it.
 
-**The rename is finished for real.** It had missed `Sites/gyreandgymble` and `Sites/snorkeltoast` entirely, plus this repository's own gitignored `templates/_test/Acme/`. All three are at zero now and ST0004 carries a post-close note; the thread stays closed, because the boundary is what failed and a close is not where scope is relitigated.
-
-**WP-07 closed 9 August on its finding** -- three of three checkable projects already integrated, and Lamplight unchecked by design under the wind-back. **WP-04 and WP-06 dissolved the same day**, WP-06 leaving two tool-shaped survivors (one built into WP-05's change, one ruled and queued into WP-03). **WP-08 closed by evening** -- its last item, the staleness advisory, built as shape (a). **Every WP carries its own record -- this board does not restate them.**
+**Unpushed at the 9 August fold:** three commits here (`bcdddb2`, `c92b83b`, `9e6b493`), one in Baize (`7211fc1`), one in Intent (`95f4da2`), two in Acme's nested repository. **Pushing is hv's, and this repository publishes on push.**
 
 **Day narrative lives in `.history/`, one directory per day.** `intent/wip.md` and `intent/restart.md` point here and do not restate.
 
