@@ -3,7 +3,7 @@ verblock: "08 Aug 2026:v0.3: matts - Premise corrected: three of three checkable
 wp_id: WP-07
 title: "Integrate the original four"
 scope: Medium
-status: WIP
+status: Done
 ---
 
 # WP-07: Integrate the original four
@@ -52,3 +52,7 @@ Lamplight waits on WP-06's `ref` ruling. **The other three waited on nothing and
 - After touching `addenda/`, **regenerate `BOOTSTRAP-CD.md` by hand.** Regeneration fires on sync only, so a repo-side edit has nothing to hang it on.
 - **`handoff/` is where an integration leaves its fingerprints, when there is one.** **Two of the three carry one -- Baize and snorkeltoast. Gyre & Gymble has none and is integrated anyway**, so a handoff directory is evidence of an integration and never a requirement for one. Where it exists it names the application-side path the drop itself could not reach: Baize's names `apps/rack/assets/css/app.css`, one level deeper than the repository root suggests. **Read the handoff for the path rather than constructing it** -- a root-level `find assets -name '*.css'` on Baize returns nothing at all.
 - **Three projects, three integration idioms.** G&G hex with no handoff; snorkeltoast hex with a handoff naming its provenance in the file itself; Baize `oklch()` with a handoff written as a drop-in for a file the app owns. **Nothing about the shape of one predicted the next.**
+
+## Closed 9 August
+
+**The deliverable was the finding, and the finding is complete**: three of three checkable projects were already integrated, in three different idioms, with every probe validated in both directions, and the premise corrected here rather than worked around. The fourth leg dissolved with hv's wind-back: **integration is the application's business** -- canon already said the tool has no application-side check -- so **Lamplight is recorded unchecked by design, not pending.** The `ref` ruling it waited on dissolved with WP-06. Baize's 96%/95% divergence: hv ruled **"leave it"** on 9 August -- no addendum, consistent with the wind-back.

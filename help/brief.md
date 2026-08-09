@@ -6,10 +6,10 @@ Assemble the brief for Claude Design.
 cdsync brief [--stdout] [--target PATH]
 ```
 
-Reads the venture's facts from `cdsync.json`, expands the order, and assembles a
-complete document: the header, the fixed/open lists, the output structure, every
-ordered asset's **full specification**, the standing gaps, and the `RETURN.md`
-contract. Written atomically to `$CDSYNC_TARGET/brief.md`.
+Reads the venture's facts from `cdsync.json` at the design tree root, expands the
+order, and assembles a complete document: the header, the fixed/open lists, the
+output structure, every ordered asset's **full specification**, the standing gaps,
+and the `RETURN.md` contract. Written atomically to `$CDSYNC_TARGET/brief.md`.
 
 ## Options
 
@@ -38,10 +38,18 @@ without checking.
 
 ## cdsync.json
 
+**It lives at the design tree root** — `design/cdsync.json`, or
+`design/system/cdsync.json` where the tree sits one level down — one home for
+`new` ventures and `init` projects alike. Target resolution probes those two
+locations, so the file's own directory *is* the target; a tree kept anywhere
+else needs `--target` or `$CDSYNC_TARGET` on every command. There is no
+`.target` field any more — a file inside the tree pointing at the tree would be
+circular, and a leftover one is ignored with a warning. No install path may
+overwrite the file, and a drop may not deliver one.
+
 | Field | What it carries |
 |---|---|
 | `venture` | Required. The name |
-| `target` | Where the design record lives. Defaults to `design` |
 | `one_liner` | What it does, one sentence, for whom |
 | `stage` | `pre-seed` / `seed` / `series-a` / `scaling` |
 | `round` | Which drop this is |
@@ -86,14 +94,23 @@ identical on disk.
 the tool from the library, not declared here. That is what makes staleness
 detectable.
 
-## Refusals
+## Ordering ahead of the library, and the one refusal left
 
-An ordered slug with no entry in the spec library is a refusal, not a warning. The
-taxonomy names many more assets than the library specifies, and only the specified
-ones can be briefed, because a brief carries the specification itself. The refusal
-prints the real figure, and `cdsync doctor` prints all three counts — neither is
-written out here, because a count restated in prose drifts from the table it
-describes.
+A named slug the taxonomy holds may be ordered **before the library specifies
+it**. The round creates the asset: the brief carries a section stating the
+contract its specification cannot, and the asset stamps `spec_version:
+unassigned` — the literal word — until the library gains an entry, at which
+point `check` rule 2 asks for a rebuild against it. That is the intended
+lifecycle, not an error.
+
+A named slug **outside the taxonomy** is still a refusal. The taxonomy is the
+identity space — a new asset *type* is added to the library, never invented by
+an order. The refusal prints the taxonomy's real size, and `cdsync doctor`
+prints all three counts — neither is written out here, because a count restated
+in prose drifts from the table it describes.
+
+An **unspecified bundle member** is a third case: omitted and declared as
+deliberately absent, because the venture did not name it.
 
 ## Why the write is atomic
 

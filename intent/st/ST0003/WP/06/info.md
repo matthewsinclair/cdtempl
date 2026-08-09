@@ -3,7 +3,7 @@ verblock: "02 Aug 2026:v0.2: matts - Filled from the ST0001/ST0002 close-out car
 wp_id: WP-06
 title: "Settle round three's outstanding rulings"
 scope: Medium
-status: Not Started
+status: Done
 ---
 
 # WP-06: Settle round three's outstanding rulings
@@ -42,3 +42,12 @@ Two items came *off* this list rather than being settled, and are recorded so th
 ## Notes
 
 The Lamplight `ref` ruling gates WP-07 for Lamplight only -- and since 8 August that is the *whole* of what is left in WP-07, because the other three projects turned out to be integrated already. **This ruling is now the only thing between WP-07 and its close.**
+
+## Dissolved 9 August, two survivors extracted
+
+**hv's wind-back settled this list without ruling it item by item**: the rulings existed to keep the *next* round clean, and there is no next round for the delivered projects -- **the record stands as delivered.** Lamplight's `ref` split and its seven renders, snorkeltoast's conventions, G&G's `print-collateral` downgrade, Baize's `tiles/` and ADRs: all dissolve into the record as it stands, none to be re-litigated, and the `ref` question dies with WP-07's Lamplight leg (integration is the application's business).
+
+Two items were tool-shaped and survive the projects they were found in:
+
+- **`hard_facts` and `bundles` never defined by the generator: DONE 9 August, in the WP-05 build.** The brief now states both per specification and defines both in the contract block. G&G's sixteen `[]` entries stay as delivered -- the fix is for future ventures.
+- **`formats_required` (narrowing of done, or advisory): migrated to WP-03**, recommendation on record -- advisory, because two suppliers independently read it that way -- awaiting hv's word alongside the library-text version bump.

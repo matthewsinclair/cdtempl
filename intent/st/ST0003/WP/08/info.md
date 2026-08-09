@@ -49,6 +49,8 @@ Follow the chain and it ends on a ruling that has not been made:
 
 **So building this would mean choosing WP-05's answer by implementing it**, which is the one thing this thread says not to do. The refusal stays until WP-05 rules.
 
+**9 August: WP-05 ruled, and the gap closed the same day.** A named in-taxonomy slug now orders ahead of the library -- the brief carries the contract its specification cannot, the asset stamps the literal `unassigned`, and rule 2 asks for a rebuild the day the library gains the entry. Outside the taxonomy still refuses, because the taxonomy is the identity space. The build is WP-05's; this item just stopped being blocked by it.
+
 **The first gap is genuinely unblocked** -- a repackaging round reshapes assets that already exist, so every one of them already has a spec and a `spec_version`, and step 4 never arises. **It is now closed.**
 
 `cdsync.json` takes an optional **`round_job`**: free text, one line, what this round is *for*. Free text rather than an enum, matching `effort` and `inherits_from`, **because nobody ordered a vocabulary of round types and inventing one would be the tool deciding what kinds of round exist.**
@@ -143,7 +145,7 @@ Where the six stand after the 8 August re-measurement:
 | Item | State |
 | ---- | ----- |
 | Baize's `BOOTSTRAP-CD.md` | **Done 9 Aug.** hv ruled stale is never accepted; regenerated and committed in Baize (`7211fc1`), which also caught the ADR series at 0035 against a recorded 0030 |
-| Two gaps in `cdsync brief` | **Repackaging round: DONE** (`round_job` plus the measured already-present list). **Ordering an unspecified slug: BLOCKED on WP-05**, whose rulings landed 9 Aug and are being made precise |
+| Two gaps in `cdsync brief` | **Both DONE.** Repackaging round 8 Aug (`round_job` plus the measured already-present list); ordering an unspecified slug 9 Aug, with WP-05's `unassigned` ruling |
 | Stale-document rule | **Reach ruled 9 Aug** -- repository-scoped, because clean-on-stale is the wrong answer. Whether the rule is built awaits hv's word |
 | Intent's absolute path | **Done 9 Aug.** Reported upstream as Intent issue `0016` |
 | Downloads | **Done.** All five cleared by hv deliberately; the "stays" instruction is withdrawn |
@@ -151,4 +153,4 @@ Where the six stand after the 8 August re-measurement:
 
 ## Dependencies
 
-None -- what is left here waits on two words from hv: whether the stale-document rule is built, and WP-05's `spec_version` reading, which unblocks the unspecified-slug gap.
+None -- the one thing left waiting on hv is whether the stale-document rule is built. The roster item stays deliberately deferred.

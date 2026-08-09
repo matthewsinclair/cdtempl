@@ -75,3 +75,7 @@ Needs hv. Both are scope questions about what the rule asserts, not bugs.
 ## Notes
 
 The six genuine leaks are a separate matter and belong to the venture, not the tool: `oklch()` values in `accessibility.md`, `colour.md` and `components.md` that are not tokens in `tokens.json`, so there is nothing to implement them from. They are named in the Laksa handoff note. **Cdsync never repairs a drop.**
+
+## Parked, 9 August
+
+**hv's word: "park."** The three shapes stay recorded above with their evidence, plus the recommendations from the 9 August explanation: teach the rule that a value tabulated beside a declared token is documentation; skip inline code spans in prose while keeping fenced blocks scanned; skip a declared vendor path. **Nothing changes in rule 4 until a live venture trips one of these.** Not to be picked up without hv re-opening it.

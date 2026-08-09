@@ -99,12 +99,23 @@ rule_spec_version() {
   local slug="$1" spec="$2"
   local drop_version library_version library_spec
 
+  drop_version="$(fm_get "$spec" spec_version)" || drop_version=""
+
   if ! library_spec="$(spec_path "$slug")"; then
+    # `unassigned` here is the CORRECT state, not a finding: the asset was
+    # ordered ahead of the library (hv, 9 Aug 2026) and the stamp says so.
+    # The rule starts measuring the day the library gains the entry.
+    if [[ "$drop_version" == "unassigned" ]]; then
+      return 0
+    fi
+    if [[ -n "$drop_version" ]]; then
+      finding advisory "$slug" "rule-2" "no entry in the spec library, yet the drop stamps spec_version $drop_version -- a number nobody issued; an asset built ahead of the library stamps the literal 'unassigned'"
+      return 0
+    fi
     finding advisory "$slug" "rule-2" "no entry in the spec library -- it cannot be checked for staleness"
     return 0
   fi
 
-  drop_version="$(fm_get "$spec" spec_version)" || drop_version=""
   library_version="$(fm_get "$library_spec" spec_version)" || library_version=""
 
   if [[ -z "$drop_version" ]]; then
@@ -119,6 +130,23 @@ rule_spec_version() {
     finding advisory "$slug" "rule-2" "the library entry carries no spec_version, so staleness cannot be judged"
     return 0
   fi
+
+  # An asset stamped ahead of the library, in a library that has since caught
+  # up: the intended second half of the `unassigned` lifecycle, not an error.
+  if [[ "$drop_version" == "unassigned" ]]; then
+    finding advisory "$slug" "rule-2" "stamped unassigned, and the library now holds spec_version $library_version -- rebuild against it; do not just replace the stamp"
+    return 0
+  fi
+
+  # Arithmetic on a word would read it as zero and report a confident wrong
+  # verdict, so a stamp that is neither a number nor the unassigned convention
+  # is named rather than compared.
+  case "$drop_version" in
+    *[!0-9]*)
+      finding advisory "$slug" "rule-2" "unreadable spec_version '$drop_version' -- expected a number copied from the library, or the literal 'unassigned'"
+      return 0
+      ;;
+  esac
 
   if [[ "$drop_version" -lt "$library_version" ]]; then
     # NAMES THE REMEDY, because the obvious reading of the bare disagreement is

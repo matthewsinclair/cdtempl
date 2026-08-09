@@ -33,7 +33,7 @@ Cdsync is bash. A "module" is a file under `lib/` sourced by `bin/cdsync`, and t
 | Concern | THE Module | Notes |
 | ------- | ---------- | ----- |
 | Scaffold a venture | `lib/cmd_new.sh` | **All** application knowledge lives here. New *venture*: its own repository, `cdsync.json`, agent contract, skeleton |
-| Start a design system in an existing repository | `lib/cmd_init.sh` | New *design system*, project already there. The skeleton, plus the one file written outside the target -- no `cdsync.json`, no agent contract, no nested repository |
+| Start a design system in an existing repository | `lib/cmd_init.sh` | New *design system*, project already there. The skeleton, the `cdsync.json` stub at the tree root (hv, 9 Aug 2026), and the one file written outside the target -- no agent contract, no nested repository |
 | The repo-owned `_inbox` ignore rule | `lib/target.sh` | `write_target_inbox_gitignore`. Lives in the target's PARENT, because `install` replaces the target. Appends, never truncates |
 | Hand the design system to Claude Design | `lib/cmd_bootstrap.sh` | Generates `BOOTSTRAP-CD.md`. One generator, two shapes; cold or warm is measured, never declared |
 | Assemble the brief | `lib/cmd_brief.sh` | The brief carries everything its round needs |

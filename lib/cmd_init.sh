@@ -8,21 +8,25 @@
 # venture is the new thing.
 #
 # It is the wrong shape when the project is already there. An existing site has
-# its own repository and its own history, and the canon is explicit that no
-# Cdsync protocol material belongs inside a project -- no `cdsync.json`, no
-# `AGENTS.md`, no handover scaffolding. All four ported projects bear that out:
-# not one of them carries a `cdsync.json`, and what they hold is the tree and
-# nothing else.
+# its own repository and its own history, and no agent contract or nested
+# repository belongs inside it -- the canon's no-protocol-material rule. The
+# design tree is the one Cdsync-owned carve-out in such a project, and
+# `cdsync.json` lives at its root -- one home for `new` ventures and `init`
+# projects alike (hv, 9 Aug 2026). That ruling superseded the older reading
+# under which an init'd project carried no `cdsync.json` at all, which left
+# `brief` unrunnable there and scope supplied by hand.
 #
-# Before this command there was no way to say so. `bootstrap` refused over a
-# tree that did not exist and advised `cdsync new <name>`, which would have
-# created a second repository nested inside the first and written three files
-# the canon forbids there. The advice was the only advice available and it was
-# wrong, which is the tell for a missing command rather than a missing flag.
+# Before this command there was no way to start a tree at all. `bootstrap`
+# refused over a tree that did not exist and advised `cdsync new <name>`, which
+# would have created a second repository nested inside the first and written an
+# agent contract the canon forbids there. The advice was the only advice
+# available and it was wrong, which is the tell for a missing command rather
+# than a missing flag.
 #
-# So this does the one thing that was missing and nothing else: the directories,
-# and the `.gitkeep` in each. `bootstrap` writes the document, `brief` orders the
-# round, `install` lands the export. One job each.
+# So this does the small set of things that were missing and nothing else: the
+# directories, the `.gitkeep` in each, and the venture's `cdsync.json` stub at
+# the tree root. `bootstrap` writes the document, `brief` orders the round,
+# `install` lands the export. One job each.
 
 # The skeleton is three directories and a `.gitkeep` apiece. `.gitkeep` because
 # git does not track an empty directory, and an absent `assets/` makes
@@ -88,9 +92,23 @@ cmd_init() {
   # survive the first delivery it is meant to protect against.
   write_target_inbox_gitignore "$target" || return 1
 
+  # The venture's cdsync.json, at the tree root. This is what makes `brief`
+  # runnable for a project Cdsync does not own -- scope used to be supplied by
+  # hand for exactly this case. Protected from every install path, so the
+  # first delivery cannot eat it.
+  # Named after the TARGET'S repository, not the working directory -- the tree
+  # belongs to the project that owns it, which is the same lesson the
+  # numbering scan already carries.
+  local venture
+  venture="$(basename "$(git -C "$(dirname "$target")" rev-parse --show-toplevel 2>/dev/null || echo "$target")")"
+  render_venture_template "$CDSYNC_HOME/templates/venture/$CDSYNC_CONFIG_NAME.tmpl" \
+    "$target/$CDSYNC_CONFIG_NAME" "$venture" || return 1
+  echo "  create  $CDSYNC_CONFIG_NAME"
+
   echo ""
   success "design system tree initialised at $target"
   echo ""
-  info "next: cdsync bootstrap --target $target"
+  info "next: fill in $target/cdsync.json -- especially 'fixed', 'open' and 'order'"
+  info "then: cdsync bootstrap --target $target"
   info "then: commit the tree in the project's own repository"
 }

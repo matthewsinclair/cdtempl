@@ -35,6 +35,7 @@ So `pattern-library` is a two-part job: write the spec, and simultaneously re-po
 - `pattern-library` written **and** the exemplar re-pointed, in one change, with the test updated to match.
 - The three text inconsistencies repaired together, behind a `spec_library_version` bump.
 - A decision on what a library-version bump means for drops already stamped against the old one. **`spec_version` is the library's stamp, not a per-drop counter** -- so this is a real question, not bookkeeping.
+- **From WP-06's dissolution (9 Aug): `formats_required` needs a meaning** -- a narrowing of done, or advisory. Two suppliers independently read it as advisory, which is the standing recommendation; it folds into the same version-bump pass rather than moving alone.
 
 ## Dependencies
 

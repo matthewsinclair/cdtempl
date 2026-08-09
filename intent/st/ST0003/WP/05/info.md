@@ -3,7 +3,7 @@ verblock: "08 Aug 2026:v0.3: matts - The spec_version ruling now blocks WP-08's 
 wp_id: WP-05
 title: "Make scope durable: cdsync.json and spec_version"
 scope: Medium
-status: Not Started
+status: Done
 ---
 
 # WP-05: Make scope durable: cdsync.json and spec_version
@@ -49,4 +49,14 @@ Needs hv for both rulings. WP-03 benefits from the first being settled.
 
 ## Notes
 
-geodica also asked, differently: its kit is prose only -- `tokens.md` and `primitives.md`, no `tokens.json` -- so rule 4 cannot run against it at all. Either request machine-readable tokens next round, or accept the rule is dark for that venture and say so.
+geodica also asked, differently: its kit is prose only -- `tokens.md` and `primitives.md`, no `tokens.json` -- so rule 4 cannot run against it at all. Either request machine-readable tokens next round, or accept the rule is dark for that venture and say so. *(Under the 9 Aug wind-back this stays as record: no round is going back to geodica.)*
+
+## Ruled and built, 9 August
+
+Both rulings landed in conversation and the build shipped the same day. **Suite 353/353, shellcheck clean, the four core behaviours mutation-proven** (each mutant confirmed landed by diff and killed exactly its test).
+
+- **`cdsync.json` lives at the design tree root, always** -- one home for `new` ventures and `init` projects alike. Resolution probes `design/system/` then `design/`; the file's own directory IS the target; the `.target` field is retired and a leftover one warns. The file joins `CDSYNC_DROP_PROTECTED_PATHS`, and a drop may not deliver one at any depth. `new` scaffolds it into the tree; **`init` writes the stub**, which is what makes `brief` runnable for a project Cdsync does not own -- the case where scope used to be supplied by hand.
+- **`spec_version` for a new asset is the literal `unassigned`.** `brief` now orders a named in-taxonomy slug the library has not specified -- the round creates the asset, the document carries the contract its specification cannot, and the stamp is `unassigned` until the library gains an entry, at which point rule 2 asks for a rebuild. **Outside the taxonomy still refuses**: the taxonomy is the identity space. Bundle expansion unchanged. Both generators state the whole convention, so no supplier asks a sixth time -- and WP-08's order-an-unspecified-slug gap closed with it.
+- **Acme migrated**: `cdsync.json` at `design/`, `.target` gone, brief regenerated against library v3 (`91e9408`, `adc50f2` in its own repository).
+- **The regenerate-every-project step retired with the wind-back**: the four delivered projects' documents froze; generator changes regenerate live ventures only.
+- Carried here from WP-06's dissolution: **the brief now states `hard_facts` and bundle membership per specification** and defines both in the contract block -- the two fields the document asked back and never supplied.

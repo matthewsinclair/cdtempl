@@ -54,6 +54,12 @@ Rule 2 also reports a dependency naming a slug that is not in the taxonomy. A
 dependency on an asset that is real but **unbuilt** is correct and is not flagged:
 `component-library` requires `grid-and-layout`, which is first in Tier 2.
 
+Rule 2 knows the `unassigned` convention: an asset ordered ahead of the library
+stamps the literal word, which is **silent while the library holds no entry** and
+becomes an advisory — rebuild against the new specification — the day it gains
+one. A number on a library-less asset is flagged as a number nobody issued, and a
+stamp that is neither a number nor `unassigned` is named rather than compared.
+
 **Rule 6 cannot block, and that is forced rather than chosen.** Classification governs
 where material may be shown, never whether it is committed, and it "is not a delivery
 filter and must not be used as one" — so a blocking rule here would refuse a drop on the

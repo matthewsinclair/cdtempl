@@ -3,9 +3,9 @@ node: cc
 name: Control Claude
 role: control
 session_id: e2036be7-6243-4da5-97a5-985cfaddc2bc
-heartbeat_at: 2026-08-09T09:43Z
+heartbeat_at: 2026-08-09T12:30Z
 status: active
-focus: "9 Aug: rulings landing. Wind-back recorded, cdsync.json home ruled, Baize bootstrap regenerated (7211fc1), Intent 0016 filed. Awaiting: spec_version precision, the wind-back map, stale-rule order, WP-02 words"
+focus: "9 Aug: WP-05 ruled and BUILT -- cdsync.json at the tree root, unassigned lifecycle, ordered-ahead briefs. Five WPs closed, WP-02 parked. Awaiting: stale-rule build-or-decline, formats_required word"
 claims: [ST0003]
 ---
 
@@ -17,34 +17,32 @@ Completed narrative is archived per day at `.history/`; 8 August is the most rec
 
 ## Where things stand
 
-**ST0003 is in flight, and nothing left in it is unblocked.** ST0001 (16/16), ST0002 (12/12), ST0004 (11/11) and ST0003/WP-01 (8/8) all closed through the gate. **No count of the moved work packages is kept here** -- this board carried "2 of 8" for two days after it stopped being true, which is the hand-maintained-number hazard it warns about, on itself, again.
+**ST0003 is nearly done: the 9 August wind-back dissolved most of what was waiting, and WP-05 was ruled and built the same day.** ST0001 (16/16), ST0002 (12/12), ST0004 (11/11) and ST0003/WP-01 (8/8) all closed through the gate; ST0003's own `info.md` table is current as of 9 Aug. **No count of the moved work packages is kept here** -- this board carried "2 of 8" for two days after it stopped being true, which is the hand-maintained-number hazard it warns about, on itself, again.
 
 **0.1.0 is released and the repository is PUBLIC.** Tag `v0.1.0`, GitHub release published, the published asset downloaded and run to verify it. Published from a single root commit; the 135-commit history is retained privately on the mirror's `archive/pre-public-20260806` and in a bundle beside it.
 
 **The rename is finished for real.** It had missed `Sites/gyreandgymble` and `Sites/snorkeltoast` entirely, plus this repository's own gitignored `templates/_test/Acme/`. All three are at zero now and ST0004 carries a post-close note; the thread stays closed, because the boundary is what failed and a close is not where scope is relitigated.
 
-**WP-07's premise was false for every project it could be checked against** -- Gyre & Gymble on 6 August, Baize and snorkeltoast on 8 August, **three of three already integrated.** Only Lamplight is unchecked and it waits on WP-06's `ref` ruling, so the WP is WIP and cannot close. **WP-08 was re-measured before being worked from and three of its six items had drifted**; it is WIP, and three items now need a ruling rather than effort. **Both WPs carry their own findings -- this board does not restate them.**
+**WP-07 closed 9 August on its finding** -- three of three checkable projects already integrated, and Lamplight unchecked by design under the wind-back. **WP-04 and WP-06 dissolved the same day**, WP-06 leaving two tool-shaped survivors (one built into WP-05's change, one migrated to WP-03). **WP-08 is the one WP still open**, on a single hv word. **Every WP carries its own record -- this board does not restate them.**
 
 **Day narrative lives in `.history/`, one directory per day.** `intent/wip.md` and `intent/restart.md` point here and do not restate.
 
 ## TODO
 
-**All of it lives in ST0003, "Post-release 0.1.0 clean-up"** -- `intent/st/ST0003/`, eight work packages, each with its own `info.md` stating what blocks it. **The ordering is in `intent/restart.md`.** This board carries no second copy.
+**All of it lives in ST0003, "Post-release 0.1.0 clean-up"** -- `intent/st/ST0003/`, whose `info.md` table is current as of 9 Aug. **The ordering is in `intent/restart.md`.** This board carries no second copy.
 
-**Done:** WP-01 cut the release; WP-07 for all three checkable projects; WP-08's repackaging round, and the taxonomy count that was wrong in the message users read.
+**Live edges, and only two:** WP-08's stale-document rule (hv's build-or-decline), and WP-03's library pass (the version bump, `pattern-library`'s two-part dance, `formats_required` from WP-06). **WP-02 is parked by hv** -- not to be picked up without hv re-opening it.
 
-**There is now no unblocked engineering left in ST0003.** WP-08's second `brief` gap turned out to be **blocked on WP-05's `spec_version` ruling** -- ordering a slug the library has no spec for means telling the round what version to stamp on the asset it is creating, which is that ruling exactly. WP-08 had recorded itself as depending on nothing. **Everything remaining in the thread waits on hv.**
+**The 9 August build (WP-05's record):** `cdsync.json` lives at the design tree root, its own location resolving the target; a named in-taxonomy slug orders ahead of the library and stamps the literal `unassigned`; `init` writes the stub that makes `brief` runnable for a project Cdsync does not own; the brief states `hard_facts` and bundle membership per specification. Suite green end to end, shellcheck clean, four core behaviours mutation-proven, Acme migrated.
 
 ## Wants hv
 
-**Off the list rather than settled, so do not re-open:** rule 5 shipped 1 August; rule 3 came off because its residual is mostly TRUE positives. **Ruled 9 August and now in `## Decisions`:** the delivered-projects wind-back, `cdsync.json`'s home, stale-is-never-accepted, and the Baize divergence ("leave it").
+**Off the list rather than settled, so do not re-open:** rule 5 shipped 1 August; rule 3 came off because its residual is mostly TRUE positives. **Ruled 9 August and now in `## Decisions`:** the wind-back and its confirmed map, `cdsync.json`'s home, the `unassigned` lifecycle, stale-is-never-accepted, WP-02 parked, and the Baize divergence ("leave it").
 
-**Awaiting hv, raised 9 August:**
+**Awaiting hv, and only these:**
 
-- **The `spec_version` precise reading** -- per-slug `unassigned` for a new asset, plus the round-level `spec_library_version` stamp the brief already carries, all stated by the generator. Confirm before it goes into the generator; it is the last thing between WP-05 and implementation.
-- **The wind-back's consequence map** -- WP-04 closes, WP-06 dissolves to two survivors, WP-07 closes on its finding, the sibling regeneration sweep retires. On confirm the WPs move and the state files follow.
-- **Whether the stale-document rule is built** -- its reach is ruled (repository-scoped; clean-on-stale is wrong); the order itself awaits the word.
-- **WP-02's three rule-4 rulings** -- explained 9 August with recommendations; one word each suffices, or "park".
+- **The stale-document rule: build it, or drop it.** The two honest shapes: an advisory line in `doctor`/`check` comparing the document's age against the repository's newest change, or -- recommended -- `check` regenerating `BOOTSTRAP-CD.md` as a byproduct the way `install` and `import` already do, so staleness stops being possible and there is nothing to warn about. One word.
+- **`formats_required`: advisory, or a narrowing of done.** Recommendation advisory (two suppliers independently read it so); folds into WP-03's version-bump pass whenever that runs. Not urgent.
 
 **Standing:**
 
@@ -149,7 +147,10 @@ Settled and not to be re-opened. Full reasoning in `intent/st/ST0001/design.md`.
 
 **CANON, above every Decision below: `intent/docs/design-system-lifecycle.md`.**
 
-- (2026-08-09) **The delivered projects are delivered, and the loop does not run back to Claude Design for them.** The cdsync process earns its keep for a few rounds while a design system beds down; after that the tree is a **record of what was asked for**, not a living document. Further rounds are rare, project-specific and as-needed; rollout is the project's own work, and nothing in the four delivered projects needs anything more from here. The map of what this dissolves in ST0003 awaits hv's confirm before any WP moves.
+- (2026-08-09) **The delivered projects are delivered, and the loop does not run back to Claude Design for them.** The cdsync process earns its keep for a few rounds while a design system beds down; after that the tree is a **record of what was asked for**, not a living document. Further rounds are rare, project-specific and as-needed; rollout is the project's own work, and nothing in the four delivered projects needs anything more from here. **The map was confirmed the same day**: WP-04 closed unsent, WP-06 dissolved to its two survivors, WP-07 closed on its finding, the sibling regeneration sweep retired.
+- (2026-08-09) **`spec_version` for a new asset is `unassigned`, stamped by instruction rather than invented by the supplier.** Confirmed by hv on the precise reading: the per-slug field takes the literal `unassigned` when the library holds no specification for the slug; the round already carries `spec_library_version` (the brief stamps every order with it); the generators state both so no supplier has to ask. Rule 2 treats `unassigned` with no library entry as the correct state, and flags the asset for rebuild once the library gains the entry. A library-wide number never goes into the per-slug field -- two unrelated counters colliding is the G&G lesson.
+- (2026-08-09) **A slug the venture names may be ordered without a specification if it is in the taxonomy; outside the taxonomy stays refused.** Implementation boundary under the ruling above: the old refusal existed only because the brief could not say what to stamp, and `unassigned` says it. The taxonomy stays the identity space -- a genuinely new asset TYPE is library work, not an order. Bundle expansion is unchanged: an unspecified bundle member stays declared-absent, because the venture did not name it.
+- (2026-08-09) **WP-02 is parked, not ruled.** Rule 4's three noise shapes stay recorded with their evidence and recommendations; nothing changes in the rule until a live venture trips one.
 - (2026-08-09) **`cdsync.json` lives at the design tree root, always -- one home for `new` ventures and `init` projects alike.** The WP-05 framing had invented a choice; hv's answer is that there is nowhere else it could sensibly live. Consequences carried into implementation: the file joins `CDSYNC_DROP_PROTECTED_PATHS`, a drop may never deliver it, and its `.target` field retires as circular once the file sits inside the tree it points at.
 - (2026-08-09) **A stale generated document is never accepted -- regenerate it.** And a staleness check that reports clean on a provably stale document is the wrong check, so any such check scopes to the repository, matching the generator's own reach.
 - (2026-08-09) **Baize's 96%/95% refinement stays unrecorded -- "leave it."** No addendum. Consistent with integration being the application's business, and with the wind-back above.

@@ -73,7 +73,7 @@ This thread's objective (`info.md`) is **four things**: the brief format, the ou
 ### WP-01
 
 - AT-01.1 test/cdsync.bats::"brief writes to the target and inlines the full specification" -- covers AC-01.1 -- status: green
-- AT-01.2 test/cdsync.bats::"brief refuses a slug that has no spec in the library" -- covers AC-01.2 -- status: green
+- AT-01.2 test/cdsync.bats::"brief still refuses a named slug outside the taxonomy" -- covers AC-01.2 -- status: green. **Superseded in part, 9 Aug 2026**: hv ruled an in-taxonomy slug may be ordered ahead of the library (`spec_version: unassigned`), so the refusal this AT pinned now applies only outside the taxonomy. The original test was renamed to "an ordered-ahead slug gets the contract section, not an invented spec"; the refusal boundary lives in the test named here.
 - AT-01.3 test/cdsync.bats::"brief orders what a partial bundle has and declares the rest absent" -- covers AC-01.2 -- status: green
 - Coverage: AC-01.1 and AC-01.2 covered; AC-01.3 is non-test and carries its evidence inline.
 

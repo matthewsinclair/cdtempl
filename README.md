@@ -60,6 +60,7 @@ Two commands. Everything else is Claude Design's turn.
 
 ```
 cdsync init      --target /path/to/repo/design/system
+# fill in design/system/cdsync.json -- especially fixed, open and order
 cdsync bootstrap --target /path/to/repo/design/system
 ```
 
@@ -67,7 +68,7 @@ Then commit the tree in that project's own repository and hand `BOOTSTRAP-CD.md`
 
 `init` also writes a `.gitignore` in the target's **parent**, holding one anchored rule: `/system/_inbox/`. It lives outside the target because `install` replaces the target wholesale, so a guard inside it would not survive the first delivery it exists to protect against. It never truncates an existing `.gitignore` -- it appends, and only when the rule is absent.
 
-**Nothing else of Cdsync's belongs in that project.** No `cdsync.json`, no outbox, no handover scaffolding. If Cdsync needs a sample or a template, it lives in Cdsync.
+**Nothing else of Cdsync's belongs in that project.** No outbox, no handover scaffolding, no agent contract. The one exception is `cdsync.json`, the venture's own facts and order: it lives at the design tree root -- one home for `new` ventures and `init` projects alike -- which is what makes `brief` runnable for a project Cdsync does not own. No install path may overwrite it, and a drop may not deliver one.
 
 ### A brand-new venture
 
@@ -75,7 +76,7 @@ Then commit the tree in that project's own repository and hand `BOOTSTRAP-CD.md`
 cdsync new acme
 ```
 
-Creates `./acme/` as **its own git repository**, with the venture's facts in `cdsync.json`, an agent contract in `AGENTS.md` and `CLAUDE.md`, and the target skeleton under `design/`. Its `.gitignore` covers the generated `design/site/` and, like `init`, the target's `_inbox/`. Fill in `cdsync.json` -- especially `fixed`, `open` and `order` -- then `cdsync brief`.
+Creates `./acme/` as **its own git repository**, with the venture's facts in `design/cdsync.json` at the tree root, an agent contract in `AGENTS.md` and `CLAUDE.md`, and the target skeleton under `design/`. Its `.gitignore` covers the generated `design/site/` and, like `init`, the target's `_inbox/`. Fill in `design/cdsync.json` -- especially `fixed`, `open` and `order` -- then `cdsync brief`.
 
 ### `init` or `new`, and why it is not a flag
 
@@ -83,8 +84,8 @@ They are not variants of each other. The question is **what the new thing is**.
 
 | The new thing | Command | You get |
 | ------------- | ------- | ------- |
-| A **venture** | `cdsync new <name>` | Its own repository, `cdsync.json`, the agent contract, the skeleton |
-| A **design system**, in a project that already exists | `cdsync init` | The skeleton, in the repository you are already in |
+| A **venture** | `cdsync new <name>` | Its own repository, the agent contract, the skeleton, `cdsync.json` at the tree root |
+| A **design system**, in a project that already exists | `cdsync init` | The skeleton and the `cdsync.json` stub, in the repository you are already in |
 
 Running `new` against an existing project would `git init` a second repository nested inside the first and write three files the canon forbids there.
 
@@ -144,7 +145,7 @@ A slug can be legitimately named as a dependency long before it is specified, an
 
 ### The two version numbers
 
-**`spec_version` is the library's stamp, not a per-drop counter.** It records which version of the library specification an asset was built from, copied unchanged. Claude Design does not increment it, and a new draft of the same asset against the same specification carries the same number as the last one.
+**`spec_version` is the library's stamp, not a per-drop counter.** It records which version of the library specification an asset was built from, copied unchanged. Claude Design does not increment it, and a new draft of the same asset against the same specification carries the same number as the last one. **An asset ordered ahead of the library stamps the literal `unassigned`** -- there is no number to copy, and a self-chosen one is the counter this rule exists to stop; when the library gains the entry, `check` asks for a rebuild against it.
 
 That is the whole point: the comparison is what makes it useful. **A number each side increments on its own schedule cannot measure a distance**, because it never disagrees for a reason. An asset's own progress is `status` and `coverage`.
 

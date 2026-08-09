@@ -1,20 +1,20 @@
 ---
-verblock: "08 Aug 2026:v1.2: Matthew Sinclair - WP-07's premise false in all three checkable projects, WP-08 re-measured, no unblocked engineering left in ST0003"
+verblock: "09 Aug 2026:v1.3: Matthew Sinclair - The wind-back lands: WP-05 ruled and built, five WPs closed, WP-02 parked"
 ---
 
 # Work In Progress
 
-Project-wide snapshot, folded at the end of 8 August's work. The live per-session channel is `intent/whiteboard/cc/wip.md`; this is the settled version. **Orientation, canon and the waiting list are in `intent/restart.md` and are not restated here.**
+Project-wide snapshot, updated 9 August. The live per-session channel is `intent/whiteboard/cc/wip.md`; this is the settled version. **Orientation, canon and the live edges are in `intent/restart.md` and are not restated here.**
 
 ## Where the project stands
 
-**Cdsync v1 is released and public.** **Ten commands** -- `new`, `init`, `brief`, `bootstrap`, `install`, `import`, `check`, `site`, `release`, plus `doctor`. **342 tests, 0 failures.** Shellcheck silent at default severity. **CI success on hygiene, ubuntu-latest and macos-latest**, read per job. `README.md` and `LICENSE.md` (MIT). **Read the spec-library numbers from `cdsync doctor`, not from prose here** -- it prints specs, taxonomy slugs and bundles, and a hand-copied count is how this project has drifted before.
+**Cdsync v1 is released and public.** **Ten commands** -- `new`, `init`, `brief`, `bootstrap`, `install`, `import`, `check`, `site`, `release`, plus `doctor`. **The bats suite is green end to end and prints its own count** -- a hand-copied test count in this file drifted within a day of being written, which is the standing counts ruling applying to one more number. Shellcheck silent at default severity. **CI success on hygiene, ubuntu-latest and macos-latest**, read per job. `README.md` and `LICENSE.md` (MIT). **Read the spec-library numbers from `cdsync doctor`, not from prose here.**
 
 **The repository is public as of 6 August**, published from a single root commit. The 135-commit development history was truncated and retained privately at the Dropbox mirror on `archive/pre-public-20260806`, with a bundle beside it. **Everything committed here is published on push.**
 
-**ST0003 is in flight**, with WP-01 closed and WP-07 and WP-08 both WIP. **There is no unblocked engineering left in it** -- everything remaining waits on an hv ruling, which became true on 8 August. Every repository touched is clean and at `ahead=0` on every remote.
+**ST0003 is nearly done, and the 9 August wind-back is why.** hv ruled the delivered projects delivered -- the loop does not run back to Claude Design for them; the tree is a record of what was asked for. Five of eight WPs are closed (WP-01 on 6 Aug; WP-04, 05, 06, 07 on 9 Aug), WP-02 is parked, and WP-08 waits on one word: the stale-document rule, built or declined. **WP-05's rulings landed and were built the same day** -- `cdsync.json` at the design tree root for every project, and `spec_version: unassigned` for an asset ordered ahead of the library.
 
-**Six projects hold a design system tree.** matthewsinclair and geodica completed round one on 2 August. Of the original four from round three, **three are integrated and were already integrated before anyone checked** -- Gyre & Gymble, Baize and snorkeltoast, in three different idioms. **Lamplight is unchecked rather than unintegrated**, and holds on WP-06's `ref` ruling. **hv is rolling both new design systems out in Laksa and fixing forward**; implementation is not this project's thread.
+**Six projects hold a design system tree.** matthewsinclair and geodica completed round one on 2 August. Of the original four from round three, **three are integrated and were already integrated before anyone checked** -- Gyre & Gymble, Baize and snorkeltoast, in three different idioms. **Lamplight is unchecked by design** -- integration is the application's business, and nothing here needs the answer. **hv is rolling both new design systems out in Laksa and fixing forward**; implementation is not this project's thread.
 
 **0.1.0 is released.** Tag `v0.1.0` on `e54ebbc`, annotated; GitHub release published with `cdsync-0.1.0.tar.gz` (474,181 bytes, 140 entries). Verified by downloading the published asset, confirming its sha256 matched the local build byte for byte, extracting it and running it. `VERSION` stays `0.1.0` and is now a **released** version, so the next cut moves off it.
 
@@ -25,7 +25,7 @@ Project-wide snapshot, folded at the end of 8 August's work. The live per-sessio
 | ST0001 | Harvest template v0 from the three Claude Design projects | Completed | 16/16 |
 | ST0002 | Port four established projects to the Cdsync shape | Completed | 12/12 |
 | ST0004 | Rename the tool to Cdsync | Completed | 11/11, plus a post-close note |
-| ST0003 | Post-release 0.1.0 clean-up | **WIP** | WP-01 closed 8/8; WP-07 and WP-08 WIP, both blocked on rulings |
+| ST0003 | Post-release 0.1.0 clean-up | **WIP** | Five WPs closed, WP-02 parked, WP-08 on one hv word; contract still deliberately unwritten |
 
 Each close went through `intent st done`, which refuses while a contract is BLOCKED, so each had to earn its number. `intent st list` shows nothing by default -- use `--status Completed`.
 
@@ -45,7 +45,7 @@ The tool was renamed to Cdsync. ST0004 closed 11/11 on a stated bar of **five re
 
 ## What the work packages found
 
-**Not restated here.** WP-01's two defects in `release` itself are in `intent/st/ST0003/WP/01/info.md`. **WP-07's finding that its own premise was false -- in every project it could be checked against, not just the first -- is in `WP/07/info.md`.** WP-08's re-measurement, which found three of its six items had drifted and a fourth blocked on WP-05, is in `WP/08/info.md`. **The standing hazards they taught are on the board, in one copy** -- this file previously carried a second, which is the drift it keeps naming.
+**Not restated here.** WP-01's two defects in `release` itself are in `intent/st/ST0003/WP/01/info.md`. **WP-07's finding that its own premise was false -- in every project it could be checked against -- is in `WP/07/info.md`**, with its 9 Aug close. WP-05's as-built -- the tree-root `cdsync.json`, the `unassigned` lifecycle, the ordered-ahead brief -- is in `WP/05/info.md`. WP-06's dissolution and its two survivors are in `WP/06/info.md`. **The standing hazards they taught are on the board, in one copy** -- this file previously carried a second, which is the drift it keeps naming.
 
 ## Structural guards, cumulative
 

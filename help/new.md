@@ -7,8 +7,8 @@ cdsync new <name> [--target PATH]
 ```
 
 Creates `./<name>/` as its own git repository, with the venture's facts in
-`cdsync.json`, an agent contract in `AGENTS.md` and `CLAUDE.md`, and the target
-skeleton underneath `design/`.
+`design/cdsync.json` at the tree root, an agent contract in `AGENTS.md` and
+`CLAUDE.md`, and the target skeleton underneath `design/`.
 
 A venture gets its own repository rather than living under Cdsync. The rejected
 alternative — `drops/<name>/` inside Cdsync — would couple every venture's
@@ -24,7 +24,7 @@ confidential tree to one repository and make per-venture access impossible.
 
 | Path | What it is |
 |---|---|
-| `cdsync.json` | The venture's facts, in one place. `brief` is generated from it |
+| `design/cdsync.json` | The venture's facts, at the tree root. `brief` is generated from it, and its location is what the target resolves from |
 | `AGENTS.md` | The tool-agnostic agent contract |
 | `CLAUDE.md` | The Claude Code overlay |
 | `README.md` | The loop, written down |

@@ -31,18 +31,18 @@ Two things are worth knowing before picking anything up.
 
 ## The work packages
 
-| WP | Title | Blocked on |
-| -- | ----- | ---------- |
+| WP | Title | State |
+| -- | ----- | ----- |
 | WP-01 | Cut the 0.1.0 release | **Done 6 Aug, 8/8** |
-| WP-02 | Rule 4 -- two rulings and what follows | hv |
-| WP-03 | Grow the spec library, and repair its text | Partly WP-05 |
-| WP-04 | Transport, and the conversion round behind it | **hv transport** |
-| WP-05 | Make scope durable: `cdsync.json` and `spec_version` | hv |
-| WP-06 | Settle round three's outstanding rulings | hv |
-| WP-07 | Integrate the original four | **WIP.** Three done; Lamplight on WP-06 |
-| WP-08 | Housekeeping and small gaps | **WIP.** Three items on hv; one gap on WP-05 |
+| WP-02 | Rule 4 -- two rulings and what follows | **Parked by hv, 9 Aug.** Evidence and recommendations on record |
+| WP-03 | Grow the spec library, and repair its text | Open. The version-bump pass, plus `formats_required` from WP-06 |
+| WP-04 | Transport, and the conversion round behind it | **Done 9 Aug** -- dissolved by the wind-back; nothing was or will be sent |
+| WP-05 | Make scope durable: `cdsync.json` and `spec_version` | **Done 9 Aug** -- both ruled and built the same day |
+| WP-06 | Settle round three's outstanding rulings | **Done 9 Aug** -- dissolved to two survivors; the record stands as delivered |
+| WP-07 | Integrate the original four | **Done 9 Aug** -- closed on the finding; Lamplight unchecked by design |
+| WP-08 | Housekeeping and small gaps | **WIP.** One item on hv: the stale-document rule, built or declined |
 
-**Unblocked right now: nothing.** That became true on 8 August, when WP-07's remaining projects turned out to be integrated already and WP-08's last piece of engineering turned out to depend on WP-05. **Read the table above as a waiting list, not a work queue.**
+**The 8 August state -- nothing unblocked, everything on hv -- lasted one day.** On 9 August hv ruled the wind-back (the delivered projects are delivered; the loop does not run back to Claude Design for them), ruled `cdsync.json`'s home and `spec_version`'s answer, parked WP-02, and the thread collapsed from a waiting list to two live edges: WP-03's library work, and WP-08's last question.
 
 ## Acceptance
 

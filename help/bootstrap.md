@@ -66,12 +66,15 @@ the number is one Claude Design can reconcile against.
 ## It is protected from the drop
 
 `BOOTSTRAP-CD.md` is declared in `CDSYNC_DROP_PROTECTED_PATHS` alongside
-`addenda/`. It is Cdsync's output living inside a tree Claude Design replaces
-wholesale, so without that declaration an export would silently eat it.
+`addenda/` and `cdsync.json`. It is Cdsync's output living inside a tree Claude
+Design replaces wholesale, so without that declaration an export would silently
+eat it.
 
-The two are protected for opposite reasons: `addenda/` is written by the project
-*about* a drop and flows **back**; `BOOTSTRAP-CD.md` is written by Cdsync *for*
-Claude Design and flows **out**.
+The three are protected for different reasons: `addenda/` is written by the
+project *about* a drop and flows **back**; `BOOTSTRAP-CD.md` is written by
+Cdsync *for* Claude Design and flows **out**; `cdsync.json` is the venture's
+own facts and order, living at the tree root, and flows **nowhere** -- a drop
+may not deliver one either.
 
 ## `--delta`
 

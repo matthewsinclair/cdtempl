@@ -197,6 +197,34 @@ atomic_write() {
 }
 
 # ============================================================================
+# TEMPLATE RENDERING
+# ============================================================================
+
+# Substitute {{VENTURE}} and write. Same token convention as the sibling tool's
+# tmpl/ directory, so a template here reads the way one there does.
+#
+# Lives in the always-sourced primitives because TWO command modules render
+# venture templates -- `new` for the whole scaffold, `init` for the cdsync.json
+# stub at the tree root -- and command modules are sourced on demand, so a
+# helper one command borrows from another is a command-not-found at runtime.
+# That is exactly how `init` failed the first time it tried.
+render_venture_template() {
+  local src="$1"
+  local dst="$2"
+  local name="$3"
+
+  if [[ ! -f "$src" ]]; then
+    error "missing template: $src"
+    return 1
+  fi
+
+  sed "s|{{VENTURE}}|$name|g" "$src" >"$dst" || {
+    error "could not write $dst"
+    return 1
+  }
+}
+
+# ============================================================================
 # NOT IMPLEMENTED
 # ============================================================================
 

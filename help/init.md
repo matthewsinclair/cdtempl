@@ -43,14 +43,15 @@ They are not variants of each other. The question is what the new thing is.
 
 | The new thing | The command | What you get |
 |---|---|---|
-| A **venture** | `cdsync new <name>` | Its own git repository, `cdsync.json`, the agent contract, and the skeleton underneath `design/` |
-| A **design system**, in a project that already exists | `cdsync init` | The skeleton, in the repository you are already in |
+| A **venture** | `cdsync new <name>` | Its own git repository, the agent contract, the skeleton underneath `design/`, and `cdsync.json` at the tree root |
+| A **design system**, in a project that already exists | `cdsync init` | The skeleton and the `cdsync.json` stub, in the repository you are already in |
 
-**An existing project must not get the `new` treatment.** The canon is explicit
-that no Cdsync protocol material belongs inside a project: no `cdsync.json`, no
-outbox, no handover scaffolding. All four ported projects bear that out -- not
-one carries a `cdsync.json`, and what they hold is the tree and nothing else.
-`new` would also `git init` a second repository nested inside the first.
+**An existing project must not get the `new` treatment.** No agent contract and
+no nested repository belong inside a project -- the canon's no-protocol-material
+rule. The design tree is the one Cdsync-owned carve-out there, and `cdsync.json`
+lives at its root -- one home for `new` ventures and `init` projects alike
+(hv, 9 Aug 2026). That is what makes `brief` runnable for a project Cdsync does
+not own; scope used to be supplied by hand for exactly this case.
 
 ## Why this exists
 
@@ -79,6 +80,7 @@ cdsync bootstrap --target <path>
 
 ```
 cdsync init --target <repo>/design/system
+# fill in <repo>/design/system/cdsync.json -- especially fixed, open and order
 cdsync bootstrap --target <repo>/design/system
 ```
 

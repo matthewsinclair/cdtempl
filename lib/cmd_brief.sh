@@ -56,17 +56,32 @@ cmd_brief() {
 
   require_jq || return 2
 
-  if ! config_exists "$PWD"; then
-    error "no cdsync.json here"
-    echo "" >&2
-    echo "  A brief is assembled from the venture's own facts. Run 'cdsync new'," >&2
-    echo "  or write a cdsync.json -- see 'cdsync help brief' for the fields." >&2
-    return 2
-  fi
-
   local target source
   target="$(resolve_target "$flag_target" "$PWD")" || return 2
   source="$(target_source "$flag_target" "$PWD")" || return 2
+
+  # cdsync.json lives at the tree root (hv, 9 Aug 2026), so the resolved target
+  # is where the venture's facts are read from. Bound once; every config reader
+  # below defaults to it. Consumed across the sourced-file boundary by
+  # config.sh's config_path, which shellcheck cannot see from here -- the same
+  # shape as CDSYNC_TARGET_DIRS in target.sh. Deliberately not exported: it is
+  # Cdsync's own state, not something a child process should inherit.
+  # shellcheck disable=SC2034
+  CDSYNC_CONFIG_DIR="$target"
+
+  if ! config_exists "$target"; then
+    error "no cdsync.json in the target: $target"
+    echo "" >&2
+    if [[ -f "$PWD/$CDSYNC_CONFIG_NAME" ]]; then
+      echo "  There is one at the project root, which was its old home. It lives at" >&2
+      echo "  the design tree root now -- move it:" >&2
+      echo "    mv $CDSYNC_CONFIG_NAME ${target#"$PWD"/}/$CDSYNC_CONFIG_NAME" >&2
+    else
+      echo "  A brief is assembled from the venture's own facts. Run 'cdsync new'," >&2
+      echo "  or write ${target#"$PWD"/}/$CDSYNC_CONFIG_NAME -- see 'cdsync help brief' for the fields." >&2
+    fi
+    return 2
+  fi
 
   local venture
   venture="$(config_get '.venture')" || {
@@ -88,33 +103,39 @@ cmd_brief() {
     return 2
   fi
 
-  local slugs="" omitted="" refused="" slug origin
+  local slugs="" unspecified="" omitted="" refused="" slug origin
   while IFS=$'\t' read -r slug origin; do
     if [[ -z "$slug" ]]; then continue; fi
 
     if spec_exists "$slug"; then
       slugs="$slugs$slug"$'\n'
     elif [[ "$origin" == "-" ]]; then
-      refused="$refused $slug"
+      if taxonomy_has "$slug"; then
+        unspecified="$unspecified$slug"$'\n'
+      else
+        refused="$refused $slug"
+      fi
     else
       omitted="$omitted$slug"$'\t'"$origin"$'\n'
     fi
   done < <(printf '%s\n' "$expanded")
 
   slugs="${slugs%$'\n'}"
+  unspecified="${unspecified%$'\n'}"
   omitted="${omitted%$'\n'}"
 
-  # A slug the venture named itself and the library cannot specify is a refusal.
-  # You asked for a particular thing that cannot be briefed, and absorbing that
-  # into a footnote would be the tool deciding your order for you.
+  # A named slug OUTSIDE the taxonomy is a refusal: the taxonomy is the identity
+  # space, and a type it does not name is added to the library, never invented by
+  # an order. A named slug the taxonomy holds and the library has not specified
+  # is different, and is ordered -- the round creates the asset and stamps
+  # `spec_version: unassigned` (hv, 9 Aug 2026). The old refusal covered both,
+  # and existed only because the brief could not say what a new asset stamps.
   if [[ -n "$refused" ]]; then
-    error "ordered by name but not in the spec library:$refused"
+    error "ordered by name but not in the taxonomy:$refused"
     echo "" >&2
-    echo "  The library holds a spec for each of these:" >&2
-    each_spec | sed 's/^/    /' >&2
-    echo "" >&2
-    echo "  The taxonomy names $(taxonomy_count) assets; only the specified ones can be" >&2
-    echo "  briefed, because a brief carries the specification itself." >&2
+    echo "  The taxonomy names $(taxonomy_count) asset types and is the identity space:" >&2
+    echo "  a slug it holds may be ordered even before the library specifies it, but" >&2
+    echo "  a new TYPE is added to the library first, not invented by an order." >&2
     return 2
   fi
 
@@ -129,12 +150,14 @@ cmd_brief() {
     return 1
   fi
 
-  if [[ -z "$slugs" ]]; then
+  # Reached only by bundle expansion: a named unspecified slug is ordered above,
+  # so an empty pair here means every bundle member fell to the omission list.
+  if [[ -z "$slugs" && -z "$unspecified" ]]; then
     error "nothing this order reached has a specification yet"
     echo "" >&2
     echo "  Every asset the order expanded to is unspecified, so there is no brief" >&2
     echo "  to assemble -- a brief carries the specification itself, and this one" >&2
-    echo "  would carry none." >&2
+    echo "  would carry none. Name a slug directly to order it ahead of the library." >&2
     echo "" >&2
     echo "  The library holds a spec for each of these:" >&2
     each_spec | sed 's/^/    /' >&2
@@ -154,7 +177,7 @@ cmd_brief() {
   # Composed once, then routed. Composing twice for the two outlets is how the
   # written brief and the pasted one start to differ.
   local document
-  document="$(compose_brief "$venture" "$slugs" "$omitted" "$target")"
+  document="$(compose_brief "$venture" "$slugs" "$unspecified" "$omitted" "$target")"
 
   # Atomic. The original reason given for this was wrong and is withdrawn --
   # Claude Design does not read the working tree. The behaviour stays because it
@@ -163,7 +186,15 @@ cmd_brief() {
   printf '%s\n' "$document" | atomic_write "$target/brief.md" || return 1
 
   success "brief written to $target/brief.md"
-  info "$(printf '%s\n' "$slugs" | grep -c .) assets ordered, against spec library version $(library_get spec_library_version)"
+
+  local n_spec n_unspec
+  n_spec="$(printf '%s\n' "$slugs" | grep -c . || true)"
+  n_unspec="$(printf '%s\n' "$unspecified" | grep -c . || true)"
+  if [[ "$n_unspec" -gt 0 ]]; then
+    info "$((n_spec + n_unspec)) assets ordered ($n_unspec ahead of the library, stamped unassigned), against spec library version $(library_get spec_library_version)"
+  else
+    info "$n_spec assets ordered, against spec library version $(library_get spec_library_version)"
+  fi
 
   # Said out here as well as in the document. The brief states the omission for
   # its reader; this states it for whoever is about to send the brief, who is the
@@ -187,14 +218,22 @@ cmd_brief() {
 compose_brief() {
   local venture="$1"
   local slugs="$2"
-  local omitted="$3"
-  local target="$4"
+  local unspecified="$3"
+  local omitted="$4"
+  local target="$5"
+
+  # The present-in-target check and the prerequisites walk cover everything
+  # ordered, specified or not -- an unspecified asset already in the target is
+  # exactly the rebuild-and-replace hazard the round-job section warns about.
+  local ordered_all
+  ordered_all="$(printf '%s\n%s\n' "$slugs" "$unspecified" | grep . || true)"
 
   brief_header "$venture"
   brief_venture_facts "$venture"
-  brief_round_job "$slugs" "$target"
+  brief_round_job "$ordered_all" "$target"
   brief_order "$slugs" "$omitted"
-  brief_prerequisites "$slugs" "$target"
+  brief_unspecified "$unspecified"
+  brief_prerequisites "$ordered_all" "$target"
   brief_structure
   brief_kit "$target"
   brief_specifications "$slugs"
@@ -447,6 +486,51 @@ brief_order() {
   echo ""
 }
 
+# Assets ordered ahead of their specification.
+#
+# The library cannot supply what the round is creating, so this section stands
+# where their specifications would: the round defines the asset, its `spec.md`
+# declares what done means, and the stamp is `unassigned` -- the literal word --
+# because a number nobody issued cannot measure anything. When the library later
+# gains the specification, `check` rule 2 flags the asset for rebuild against
+# it, which is the intended lifecycle rather than an error. Ruled by hv on
+# 9 Aug 2026; until then a named unspecified slug was refused outright, which
+# made a genuinely new asset unorderable -- the WP-08 chicken-and-egg.
+brief_unspecified() {
+  local unspecified="$1"
+  local slug
+
+  if [[ -z "$unspecified" ]]; then
+    return 0
+  fi
+
+  echo "## Ordered ahead of the library -- no specification exists yet"
+  echo ""
+  echo "The taxonomy names these and the library has not specified them, so **this"
+  echo "round creates them**. No specification for them appears below, and that is"
+  echo "deliberate rather than an omission:"
+  echo ""
+  while IFS= read -r slug; do
+    if [[ -z "$slug" ]]; then continue; fi
+    # Literal markdown backticks -- a list item, not command substitution.
+    # shellcheck disable=SC2016
+    printf -- '- `%s`\n' "$slug"
+  done < <(printf '%s\n' "$unspecified")
+  echo ""
+  echo "For each of these:"
+  echo ""
+  echo "- **Define the asset as you build it.** Its \`spec.md\` is the statement of"
+  echo "  what done means, exactly as for a specified asset, in the format the"
+  echo "  output-structure section requires."
+  echo "- **Stamp \`spec_version: unassigned\` -- the literal word.** There is no"
+  echo "  specification to copy a number from, and a number you choose yourself is"
+  echo "  the revision counter the versions section warns about. When the library"
+  echo "  gains a specification for it, the check will ask for a rebuild against"
+  echo "  it -- that is the intended lifecycle, not a fault."
+  echo "- **\`kit_version\` follows the kit as usual.**"
+  echo ""
+}
+
 # Declare what a bundle asked for and the library could not supply.
 #
 # A bundle names a group, and its membership is the library's business rather than
@@ -633,7 +717,9 @@ brief_spec_contract() {
   echo "asset: <slug>              # exactly the slug this brief ordered"
   echo "name: <name>"
   echo "spec_version: <n>          # copied from the specification below and left"
-  echo "                           # alone -- not a counter you increment"
+  echo "                           # alone -- not a counter you increment. For an"
+  echo "                           # asset ordered ahead of the library, the"
+  echo "                           # literal word: unassigned"
   echo "kit_version: <n>           # likewise, from the kit"
   echo "form: <A|B|C|D>"
   echo "tier: <n>"
@@ -644,10 +730,14 @@ brief_spec_contract() {
   echo "inputs_missing:"
   echo "  - \"<a fact this asset needed and the brief did not carry>\""
   echo "depends_on:"
-  echo "  hard_facts: [<...>]"
-  echo "  hard_assets: [<...>]"
-  echo "  reciprocal: [<...>]"
-  echo "bundles: [<...>]"
+  echo "  hard_facts: [<...>]      # venture facts that must be DECIDED before this"
+  echo "                           # asset can complete -- copied from 'facts that"
+  echo "                           # must be decided first' under the specification;"
+  echo "                           # empty when it states none"
+  echo "  hard_assets: [<...>]     # assets that must EXIST first -- likewise copied"
+  echo "  reciprocal: [<...>]      # develops in dialogue with these -- likewise copied"
+  echo "bundles: [<...>]           # where the library's bundles place this asset --"
+  echo "                           # stated under each specification; copy, never choose"
   echo "---"
   echo '```'
   echo ""
@@ -795,6 +885,19 @@ brief_one_specification() {
   hard="$(join_words "$(fm_list "$spec" depends_on.hard_assets)")"
   reciprocal="$(join_words "$(fm_list "$spec" depends_on.reciprocal)")"
 
+  # Stated because the contract asks them back and the body below cannot carry
+  # them -- front matter is stripped when the spec is inlined, so a supplier
+  # shown only this document had no source for either field. Sixteen assets came
+  # back `[]` on the first round that asked, and that was the document's fault.
+  local facts membership
+  facts="$(join_words "$(fm_list "$spec" depends_on.hard_facts)")"
+  membership="$(join_words "$(bundles_holding "$slug")")"
+
+  if [[ -n "$facts" ]]; then
+    echo "**Facts that must be decided first:** $facts -- copy into"
+    echo "\`depends_on.hard_facts\`."
+    echo ""
+  fi
   if [[ -n "$hard" ]]; then
     echo "**Needs to exist first:** $hard"
     echo ""
@@ -802,6 +905,10 @@ brief_one_specification() {
   if [[ -n "$reciprocal" ]]; then
     echo "**Reciprocal, must not be ordered:** $reciprocal -- each is evidence about"
     echo "the other, so neither waits on the other."
+    echo ""
+  fi
+  if [[ -n "$membership" ]]; then
+    echo "**Bundles that place this asset:** $membership -- copy into \`bundles:\`."
     echo ""
   fi
 

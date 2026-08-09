@@ -94,6 +94,28 @@ bundle_exists() {
   [[ -n "$found" ]]
 }
 
+# Emit the bundles that place a slug, one per line. The inverse of
+# each_bundle_member, and the reader `brief` uses to state an asset's bundle
+# membership -- the drop-side `bundles:` field is copied from what the brief
+# states, so the supplier is never left to choose one, which is how sixteen
+# assets came back with `bundles: []` on the round that first asked.
+bundles_holding() {
+  local slug="$1"
+  local bundle member
+
+  while IFS= read -r bundle; do
+    [[ -z "$bundle" ]] && continue
+    while IFS= read -r member; do
+      if [[ "$member" == "$slug" ]]; then
+        echo "$bundle"
+        break
+      fi
+    done < <(each_bundle_member "$bundle")
+  done < <(each_bundle)
+
+  return 0
+}
+
 each_bundle() {
   fm_block "$(spec_library_manifest)" | awk '
     /^bundles:/ { in_bundles = 1; next }

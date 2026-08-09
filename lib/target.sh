@@ -65,7 +65,9 @@ normalise_path() {
 #
 #   1. --target FLAG        explicit, wins over everything
 #   2. $CDSYNC_TARGET        environment
-#   3. cdsync.json .target   the project's durable answer
+#   3. cdsync.json's own directory -- the file lives at the tree root
+#      (hv, 9 Aug 2026), so finding it IS finding the target. Probed at
+#      design/system/ then design/ under the base.
 #   4. design/              built-in default
 #
 # Mirrors how $UTILZ_HOME and $INTENT_HOME resolve in the sibling tools:
@@ -78,6 +80,7 @@ resolve_target() {
   local base="${2:-$PWD}"
   local target=""
   local source=""
+  local probe
 
   if [[ -n "$flag_target" ]]; then
     target="$flag_target"
@@ -85,12 +88,15 @@ resolve_target() {
   elif [[ -n "${CDSYNC_TARGET:-}" ]]; then
     target="$CDSYNC_TARGET"
     source="\$CDSYNC_TARGET"
-  elif config_exists "$base"; then
-    require_jq || return 1
-    local from_config
-    if from_config="$(config_get '.target' "$base")"; then
-      target="$from_config"
-      source="cdsync.json"
+  elif probe="$(config_probe "$base")"; then
+    target="$(dirname "$probe")"
+    source="cdsync.json"
+
+    # The `.target` field is retired: a file inside the tree cannot also be the
+    # pointer to the tree. Ignoring it silently would leave a stale field that
+    # reads as if it steers, so it is said out loud until the field is deleted.
+    if config_get '.target' "$target" >/dev/null 2>&1; then
+      warn "cdsync.json carries a retired .target field -- ignored; the file's own directory is the target"
     fi
   fi
 
@@ -130,12 +136,9 @@ target_source() {
     return 0
   fi
 
-  if config_exists "$base"; then
-    require_jq || return 1
-    if config_get '.target' "$base" >/dev/null; then
-      echo "cdsync.json"
-      return 0
-    fi
+  if config_probe "$base" >/dev/null 2>&1; then
+    echo "cdsync.json"
+    return 0
   fi
 
   echo "built-in default"

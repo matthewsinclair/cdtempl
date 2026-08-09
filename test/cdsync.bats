@@ -11,6 +11,11 @@ setup() {
   TESTDIR="$(mktemp -d "${BATS_TMPDIR:-/tmp}/cdsync-test.XXXXXX")"
   cd "$TESTDIR"
 
+  # The default tree root, present so a fixture can drop cdsync.json straight
+  # into it -- the file lives at the tree root since hv's 9 Aug 2026 ruling.
+  # Empty, so tests of the no-config and cold paths are unaffected.
+  mkdir -p "$TESTDIR/design"
+
   # Inherited state would silently change what resolve_target returns.
   unset CDSYNC_TARGET
 
@@ -204,15 +209,40 @@ EOF
   [ "$output" = "/somewhere/else" ]
 }
 
-@test "cdsync.json supplies the target when no flag or env is set" {
-  echo '{"target": "artwork"}' > "$TESTDIR/cdsync.json"
+@test "cdsync.json's own directory supplies the target when no flag or env is set" {
+  # The file lives at the tree root (hv, 9 Aug 2026), so finding it IS finding
+  # the target -- there is no `.target` field to read any more.
+  mkdir -p "$TESTDIR/design"
+  echo '{"venture": "probe"}' > "$TESTDIR/design/cdsync.json"
   run run_lib "resolve_target '' '$TESTDIR'"
   [ "$status" -eq 0 ]
-  [ "$output" = "$TESTDIR/artwork" ]
+  [ "$output" = "$TESTDIR/design" ]
+}
+
+@test "design/system/ wins the probe over design/ when both hold a cdsync.json" {
+  mkdir -p "$TESTDIR/design/system"
+  echo '{"venture": "outer"}' > "$TESTDIR/design/cdsync.json"
+  echo '{"venture": "inner"}' > "$TESTDIR/design/system/cdsync.json"
+  run run_lib "resolve_target '' '$TESTDIR'"
+  [ "$status" -eq 0 ]
+  assert_contains "$TESTDIR/design/system"
+}
+
+@test "a retired .target field is ignored, and said out loud" {
+  # A file inside the tree cannot also be the pointer to the tree. Silent
+  # ignoring would leave a stale field that reads as if it steers.
+  mkdir -p "$TESTDIR/design"
+  echo '{"venture": "probe", "target": "artwork"}' > "$TESTDIR/design/cdsync.json"
+  run run_lib "resolve_target '' '$TESTDIR'"
+  [ "$status" -eq 0 ]
+  assert_contains "$TESTDIR/design"
+  assert_contains "retired .target field"
+  refute_contains "$TESTDIR/artwork"
 }
 
 @test "the flag beats the environment, which beats cdsync.json" {
-  echo '{"target": "from-config"}' > "$TESTDIR/cdsync.json"
+  mkdir -p "$TESTDIR/design"
+  echo '{"venture": "probe"}' > "$TESTDIR/design/cdsync.json"
 
   run bash -c "set -euo pipefail
     export CDSYNC_HOME='$CDSYNC_HOME' CDSYNC_TARGET=/from-env
@@ -227,7 +257,7 @@ EOF
   [ "$output" = "/from-env" ]
 
   run run_lib "resolve_target '' '$TESTDIR'"
-  [ "$output" = "$TESTDIR/from-config" ]
+  [ "$output" = "$TESTDIR/design" ]
 }
 
 @test "a relative target resolves against the base, not the working directory" {
@@ -972,6 +1002,52 @@ EOF
   run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
   assert_contains "rule-2"
   assert_contains "not a per-drop counter"
+}
+
+# The `unassigned` lifecycle, ruled by hv on 9 Aug 2026: an asset ordered ahead
+# of the library stamps the literal word, which is CORRECT while the library
+# holds no entry and becomes a rebuild prompt the day it gains one.
+@test "rule 2 accepts unassigned for an asset the library does not hold" {
+  make_drop >/dev/null
+  mv "$TESTDIR/drop/assets/investor-update" "$TESTDIR/drop/assets/portraits"
+  sed -i.bak 's/^spec_version: 1/spec_version: unassigned/' \
+    "$TESTDIR/drop/assets/portraits/spec.md"
+  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  [ "$status" -eq 0 ]
+  # The fixture kit carries its own unrelated rule-2 advisory, so the refutes
+  # pin the two findings a library-less ASSET could raise, not the rule id.
+  refute_contains "no entry in the spec library"
+  refute_contains "a number nobody issued"
+}
+
+@test "rule 2 names a number nobody issued on a library-less asset" {
+  make_drop >/dev/null
+  mv "$TESTDIR/drop/assets/investor-update" "$TESTDIR/drop/assets/portraits"
+  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  assert_contains "rule-2"
+  assert_contains "a number nobody issued"
+}
+
+@test "rule 2 sends an unassigned asset to the spec the library has since gained" {
+  make_drop >/dev/null
+  sed -i.bak 's/^spec_version: 1/spec_version: unassigned/' \
+    "$TESTDIR/drop/assets/investor-update/spec.md"
+  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  assert_contains "rule-2"
+  assert_contains "the library now holds spec_version 1"
+  assert_contains "rebuild against it"
+}
+
+# Bash arithmetic reads a word as zero, so an unguarded compare would report a
+# confident "stale: built from spec_version banana" -- a wrong verdict worn as
+# a right one. Named instead.
+@test "rule 2 names an unreadable stamp rather than comparing it as zero" {
+  make_drop >/dev/null
+  sed -i.bak 's/^spec_version: 1/spec_version: banana/' \
+    "$TESTDIR/drop/assets/investor-update/spec.md"
+  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  assert_contains "unreadable spec_version 'banana'"
+  refute_contains "stale"
 }
 
 # The message, not the finding. This case fired fourteen times on the one drop
@@ -2113,6 +2189,13 @@ HTML
   assert_contains "protected"
 }
 
+# The venture's own facts and order, living at the tree root by hv's 9 Aug 2026
+# ruling. An install replacing it would hand the next round's order to the drop.
+@test "cdsync.json is declared protected alongside addenda" {
+  run run_lib 'drop_path_is_protected "cdsync.json" && echo protected'
+  assert_contains "protected"
+}
+
 @test "the protected list guards files as well as directories" {
   # The guard was always on names -- the replace loop walks every top-level entry
   # and asks about the basename. It was called _DIRS while it held one entry and
@@ -2495,21 +2578,26 @@ make_as_is_export() {
 }
 
 @test "brief refuses an order with no specified assets" {
-  echo '{"venture":"acme","order":{"assets":[]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":[]}}' > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 2 ]
   assert_contains "orders nothing"
 }
 
-@test "brief refuses a slug that has no spec in the library" {
-  echo '{"venture":"acme","order":{"assets":["roadmap"]}}' > "$TESTDIR/cdsync.json"
+@test "an ordered-ahead slug gets the contract section, not an invented spec" {
+  # The refusal this test used to pin is gone (hv, 9 Aug 2026): an in-taxonomy
+  # slug orders ahead of the library. What must still never happen is the
+  # document inventing a specification section for it.
+  echo '{"venture":"acme","order":{"assets":["roadmap"]}}' > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
-  [ "$status" -eq 2 ]
-  assert_contains "not in the spec library"
+  [ "$status" -eq 0 ]
+  run bash -c "cat '$TESTDIR/design/brief.md'"
+  assert_contains "## Ordered ahead of the library"
+  refute_contains '### `roadmap`'
 }
 
 @test "brief writes to the target and inlines the full specification" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/design/brief.md" ]
@@ -2524,14 +2612,14 @@ make_as_is_export() {
 
 @test "brief stamps the library versions rather than reading them from the venture" {
   echo '{"venture":"acme","spec_library_version":99,"order":{"assets":["investor-update"]}}' \
-    > "$TESTDIR/cdsync.json"
+    > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run run_lib "fm_get '$TESTDIR/design/brief.md' spec_library_version"
   [ "$output" = "$(run_lib 'library_get spec_library_version')" ]
 }
 
 @test "brief carries the fixed and open lists" {
-  cat > "$TESTDIR/cdsync.json" <<'EOF'
+  cat > "$TESTDIR/design/cdsync.json" <<'EOF'
 { "venture": "acme",
   "fixed": ["the company name is Acme"],
   "open": ["everything visual"],
@@ -2544,14 +2632,14 @@ EOF
 }
 
 @test "brief warns in the document when nothing is declared fixed" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "licence to invent everything"
 }
 
 @test "brief expands a bundle to its members" {
-  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 0 ]
   run bash -c "cat '$TESTDIR/design/brief.md'"
@@ -2563,7 +2651,7 @@ EOF
   # names a group and its membership is the library's business, so refusing the
   # order would punish the venture for the library being incomplete -- but a
   # partial set is a different ask from a whole one, so the absence is stated.
-  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 0 ]
   assert_contains "bundle members omitted"
@@ -2577,7 +2665,7 @@ EOF
 @test "brief does not inline a specification for an omitted asset" {
   # The omission has to be a statement about an absence, not a heading with
   # nothing under it -- an asset that appears in Specifications reads as ordered.
-  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
 
   run bash -c "grep '^### ' '$TESTDIR/design/brief.md'"
@@ -2592,22 +2680,70 @@ EOF
   refute_contains "decision-log"
 }
 
-@test "brief still refuses an unspecified slug the order named itself" {
-  # Same slug, named rather than reached through a bundle. You asked for a
-  # particular thing that cannot be briefed, and that stays loud.
-  echo '{"venture":"acme","order":{"assets":["hiring-plan"]}}' > "$TESTDIR/cdsync.json"
+@test "a slug a bundle omits is ordered ahead when named directly" {
+  # Same slug, named rather than reached through a bundle. The taxonomy holds
+  # it, so naming it is an order the library has not caught up with -- ordered
+  # ahead, not refused (hv, 9 Aug 2026).
+  mkdir -p "$TESTDIR/design"
+  echo '{"venture":"acme","order":{"assets":["hiring-plan"]}}' > "$TESTDIR/design/cdsync.json"
+  run "$CDSYNC_BIN" brief
+  [ "$status" -eq 0 ]
+  assert_contains "ahead of the library"
+  [ -f "$TESTDIR/design/brief.md" ]
+}
+
+@test "a named in-taxonomy slug with no spec is ordered ahead of the library" {
+  # The old refusal existed only because the brief could not say what a new
+  # asset stamps. `unassigned` says it, so the order proceeds and the document
+  # carries the contract its specification cannot.
+  mkdir -p "$TESTDIR/design"
+  echo '{"venture":"acme","order":{"assets":["roadmap"]}}' > "$TESTDIR/design/cdsync.json"
+  run "$CDSYNC_BIN" brief
+  [ "$status" -eq 0 ]
+  assert_contains "1 ahead of the library, stamped unassigned"
+
+  run bash -c "cat '$TESTDIR/design/brief.md'"
+  assert_contains "## Ordered ahead of the library"
+  assert_contains '`roadmap`'
+  assert_contains "spec_version: unassigned"
+}
+
+@test "brief still refuses a named slug outside the taxonomy" {
+  # The taxonomy is the identity space. A type it does not name is added to
+  # the library first, never invented by an order.
+  mkdir -p "$TESTDIR/design"
+  echo '{"venture":"acme","order":{"assets":["flux-capacitor"]}}' > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 2 ]
-  assert_contains "ordered by name but not in the spec library"
+  assert_contains "ordered by name but not in the taxonomy"
   [ ! -f "$TESTDIR/design/brief.md" ]
 }
 
-@test "brief refuses a named unspecified slug even when a bundle also holds it" {
+@test "a named unspecified slug is ordered even when a bundle also holds it" {
+  # Named wins over bundle attribution, so the slug is ordered ahead rather
+  # than quietly omitted with the bundle's other absentees.
+  mkdir -p "$TESTDIR/design"
   echo '{"venture":"acme","order":{"bundles":["operating-set"],"assets":["hiring-plan"]}}' \
-    > "$TESTDIR/cdsync.json"
+    > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
-  [ "$status" -eq 2 ]
-  assert_contains "ordered by name but not in the spec library"
+  [ "$status" -eq 0 ]
+  run bash -c "cat '$TESTDIR/design/brief.md'"
+  assert_contains "## Ordered ahead of the library"
+  assert_contains '`hiring-plan`'
+}
+
+@test "brief states hard_facts and bundle membership for a specified asset" {
+  # The contract asks both fields back and the inlined body cannot carry them --
+  # front matter is stripped when a spec is rendered -- so sixteen assets once
+  # came back `[]` on the round that first asked, and that was the document's
+  # fault rather than the supplier's.
+  echo '{"venture":"acme","order":{"assets":["brand-guidelines","investor-update"]}}' \
+    > "$TESTDIR/design/cdsync.json"
+  run "$CDSYNC_BIN" brief
+  [ "$status" -eq 0 ]
+  run bash -c "cat '$TESTDIR/design/brief.md'"
+  assert_contains "Facts that must be decided first:** mark-exists"
+  assert_contains "Bundles that place this asset:"
 }
 
 @test "the refusal states the taxonomy's real size rather than a remembered one" {
@@ -2627,10 +2763,11 @@ EOF
     | grep -oE '`[a-z0-9-]+`' | sort -u | grep -c . || true)"
   [ "$expected" -gt 0 ]
 
-  echo '{"venture":"acme","order":{"assets":["hiring-plan"]}}' > "$TESTDIR/cdsync.json"
+  mkdir -p "$TESTDIR/design"
+  echo '{"venture":"acme","order":{"assets":["flux-capacitor"]}}' > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 2 ]
-  assert_contains "The taxonomy names $expected assets"
+  assert_contains "The taxonomy names $expected asset types"
 }
 
 @test "doctor and brief report the same taxonomy size" {
@@ -2672,7 +2809,7 @@ EOF
   # broken-installation guard fires instead of the path under test.
   cp "$CDSYNC_HOME/specs/kit.md" "$TESTDIR/fakehome/specs/kit.md"
 
-  echo '{"venture":"acme","order":{"bundles":["ghost-set"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"bundles":["ghost-set"]}}' > "$TESTDIR/design/cdsync.json"
   run env CDSYNC_HOME="$TESTDIR/fakehome" "$CDSYNC_BIN" brief
   [ "$status" -eq 2 ]
   assert_contains "nothing this order reached has a specification"
@@ -2684,7 +2821,7 @@ EOF
   # then required kit/kit.md and inlined it only if `kit` happened to be ordered.
   # An instance holding just the brief would have invented a kit -- the one
   # artefact that exists to stop invention.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "## The kit"
@@ -2695,7 +2832,7 @@ EOF
 }
 
 @test "brief tells a first round to build the kit" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "target has no kit yet, so this round builds it"
@@ -2704,7 +2841,7 @@ EOF
 @test "brief carries the real token values once the target has a kit" {
   # Round two onwards. Without this the reader has no way to restate values it
   # cannot see, so it would reinvent the palette every round.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   mkdir -p "$TESTDIR/design/kit"
   echo '{"colour":{"grey-900":"#111111"}}' > "$TESTDIR/design/kit/tokens.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
@@ -2720,7 +2857,7 @@ EOF
   # blank-counting scope. Carrying only the library spec left the reader to define
   # both again, differently -- and check would then measure against a rule the drop
   # no longer follows.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   mkdir -p "$TESTDIR/design/kit"
   cat > "$TESTDIR/design/kit/kit.md" <<'EOF'
 ---
@@ -2740,7 +2877,7 @@ EOF
 }
 
 @test "a first round carries the kit specification and no written kit section" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "no kit yet, so this round builds it"
@@ -2749,7 +2886,7 @@ EOF
 }
 
 @test "the kit is inlined once, not twice, when it is also ordered" {
-  echo '{"venture":"acme","order":{"assets":["kit","investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["kit","investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "grep -c 'The neutral kit -- specification' '$TESTDIR/design/brief.md' || true"
   [ "$output" -le 1 ]
@@ -2761,7 +2898,7 @@ EOF
   # pitch-deck declares it needs a colour system, typography system and logo
   # suite first. None was ordered and none is in the target, and the brief used
   # to render that as a line of prose and proceed.
-  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "Prerequisites this order does not meet"
@@ -2772,7 +2909,7 @@ EOF
 @test "a bad dependency slug is declared as outside the taxonomy" {
   # pitch-deck names 'positioning', which is not a taxonomy slug. It must not
   # read as a real asset somebody forgot to order.
-  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "grep 'positioning.*not in the taxonomy' '$TESTDIR/design/brief.md'"
   [ "$status" -eq 0 ]
@@ -2784,7 +2921,7 @@ EOF
   # repackage, revise, extend and correct are four different jobs with one
   # filesystem signature.
   echo '{"venture":"acme","round_job":"Repackage the existing deck for a partner audience. Do not redesign it.","order":{"assets":["investor-update"]}}' \
-    > "$TESTDIR/cdsync.json"
+    > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 0 ]
 
@@ -2799,7 +2936,7 @@ EOF
   # Measured, not declared, and worth saying in every round. A supplier ordered
   # a slug that already exists and not told will rebuild it, and the rebuild
   # discards whatever the existing one carried -- silently, on both sides.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   mkdir -p "$TESTDIR/design/assets/investor-update"
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 0 ]
@@ -2814,7 +2951,7 @@ EOF
   # The negative half. Without this, a section that always says "already in the
   # target" would pass the test above while being wrong every time.
   echo '{"venture":"acme","round_job":"Build the first set.","order":{"assets":["investor-update"]}}' \
-    > "$TESTDIR/cdsync.json"
+    > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 0 ]
 
@@ -2827,7 +2964,7 @@ EOF
   # No job declared and nothing already present. An empty section headed "What
   # this round is for" would train its reader to skim the part of the document
   # that matters most, which is the same reason brief_field omits empty keys.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 0 ]
 
@@ -2837,7 +2974,7 @@ EOF
 }
 
 @test "a dependency already in the target is not declared unmet" {
-  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/design/cdsync.json"
   mkdir -p "$TESTDIR/design/assets/colour-system"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "sed -n '/Prerequisites this order/,/declared, not refused/p' '$TESTDIR/design/brief.md'"
@@ -2849,7 +2986,7 @@ EOF
   run run_lib "fm_list '$CDSYNC_HOME/specs/component-library.md' depends_on.hard_assets"
   assert_contains "kit"
 
-  echo '{"venture":"acme","order":{"assets":["component-library","kit"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["component-library","kit"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "sed -n '/Prerequisites this order/,/declared, not refused/p' '$TESTDIR/design/brief.md'"
   refute_contains '`kit`'
@@ -2860,7 +2997,7 @@ EOF
   # document reads -- and the front matter is stripped to do it. A reader shown
   # only that reproduced the table and put status in index.md, leaving check
   # unable to read status, spec_version or coverage on any asset in the drop.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "the one file with a required format"
@@ -2870,7 +3007,7 @@ EOF
 }
 
 @test "brief forbids declaring the counts the tool computes" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains 'Do not declare `blanks`'
@@ -2878,7 +3015,7 @@ EOF
 }
 
 @test "brief carries the ruling that a fixed colour belongs in the kit" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "neutral ramp is a default, not a constraint"
@@ -2889,7 +3026,7 @@ EOF
   # The structure listed brief.md as part of the drop, eleven lines above saying
   # brief.md is not one of the paths a drop owns -- so import discarded it. A
   # second copy of the order is a copy that can disagree with the first.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   refute_contains "this document, echoed back"
@@ -2897,14 +3034,14 @@ EOF
 }
 
 @test "brief says nothing about omissions when the order is whole" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   refute_contains "Not in this drop"
 }
 
 @test "brief --stdout emits the document as well as writing it" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief --stdout
   [ "$status" -eq 0 ]
   assert_contains "# Brief -- acme, round 1"
@@ -2912,7 +3049,7 @@ EOF
 }
 
 @test "brief output is valid front matter" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run run_lib "fm_get '$TESTDIR/design/brief.md' venture"
   [ "$output" = "acme" ]
@@ -2935,7 +3072,7 @@ ADR_PATTERN='[^A-Za-z0-9][Aa][Dd][Rr]-?[0-9]{3,4}'
 ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 
 @test "brief carries a numbering section" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief --stdout
   [ "$status" -eq 0 ]
   assert_contains "Numbering, so you never have to infer it"
@@ -3061,11 +3198,20 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
   [ "$output" -eq 1 ]
 }
 
-@test "init writes none of the venture scaffolding" {
+@test "init writes the cdsync.json stub and none of the agent scaffolding" {
   mkdir -p "$TESTDIR/site" && git -C "$TESTDIR/site" init -q .
   "$CDSYNC_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
+
+  # The venture's facts live at the tree root -- one home for `new` ventures
+  # and `init` projects alike (hv, 9 Aug 2026). This is what makes `brief`
+  # runnable for a project Cdsync does not own.
+  [ -f "$TESTDIR/site/design/system/cdsync.json" ]
+  run bash -c "jq -r .venture '$TESTDIR/site/design/system/cdsync.json'"
+  [ "$output" = "site" ]
+
+  # The agent contract still never lands in an existing project.
   local f
-  for f in cdsync.json AGENTS.md CLAUDE.md README.md; do
+  for f in AGENTS.md CLAUDE.md README.md; do
     [ ! -f "$TESTDIR/site/design/system/$f" ] || {
       echo "init wrote $f, which the canon forbids inside a project" >&2
       return 1
@@ -3178,12 +3324,15 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
   run "$CDSYNC_BIN" new acme
   [ "$status" -eq 0 ]
   local f
-  for f in cdsync.json AGENTS.md CLAUDE.md README.md .gitignore; do
+  for f in AGENTS.md CLAUDE.md README.md .gitignore; do
     [ -f "$TESTDIR/acme/$f" ] || {
       echo "missing acme/$f" >&2
       return 1
     }
   done
+  # cdsync.json lives at the tree root, not the venture root (hv, 9 Aug 2026).
+  [ -f "$TESTDIR/acme/design/cdsync.json" ]
+  [ ! -f "$TESTDIR/acme/cdsync.json" ]
   [ -d "$TESTDIR/acme/design/assets" ]
   [ -d "$TESTDIR/acme/design/kit" ]
   [ -d "$TESTDIR/acme/design/notes" ]
@@ -3201,8 +3350,13 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 
 @test "new writes a cdsync.json that parses and carries the name" {
   "$CDSYNC_BIN" new acme >/dev/null 2>&1
-  run bash -c "jq -r .venture '$TESTDIR/acme/cdsync.json'"
+  run bash -c "jq -r .venture '$TESTDIR/acme/design/cdsync.json'"
   [ "$output" = "acme" ]
+
+  # The .target field is retired: the file's own location is the target, and a
+  # file inside the tree pointing at the tree would be circular.
+  run bash -c "jq -r '.target // \"absent\"' '$TESTDIR/acme/design/cdsync.json'"
+  [ "$output" = "absent" ]
 }
 
 @test "new substitutes the venture name into every template" {
@@ -3240,7 +3394,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
   # .gitignore excludes it; a committed site is a stale view of the target.
   "$CDSYNC_BIN" new acme >/dev/null 2>&1
   cd "$TESTDIR/acme"
-  jq '.order.assets = ["investor-update"]' cdsync.json > tmp.json && mv tmp.json cdsync.json
+  jq '.order.assets = ["investor-update"]' design/cdsync.json > tmp.json && mv tmp.json design/cdsync.json
   "$CDSYNC_BIN" brief >/dev/null 2>&1
   run git -C "$TESTDIR/acme" ls-files
   refute_contains "design/site/"
@@ -3260,7 +3414,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
   cd "$TESTDIR/acme"
   # The template orders nothing, which must be a refusal rather than an empty
   # brief -- so add an order the way a human would.
-  jq '.order.assets = ["investor-update"]' cdsync.json > tmp.json && mv tmp.json cdsync.json
+  jq '.order.assets = ["investor-update"]' design/cdsync.json > tmp.json && mv tmp.json design/cdsync.json
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/acme/design/brief.md" ]
@@ -3330,7 +3484,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 @test "new, brief, import, check and site compose end to end" {
   "$CDSYNC_BIN" new acme >/dev/null 2>&1
   cd "$TESTDIR/acme"
-  jq '.order.assets = ["investor-update"]' cdsync.json > tmp.json && mv tmp.json cdsync.json
+  jq '.order.assets = ["investor-update"]' design/cdsync.json > tmp.json && mv tmp.json design/cdsync.json
 
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 0 ]
@@ -3507,11 +3661,12 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # The commoner case rather than the edge: of the four trees in round one, only one
 # was built from taxonomy slugs at all. For the rest the honest number is no
 # number, and saying so is what stops the next round inventing one.
-@test "bootstrap tells a tree the library does not know to leave the stamp out" {
+@test "bootstrap tells a tree the library does not know to stamp unassigned" {
   make_drop >/dev/null
   mv "$TESTDIR/drop/assets/investor-update" "$TESTDIR/drop/assets/portraits"
   run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   assert_contains "no entry in the library"
+  assert_contains "spec_version: unassigned"
   assert_contains "rather than inventing a value"
 }
 
@@ -3519,7 +3674,8 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
   mkdir -p "$TESTDIR/bare"
   echo "# a tree of its own shape" >"$TESTDIR/bare/README.md"
   run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/bare" --stdout
-  assert_contains "Nothing in this tree takes a stamp"
+  assert_contains "Nothing in this tree carries a copyable number"
+  assert_contains "spec_version:"
 }
 
 # DECLARING THE FIELD IS ONLY HALF THE SEPARATION, and this document knew only
@@ -4059,7 +4215,7 @@ EOF
   [ "$status" -eq 0 ]
   refute_contains "$TESTDIR"
 
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
   run "$CDSYNC_BIN" brief
   [ "$status" -eq 0 ]
   run bash -c "cat '$TESTDIR/design/brief.md'"
@@ -4123,7 +4279,7 @@ EOF
   cd "$TESTDIR/acme"
   # The template orders nothing, and brief refuses an empty order rather than
   # emitting an empty brief -- so add one the way a human would.
-  jq '.order.assets = ["investor-update"]' cdsync.json > tmp.json && mv tmp.json cdsync.json
+  jq '.order.assets = ["investor-update"]' design/cdsync.json > tmp.json && mv tmp.json design/cdsync.json
 
   run "$CDSYNC_BIN" brief --stdout
   [ "$status" -eq 0 ]
@@ -4143,6 +4299,14 @@ EOF
   assert_contains "refused"
   run run_lib 'drop_file_is_refused "index.md" || echo allowed'
   assert_contains "allowed"
+}
+
+# The order flows from the venture to the drop, never back. A drop-carried
+# cdsync.json landing anywhere in the tree would sit where the next round reads
+# its order from -- uncontrolled input steering what gets built.
+@test "a drop-carried cdsync.json is declared refused" {
+  run run_lib 'drop_file_is_refused "cdsync.json" && echo refused'
+  assert_contains "refused"
 }
 
 # .gitignore decides what is TRACKED, and the tree is tracked so the spec can be

@@ -88,7 +88,11 @@ drop_root_is_shaped() {
 # loop walks every top-level entry and asks about the basename, so a file is
 # protected exactly as a directory is. It was called DIRS while it held only one
 # entry and that entry was a directory.
-CDSYNC_DROP_PROTECTED_PATHS="addenda BOOTSTRAP-CD.md"
+#
+# `cdsync.json` is the venture's own facts and order -- repo-authored like
+# addenda/, read by `brief`, living at the tree root by hv's 9 Aug 2026 ruling.
+# An install replacing it would hand the next round's order to the drop.
+CDSYNC_DROP_PROTECTED_PATHS="addenda BOOTSTRAP-CD.md cdsync.json"
 
 # Is this top-level name one no install path may overwrite?
 #
@@ -117,7 +121,12 @@ CDSYNC_DROP_PROTECTED_PATHS="addenda BOOTSTRAP-CD.md"
 # outward and never from a drop inward. This is the mirror of
 # CDSYNC_DROP_PROTECTED_PATHS -- that declares what a drop may not overwrite,
 # this declares what a drop may not deliver.
-CDSYNC_DROP_REFUSED_FILES=".gitignore"
+#
+# `cdsync.json` is refused for the same direction-of-flow reason: the order
+# comes from the venture, never from a drop. A drop-carried copy landing
+# anywhere in the tree would sit where the next round reads its order from --
+# uncontrolled input steering what gets built, silently.
+CDSYNC_DROP_REFUSED_FILES=".gitignore cdsync.json"
 
 # Is this basename one no drop may deliver?
 drop_file_is_refused() {

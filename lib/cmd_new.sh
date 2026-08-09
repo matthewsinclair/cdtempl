@@ -94,17 +94,14 @@ cmd_new() {
     return 1
   }
 
-  local file
-  for file in $CDSYNC_VENTURE_TEMPLATES; do
-    render_venture_template "$templates/$file.tmpl" "$root/$file" "$name" || return 1
-    echo "  create  $name/$file"
-  done
-
-  # The target skeleton. `.gitkeep` because git does not track an empty
-  # directory, and an absent assets/ makes `cdsync check` report "no drop here"
-  # rather than "nothing imported yet".
+  # The target location first, because cdsync.json lives at the tree root --
+  # one home for `new` ventures and `init` projects alike (hv, 9 Aug 2026) --
+  # so the tree must exist before the templates land. The template carries no
+  # `.target` field: the file's own location is what later commands resolve
+  # the target from, and a file inside the tree pointing at the tree would be
+  # circular.
   local target target_rel
-  target_rel="$(config_get '.target' "$root" 2>/dev/null || echo 'design')"
+  target_rel="design"
   if [[ -n "$flag_target" ]]; then
     target_rel="$flag_target"
   fi
@@ -114,6 +111,9 @@ cmd_new() {
     *) target="$root/$target_rel" ;;
   esac
 
+  # The target skeleton. `.gitkeep` because git does not track an empty
+  # directory, and an absent assets/ makes `cdsync check` report "no drop here"
+  # rather than "nothing imported yet".
   local dir
   for dir in $CDSYNC_TARGET_DIRS; do
     mkdir -p "$target/$dir" || {
@@ -123,6 +123,24 @@ cmd_new() {
     : >"$target/$dir/.gitkeep"
     echo "  create  ${target#"$PWD"/}/$dir/"
   done
+
+  local file dst
+  for file in $CDSYNC_VENTURE_TEMPLATES; do
+    dst="$root/$file"
+    if [[ "$file" == "$CDSYNC_CONFIG_NAME" ]]; then
+      dst="$target/$file"
+    fi
+    render_venture_template "$templates/$file.tmpl" "$dst" "$name" || return 1
+    echo "  create  ${dst#"$PWD"/}"
+  done
+
+  # The probe later commands resolve the target through looks in design/system/
+  # and design/ only, so a tree anywhere else needs --target or $CDSYNC_TARGET
+  # on every command. Said at the one moment the choice is being made.
+  case "$target_rel" in
+    design|design/system) ;;
+    *) warn "non-standard target: later commands need --target $target_rel or \$CDSYNC_TARGET -- the probe looks in design/system/ and design/ only" ;;
+  esac
 
   write_venture_gitignore "$root" "$target_rel"
   echo "  create  $name/.gitignore"
@@ -139,7 +157,7 @@ cmd_new() {
   echo ""
   success "venture scaffolded at $root"
   echo ""
-  info "next: fill in $name/cdsync.json -- especially 'fixed', 'open' and 'order'"
+  info "next: fill in ${target#"$PWD"/}/cdsync.json -- especially 'fixed', 'open' and 'order'"
   info "then: cd $name && cdsync brief"
   echo ""
   echo "  The spec library holds specifications for these assets:" >&2
@@ -210,24 +228,10 @@ report_bundle_readiness() {
 # ============================================================================
 # RENDERING
 # ============================================================================
-
-# Substitute {{VENTURE}} and write. Same token convention as the sibling tool's
-# tmpl/ directory, so a template here reads the way one there does.
-render_venture_template() {
-  local src="$1"
-  local dst="$2"
-  local name="$3"
-
-  if [[ ! -f "$src" ]]; then
-    error "missing template: $src"
-    return 1
-  fi
-
-  sed "s|{{VENTURE}}|$name|g" "$src" >"$dst" || {
-    error "could not write $dst"
-    return 1
-  }
-}
+#
+# render_venture_template lives in common.sh: `init` renders the cdsync.json
+# stub too, and command modules are sourced on demand, so a helper shared
+# across two of them belongs with the always-sourced primitives.
 
 write_venture_gitignore() {
   local root="$1"

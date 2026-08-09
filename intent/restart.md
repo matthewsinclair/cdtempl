@@ -1,5 +1,5 @@
 ---
-verblock: "08 Aug 2026:v1.2: Matthew Sinclair - No unblocked engineering left in ST0003; the BOOTSTRAP-CD count points rather than counts"
+verblock: "09 Aug 2026:v1.3: Matthew Sinclair - The wind-back: delivered projects are delivered, WP-05 ruled and built, five WPs closed"
 ---
 
 # Restart Context
@@ -21,7 +21,7 @@ The 2 August fold left the rulings restated in four documents and the watch-outs
 
 ## The one-paragraph version
 
-Cdsync has completed a **full cold round trip** -- initialise an empty tree, hand it to Claude Design, take the return back, check it -- for matthewsinclair and geodica. **Both came back Cdsync-shaped, so the cold-start document works.** **Ten commands, 342 tests, CI success on hygiene, ubuntu-latest and macos-latest.** **ST0003 is in flight**, with WP-01 closed and WP-07 and WP-08 both WIP; ST0001 (16/16), ST0002 (12/12) and ST0004 (11/11) closed through the gate, which refuses a BLOCKED contract. **Six projects hold a design system tree** -- two spikes whose implementations hv is rolling out in Laksa, plus the original four, of which **three are now known to be integrated and the fourth is unchecked rather than unintegrated.**
+Cdsync has completed a **full cold round trip** -- initialise an empty tree, hand it to Claude Design, take the return back, check it -- for matthewsinclair and geodica. **Both came back Cdsync-shaped, so the cold-start document works.** **Ten commands; the bats suite is green end to end and prints its own count; CI success on hygiene, ubuntu-latest and macos-latest.** **ST0003 is nearly done**: five of eight WPs closed (WP-01 on 6 Aug; WP-04, 05, 06 and 07 on 9 Aug under the wind-back), WP-02 parked by hv, WP-08 WIP on one question. ST0001 (16/16), ST0002 (12/12) and ST0004 (11/11) closed through the gate, which refuses a BLOCKED contract. **Six projects hold a design system tree** -- two spikes whose implementations hv is rolling out in Laksa, plus the original four, of which **three were already integrated and the fourth is unchecked by design.**
 
 **The tool was renamed to Cdsync on 6 August.** It was free, and only because it happened before the first release: no tag existed and no published artefact carried the old name. **That window has closed** -- `v0.1.0` is released, so any future rename carries a published artefact with it. **The rename's own contract shipped a boundary that was too narrow and missed two repositories**; that is finished now, and the lesson is on the board.
 
@@ -42,22 +42,16 @@ Cdsync has completed a **full cold round trip** -- initialise an empty tree, han
 
 **The top-level plan is not the removal audit.** It lists top-level paths only, so a file deleted *inside* a replaced directory never appears in it. **`git status` after the install is where the removals actually are** -- that is how round three's 54 deletions were read.
 
-## The work, and there is no unblocked engineering left
+## The work, after the 9 August wind-back
 
-**Everything remaining in ST0003 waits on hv.** That became true on 8 August and had not been true before, so do not go looking for something to pick up. Full statements and their blockers live in each WP's own `info.md`; this is the ordering, not a second copy.
+**hv ruled the delivered projects delivered.** The cdsync loop earns its keep for a few rounds while a design system beds down; after that the tree is **a record of what was asked for**, not a living document -- no more syncing from here, rare as-needed rounds only, rollout the project's own work. That ruling collapsed ST0003 from a waiting list to two live edges in one day. Each WP's `info.md` carries its own record; this is the ordering, not a second copy.
 
-**Closed out, and both WPs are WIP rather than Done:**
+**Live:**
 
-- **WP-07** -- **the premise was false in all three projects it could be checked against.** G&G, Baize and snorkeltoast were each already built against their design system, in three different idioms. Only **Lamplight** is left and it holds on WP-06's `ref` ruling, which is the one open ruling that could move paths.
-- **WP-08** -- Downloads closed by hv's ruling, the repackaging round built, the taxonomy count computed rather than remembered. What is left is three items needing a ruling and one upstream report.
+1. **WP-08's stale-document rule** -- built or declined, hv's word. Everything else in WP-08 is done or deliberately deferred.
+2. **WP-03, the spec library.** The version-bump pass -- three text inconsistencies, `pattern-library`'s two-part dance, and now `formats_required` from WP-06's dissolution (recommendation on record: advisory) -- plus specs as orders need them. **`pattern-library` stays a two-part job**: writing it without re-pointing the library's own exemplar text and its pinning test makes library text false. **`cdsync doctor` prints the counts and this file states none.**
 
-**Waiting on hv, in the order they are worth answering:**
-
-1. **WP-05, and it now blocks two work packages rather than one.** `spec_version` for a NEW asset is what stops `brief` ordering a slug the library has no spec for -- **WP-08 recorded that gap as depending on nothing until the chain was traced.** Also `cdsync.json`'s home for a venture Cdsync does not own.
-2. **WP-06's `ref` ruling** -- the only thing between Lamplight and WP-07 closing.
-3. **WP-02, two rulings on rule 4** -- the hex-approximation case and a colour named in order to forbid it. Both raised by real findings; neither to be taken unilaterally.
-4. **WP-08's stale-document rule** -- ordered or declined. **Its reach is already settled either way**: scoped to the design tree it reports clean on a provably stale document, because the document is the newest file in its own tree.
-5. **WP-03, grow the spec library.** Most of the taxonomy has no spec; **`cdsync doctor` prints both figures and this file states neither**, which is the same ruling now applied inside the tool. **`pattern-library` is blocked, not queued** -- `specs/library.md` names it as the live exemplar of "real, in the taxonomy, and unwritten" and a test pins the same invariant, so writing it makes library text false.
+**Settled 9 August and built the same day -- the full record is WP-05's `info.md`:** `cdsync.json` lives at the design tree root for every project, its own location resolving the target and the `.target` field retired; a named in-taxonomy slug orders **ahead of the library** and stamps the literal `unassigned`, with rule 2 asking for a rebuild the day the library gains the entry; `init` writes the stub that makes `brief` runnable for a project Cdsync does not own. Suite green end to end, the core behaviours mutation-proven, Acme migrated and its round-two brief regenerated. **WP-02 is parked** -- rule 4's three noise shapes stay recorded with recommendations until a live venture trips one.
 
 ## Where the work is
 
@@ -74,8 +68,8 @@ Cdsync has completed a **full cold round trip** -- initialise an empty tree, han
 
 ## Loose ends
 
-- **Acme round two is assembled and unsent**, at `templates/_test/Acme/design/brief.md`, as is `intent/st/COMPLETED/ST0001/round-5-answer.md`. Transport is hv's. That tree is a nested git repository, gitignored from this one.
-- **geodica's kit is prose only** -- no `kit/tokens.json` -- so rule 4 cannot run against it. A request back to Claude Design, not a defect here.
-- **`BOOTSTRAP-CD.md` goes stale routinely, and a hand-regeneration does not hold** -- Baize's went stale again inside a day of being fixed. **Assume stale and diff rather than reading it.** **Which copies, and how a rule that would catch them must be scoped, are in WP-08**, which is the one place that carries them; no count is kept here, because a hand-maintained number is the thing that keeps drifting.
+- **Acme round two is test apparatus, not a queue item** -- the wind-back retired the transport queue, and the round-5 answer died unsent with it. Acme's brief regenerated 9 Aug against library v3; that tree is a nested git repository, gitignored from this one.
+- **geodica's kit is prose only** -- no `kit/tokens.json` -- so rule 4 is dark there. Stays as record; no round is going back.
+- **The four delivered projects' `BOOTSTRAP-CD.md` copies froze on 9 August.** Baize's was regenerated and committed that morning (`7211fc1` in Baize) under hv's stale-is-never-accepted ruling -- it also caught an unrecorded ADR drift, 0030 to 0035. snorkeltoast's copy stays stale as part of the frozen record unless hv says otherwise. Whether staleness becomes *detectable* is WP-08's last question.
 - **Spent transport sits in six `_inbox/` directories.** All gitignored and local-only; **the two newest hold the Laksa theme packs, which exist nowhere else.** Do not clear those two until Laksa has taken them.
-- **Intent's template bakes an absolute path into `.claude/settings.json`.** Cdsync's is fixed; Baize's and Lamplight's still carry theirs.
+- **Intent's template absolute-path defect is reported upstream as Intent issue `0016`** (9 Aug). Baize's and Lamplight's copies stay as they are until Intent ships the fix.

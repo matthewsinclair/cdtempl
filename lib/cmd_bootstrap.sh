@@ -267,8 +267,12 @@ bootstrap_state() {
     [[ -e "$entry" ]] || continue
     name="$(basename "$entry")"
     bootstrap_is_noise "$name" && continue
+    # cdsync.json is Cdsync-side material like this document itself: `new` and
+    # `init` both write it at the tree root, so counting it as content would
+    # make every freshly scaffolded tree measure warm and the cold document
+    # unreachable again -- the exact defect the skeleton clause below fixed.
     case "$name" in
-      _inbox|BOOTSTRAP-CD.md|RETURN-DELTA.md) continue ;;
+      _inbox|BOOTSTRAP-CD.md|RETURN-DELTA.md|cdsync.json) continue ;;
     esac
 
     # AN EMPTY SKELETON DIRECTORY IS NOT CONTENT, and missing that made the
@@ -720,6 +724,12 @@ it -- the tree would simply get smaller. So tracking policy flows from the
 repository outward and never from a drop inward: any `.gitignore` in an export
 is discarded on arrival, and named as it goes.
 
+**Nor is `cdsync.json`, at any depth.** It is the venture's own facts and order,
+living at the tree root on the receiving side, and the order flows from the
+venture to you -- never back. A copy arriving in an export would sit where the
+next round reads its order from, so it is discarded on arrival the same way,
+and named as it goes.
+
 **Nor is `scratch/`, or any working directory of your own.** Sketches, trial
 renders, screenshots taken to look at something once -- the material you make
 *while* working rather than the material you deliver. An as-is export carries
@@ -872,19 +882,22 @@ bootstrap_version_numbers() {
     else
       echo "**${missing} assets here have no entry in the library: ${unknown%, }.**"
     fi
-    echo "There is no number to copy for them, so **leave \`spec_version\` and"
-    echo "\`kit_version\` out entirely rather than inventing a value.** An absent stamp is"
-    echo "the correct answer and not a gap in your work -- a number nobody issued cannot"
-    echo "measure anything, and a number you choose yourself is the revision counter this"
+    echo "There is no number to copy for them, so stamp **\`spec_version: unassigned\`**"
+    echo "-- the literal word -- rather than inventing a value. It says the asset was"
+    echo "built ahead of the library, which is a correct state and not a gap in your"
+    echo "work; when the library gains an entry, the check will ask for a rebuild"
+    echo "against it. A number you choose yourself is the revision counter this"
     echo "section exists to stop."
     echo ""
   fi
 
   if [[ "$known" -eq 0 && "$missing" -eq 0 ]]; then
-    echo "**Nothing in this tree takes a stamp.** There are no assets in the Cdsync shape"
-    echo "here, so there is no specification for anything to have been built from."
-    echo "**Leave \`spec_version\` and \`kit_version\` out.** Do not issue one, and do not"
-    echo "carry one forward from another project -- an absent stamp is the correct answer."
+    echo "**Nothing in this tree carries a copyable number.** There are no assets in the"
+    echo "Cdsync shape here, so there is no specification for anything to have been"
+    echo "built from. Anything you deliver in that shape stamps **\`spec_version:"
+    echo "unassigned\`** -- the literal word. Do not issue a number, and do not carry"
+    echo "one forward from another project -- a number nobody issued cannot measure"
+    echo "anything."
     echo ""
   fi
 

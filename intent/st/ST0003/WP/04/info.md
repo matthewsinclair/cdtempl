@@ -3,7 +3,7 @@ verblock: "02 Aug 2026:v0.2: matts - Filled from the ST0001/ST0002 close-out car
 wp_id: WP-04
 title: "Transport, and the conversion round behind it"
 scope: Medium
-status: Not Started
+status: Done
 ---
 
 # WP-04: Transport, and the conversion round behind it
@@ -51,3 +51,7 @@ After the conversion lands: **clear the vestigial paths.** That sweep's precondi
 - **Use `install`, not `import`, for an as-is export.** Opposite semantics; choosing wrong is the most destructive mistake in the tool.
 - **Read the dry run first**, and remember the top-level plan is not the removal audit.
 - Round three's precedent: every deletion matched a sentence in that project's own `RETURN.md` -- Lamplight 42, Baize 8, snorkeltoast 4 plus six renames, G&G 0. Expect to be able to say the same here.
+
+## Closed 9 August, by the wind-back ruling
+
+**hv ruled the delivered projects delivered**: no more syncing from here, the tree a record of what was asked for, further rounds rare and as-needed. The queue this WP *was* dissolves under that ruling. **The three port briefs and the round-5 answer die unsent** -- they existed to make the delivered trees checkable for future rounds that will not happen. The two protocol documents are simply published documents in `intent/docs/`, read when the next venture spins up. **Acme is Cdsync's own test fixture**, not a delivered project: its round two stays available as test apparatus, and its brief regenerated on 9 August against library v3 when `cdsync.json` moved to its tree root. Nothing was transported, nothing will be, and the conversion round and vestigial-path sweep die with the transport.
