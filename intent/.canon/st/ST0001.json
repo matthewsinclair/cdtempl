@@ -1,0 +1,304 @@
+{
+  "schema": "intent/thread@3.0",
+  "id": "ST0001",
+  "title": "Build the generic template suite and the four specifications",
+  "slug": "harvest-template-v0-from-the-three-claude-design",
+  "status": "completed",
+  "created": "2026-07-29",
+  "completed": "2026-08-02T09:54:45Z",
+  "objective": "Establish the four things Cdsync regularises, built generically in a fresh Claude Design project rather than derived from any existing venture:\n\n1. **The brief format** -- what Claude Design receives at the start of every venture.\n2. **The output structure** -- the mandated directory layout it delivers into, so every round lands identically and `cdsync import` can be mechanical.\n3. **The asset taxonomy** -- the full list of design and venture asset types. Roughly twenty, not the three named as examples.\n4. **The per-asset specification** -- what each type consists of: sections, formats, and a definition of done. Plus a built template for each, where a template makes sense.\n\nThe fourth is the main event. A taxonomy gives an asset a name; a specification lets someone say whether the thing that arrived is finished. That is where predictability comes from, and no amount of automation substitutes for it.\n\nThe brief to Claude Design is `cd-brief.md` in this directory. The work lands at `templates/claude_design/templprj/` -- a deliberately neutral placeholder venture that gives the templates something concrete to be templates of, and doubles as the worked example of the mandated output layout.",
+  "context": "Cdsync regularises the Claude Design process for a set of problems that have recurred across several ventures. The goal is **regular and predictable** first, **automated** second -- the first matters considerably more, and the second is only worth doing because it is now cheap. If the whole process were executed by hand and never scripted, the regularity would still be most of the value. That ordering should drive the build order: specifications before machinery.\n\n**Templates are built generically, in a fresh Claude Design project.** Building them inside a live venture would bake that venture's direction into everything produced afterwards, and the bias would be invisible by the time anyone noticed it. Retrofitting the finished process onto the existing ventures happens afterwards and is cheap.\n\nWorking assumption, stated for challenge: the specs are a **library** and the brief is an **order against it**. Selection varies per venture; what a complete design system needs does not. Improving a spec therefore improves every future venture without touching a single brief.\n\nFull model in `design.md` alongside this file. The load-bearing parts:\n\n- Claude Design is a **supplier working to a brief**, not a peer node. **It cannot read this repository at all** -- not by git, not by mount. Every input arrives as an upload from hv, so briefs must be self-contained; artefacts come back as a zip.\n- **Cdsync never writes into the application.** The boundary is `$CDSYNC_TARGET`, defaulting to `design/`. Structure underneath it is standardised; the location is not.\n- `$CDSYNC_TARGET` is the as-designed record; the app is the as-built. Keeping them apart is the point.",
+  "body": "## Notes on execution\n\nClaude Design works from a **fresh project**, receiving `cd-brief.md` as an upload from hv. It cannot read this repository, so the brief carries everything a round needs.\n\n**Two rounds**, at `cd`'s proposal and hv's agreement. Round one is text only: taxonomy, priorities, per-asset specs, the neutral kit, the output structure proposal, dependencies, bundles, and what a brief must carry. Cheap enough to argue with. Round two builds the top handful into `templates/claude_design/templprj/` against whatever survives, and comes back as a zip. Splitting them matters because the build is expensive to redo if the specs turn out wrong.\n\nThere is no whiteboard node for `cd` and no inbox to post to. The `cd` node scaffolded on 2026-07-29 was retired to `intent/whiteboard/.archived/cd/` once the supplier model settled -- a board that never updates reads identically to a node that has not started, which caused a full round of confusion before the model was understood.\n\nSuperseded framings, recorded so the changes are legible rather than silent:\n\n- `cd` owning a `template/` directory in this repo, with both parties committing to `main` and directory claims enforcing the split. `cd` cannot commit, so it was unenforceable as written.\n- Imported artefacts fanned into `assets/`, `priv/static/`, and `lib/<app>_web/components/`. Rejected: it collapses as-designed into as-built, is unsafe against hand-edited components, and has no destination for artefacts that are not source code.\n- Deriving the contracts by inventorying what the existing ventures shipped. Wrong target -- that reads what happened to land, not what the process should be. It also produced a detour into Laksa site config, which is downstream of this work entirely and not Cdsync's concern.\n\n## Open questions\n\nTo be settled by Claude Design's answer, or shortly after:\n\n1. What does \"template form\" mean per asset type? It will not be uniform -- some assets are documents with blanks, some are structures with placeholder values, and some may warrant a specification with no artefact at all.\n2. Do the asset types cluster into orderable bundles -- a seed-raise set, a launch set, a rebrand set? With twenty-odd types, a brief listing each individually is unusable.\n3. Where does \"working on X changed my view of Y\" belong in the return contract? The design and venture halves inform each other non-linearly, so a revised understanding is sometimes worth more than an artefact, and it currently has nowhere to go.\n4. Is `$CDSYNC_TARGET/site/` delivered ready to serve, or built from markdown? The former would drop the only Node dependency in the design.\n5. Does the target version in place, or accumulate side-by-side as-designed states? Git history plus `MANIFEST.md` answers \"what did drop 2 change\" without `v1/` and `v2/` directories.\n\n## Related Steel Threads\n\n- None yet. `bin/cdsync` itself is downstream of this thread and will need its own.\n\n## Context for LLM\n\nThis document represents a single steel thread - a self-contained unit of work focused on implementing a specific piece of functionality. When working with an LLM on this steel thread, start by sharing this document to provide context about what needs to be done.\n\n### How to update this document\n\n1. Update the status as work progresses\n2. Update related documents (design.md, impl.md, etc.) as needed\n3. Mark the completion date when finished",
+  "preamble": "",
+  "criteria": [
+    {
+      "id": "AC-00.1",
+      "text": "All four deliverables exist and have been exercised end to end by a real supplier round, not only by fixtures",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "matthewsinclair and geodica went out cold on 1 Aug and returned Cdsync-shaped on 2 Aug; both installed and checked (`intent/whiteboard/cc/.history/20260802/wip.md`)"
+      }
+    },
+    {
+      "id": "AC-01.1",
+      "text": "A brief is assembled from the spec library rather than hand-written, and names the specs it orders",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-01.2",
+      "text": "An order naming a slug the library does not specify is refused, and a bundle reaching one declares it absent",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-01.3",
+      "text": "The brief that went to Claude Design is self-contained, because the supplier cannot read this repository",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`cd-brief.md`, and five completed rounds answered from it"
+      }
+    },
+    {
+      "id": "AC-02.1",
+      "text": "The mandated layout has exactly one definition, and both install paths read it from there",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-02.2",
+      "text": "`import` writes only the five owned paths and leaves everything else standing",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-02.3",
+      "text": "`install` replaces the whole tree, prints every removal, and refuses over uncommitted content",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-02.4",
+      "text": "A drop may not deliver `.gitignore`, and it is discarded by name rather than silently",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-02.5",
+      "text": "A supplier working only from the generated document produces the mandated shape",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "two cold trees returned on 2 Aug with an identical drop root of `assets brief.md index.md kit notes RETURN.md`"
+      }
+    },
+    {
+      "id": "AC-03.1",
+      "text": "The taxonomy is enumerable by the tool, and its numbering is identity rather than sequence",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-03.2",
+      "text": "Bundles are defined over slugs, not taxonomy numbers",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-04.1",
+      "text": "A spec's definition of done is machine-checkable, and `check` applies every rule it claims to",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-04.2",
+      "text": "A rule that cannot run says so rather than reporting clean",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-04.3",
+      "text": "A rule's published reach matches its implemented reach",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-04.4",
+      "text": "A template exists for each specified type where a template makes sense",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`templates/claude_design/templprj/`, the worked example carrying the neutral kit and Form C assets"
+      }
+    },
+    {
+      "id": "AC-04.5",
+      "text": "The library is self-describing about its own gaps rather than silently short",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`specs/library.md` names `pattern-library` as the live exemplar of a real-but-unwritten slug; `cdsync doctor` prints spec, taxonomy and bundle counts"
+      }
+    }
+  ],
+  "tests": [
+    {
+      "id": "AT-01.1",
+      "kind": "test",
+      "covers": [
+        "AC-01.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"brief writes to the target and inlines the full specification\""
+      }
+    },
+    {
+      "id": "AT-01.3",
+      "kind": "test",
+      "covers": [
+        "AC-01.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"brief orders what a partial bundle has and declares the rest absent\""
+      }
+    },
+    {
+      "id": "AT-02.1",
+      "kind": "test",
+      "covers": [
+        "AC-02.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"the protected declaration is what decides, not the owned list's silence\""
+      }
+    },
+    {
+      "id": "AT-02.2",
+      "kind": "test",
+      "covers": [
+        "AC-02.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"a target file absent from the drop survives the import\""
+      }
+    },
+    {
+      "id": "AT-02.3",
+      "kind": "test",
+      "covers": [
+        "AC-02.3"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"install replaces what the drop carries and removes what it does not\""
+      }
+    },
+    {
+      "id": "AT-02.4",
+      "kind": "test",
+      "covers": [
+        "AC-02.3"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"install dry-run names every removal and writes nothing\""
+      }
+    },
+    {
+      "id": "AT-02.5",
+      "kind": "test",
+      "covers": [
+        "AC-02.3"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"install refuses when BOOTSTRAP-CD.md is untracked under the target\""
+      }
+    },
+    {
+      "id": "AT-02.6",
+      "kind": "test",
+      "covers": [
+        "AC-02.4"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"install names each discarded .gitignore rather than removing it quietly\""
+      }
+    },
+    {
+      "id": "AT-03.1",
+      "kind": "test",
+      "covers": [
+        "AC-03.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"the taxonomy is wider than the library\""
+      }
+    },
+    {
+      "id": "AT-03.2",
+      "kind": "test",
+      "covers": [
+        "AC-03.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"a bundle expands to slugs\""
+      }
+    },
+    {
+      "id": "AT-04.1",
+      "kind": "test",
+      "covers": [
+        "AC-04.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"the documented rule count matches the rules check implements\""
+      }
+    },
+    {
+      "id": "AT-04.2",
+      "kind": "test",
+      "covers": [
+        "AC-04.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"rule 4 says it cannot run when the kit holds no colour it can read\""
+      }
+    },
+    {
+      "id": "AT-04.3",
+      "kind": "test",
+      "covers": [
+        "AC-04.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"rule 4 says it cannot run when there is no tokens.json at all\""
+      }
+    },
+    {
+      "id": "AT-04.4",
+      "kind": "test",
+      "covers": [
+        "AC-04.3"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"help/check.md names every colour form the scanner reads\""
+      }
+    }
+  ]
+}

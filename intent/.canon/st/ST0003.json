@@ -1,0 +1,397 @@
+{
+  "schema": "intent/thread@3.0",
+  "id": "ST0003",
+  "title": "Post-release 0.1.0 clean-up",
+  "slug": "post-release-0-1-0-clean-up",
+  "status": "completed",
+  "created": "2026-08-02",
+  "completed": "2026-08-09T12:20:51Z",
+  "objective": "Hold everything that ST0001 and ST0002 carried forward when they closed on 2 August, plus the questions the first real cold round trip raised, so that **none of it lives only in a fold document.**\n\nThis thread is deliberately a **holding pen with structure**, not a plan. Its work packages are independent by design: each can be taken alone, in any order, and most of them are waiting on a ruling rather than on effort.",
+  "context": "ST0001 and ST0002 both closed at 2 August on contracts written from the as-built, each of which **states its boundary explicitly and lists what falls outside it.** That was the honest way to close them -- neither had been abandoned, and neither had done everything anyone might have wanted.\n\nWhat fell outside was real work, and closing the threads left it with nowhere to live. Recording it in `intent/wip.md` was not enough: **a fold document is a snapshot, and a snapshot is not a commitment.**\n\nTwo things are worth knowing before picking anything up.\n\n**Most of this is blocked on a ruling, not on effort.** WP-02, WP-05 and WP-06 are all questions with their evidence already gathered, waiting on hv. They are cheap to answer and cheap to leave; what they are not is cheap to guess at, which is why they were not guessed at when they arose.\n\n**The naming stopped being aspirational on 6 August.** WP-01 closed 8/8: `v0.1.0` is tagged, packaged, pushed and published, so this really is post-release clean-up now. Running `cdsync release` for real found two defects in it, neither visible from reading the code -- see WP-01's `info.md`.\n\n**A work package's stated premise is not evidence.** WP-07 opened on \"none has been built against\" and that was false for the first project it named. **Check the world before recording what it is** -- and if a premise turns out wrong, correct it in the WP rather than working around it.",
+  "body": "## The work packages\n\n| WP | Title | State |\n| -- | ----- | ----- |\n| WP-01 | Cut the 0.1.0 release | **Done 6 Aug, 8/8** |\n| WP-02 | Rule 4 -- two rulings and what follows | **Parked by hv, 9 Aug.** Evidence and recommendations on record |\n| WP-03 | Grow the spec library, and repair its text | **Done 9 Aug, 7/7** -- library edition 4; two inherited premises found false |\n| WP-04 | Transport, and the conversion round behind it | **Done 9 Aug** -- dissolved by the wind-back; nothing was or will be sent |\n| WP-05 | Make scope durable: `cdsync.json` and `spec_version` | **Done 9 Aug** -- both ruled and built the same day |\n| WP-06 | Settle round three's outstanding rulings | **Done 9 Aug** -- dissolved to two survivors; the record stands as delivered |\n| WP-07 | Integrate the original four | **Done 9 Aug** -- closed on the finding; Lamplight unchecked by design |\n| WP-08 | Housekeeping and small gaps | **Done 9 Aug** -- all six items done or declined on the record; the staleness advisory built as shape (a) |\n\n**The 8 August state -- nothing unblocked, everything on hv -- lasted one day.** On 9 August hv ruled the wind-back (the delivered projects are delivered; the loop does not run back to Claude Design for them), ruled `cdsync.json`'s home, `spec_version`, the staleness advisory and `formats_required`, and parked WP-02. Six WPs closed that day, WP-03 the same evening, and **this thread closed 20/20 with it.**\n\n**The bar was that every work package reached a terminal state on the record, not that every one was built.** Three were dissolved by the wind-back rather than executed and hv parked a fourth, so a criterion demanding they be built would have been the contract overruling the owner at a close. `acceptance.md` states that boundary; `intent/restart.md` carries the remainder forward with the condition that would re-open each item.\n\n## Acceptance\n\nAcceptance Criteria and Acceptance Tests for this steel thread live in `acceptance.md` (the single source of truth). Do not restate ACs here -- see that file for the ratified completeness boundary and live status.\n\n**The contract is deliberately unwritten while this thread is Not Started.** `intent st done` refuses to close a thread whose contract is BLOCKED, and an empty contract counts as BLOCKED -- which is the gate working. Write the ACs when the scope is real, not now, and **do not write ACs to match what happens to have been done.** Shrinking scope needs the owner.\n\n## Related Steel Threads\n\n- **ST0001** (Completed 2026-08-02) -- the generic template suite and the four specifications. Its `acceptance.md` lists what it carried forward into here.\n- **ST0002** (Completed 2026-08-02) -- porting four established projects. Same.\n\nBoth are at `intent/st/COMPLETED/`. `intent st list` shows nothing by default; use `--status Completed`.\n\n## Context for LLM\n\n**Read `intent/docs/design-system-lifecycle.md` first.** It is canon and outranks every document in this thread.\n\nThen read the `## Decisions` and `## Watch-outs` sections of `intent/whiteboard/cc/wip.md`. Several items here look like small fixes and are not -- `pattern-library` cannot be written without re-pointing the library text that names it as unwritten, and the three library-text inconsistencies cannot be repaired individually because editing library text changes what its `spec_version` means.\n\n**Nothing in this thread should be started by guessing at a ruling.** If a WP says it is blocked on hv, it is blocked on hv.",
+  "preamble": "",
+  "related": [
+    {
+      "id": "ST0001",
+      "note": "Completed 2026-08-02) -- the generic template suite and the four specifications. Its `acceptance.md` lists what it carried forward into here."
+    },
+    {
+      "id": "ST0002",
+      "note": "Completed 2026-08-02) -- porting four established projects. Same."
+    }
+  ],
+  "wps": [
+    {
+      "seq": 1,
+      "title": "Cut the 0.1.0 release",
+      "scope": "S",
+      "status": "done",
+      "objective": "**DONE 6 August, 8/8 through the close-gate.** `v0.1.0` is tagged on `e54ebbc` (annotated), packaged as `cdsync-0.1.0.tar.gz` (474,181 bytes, 140 entries), pushed to both remotes, and published as a GitHub release. Verified by downloading the published asset, confirming its sha256 matched the local build byte for byte, extracting it and running it.\n\nThe original statement of this WP -- *\"the machinery is done; the act has not happened\"* -- turned out to be half wrong, and that is the finding.",
+      "body": "## What running it for real found\n\n**The machinery was not done. `cdsync release` could not cut a first release at all**, and it took two fixes to get there. Neither was visible from reading the code; both appeared the first time anyone tried to release anything.\n\n**1. `cut` could not tag the version a project is on.** It accepted only `major|minor|patch`, and all three move forward -- so the version a *first* release needs was unreachable, for every project, not just this one. `cut minor` would have produced 0.2.0 and skipped the release the repository already announced. The verbs presumed a predecessor existed and nothing said so. Both verbs now also take a bare semver; equality with the current version is allowed deliberately, because whether a version has been *released* is a question about tags and is answered by the gate that finds the tag already exists.\n\n**2. The ceremony then died one step later.** Cutting the version already in `VERSION` writes the same bytes, so `git commit` had nothing to commit and refused. `cut 0.1.0` ran all six gates green and failed at step 3. The tag now goes on the commit that is already the release rather than on an empty one manufactured beside it -- `--allow-empty` would have silenced the failure and left a second commit claiming to be the same thing.\n\n**Three reasons nothing caught the second one, all already on the board's watch-out list.** A dry run stops before writing, so it passed. The six new unit tests asserted one layer above where the defect lived. And the ceremony is untestable end to end here *by design*: `release_gates` refuses to run inside bats, because running the suite from inside the suite does not terminate. The commit decision was extracted to `release_commit_version`, which takes the repository as an argument and is exercised against a real one.\n\n**The failed run left nothing half-written** -- `VERSION` unchanged, no tag, no tarball, clean tree. That is the module header's ordering principle holding: every step is safe to rerun after the one following it failed.\n\nSeven tests, red-first. Four mutations -- string-compare, refuse-equality, remove-the-case, remove-the-commit-guard -- each confirmed to land by diff, each killing exactly the test meant to catch it. **Two of the seven passed before the fix for the wrong reason**, because the old code refused everything that was not a bump part; they are recorded that way rather than counted as pre-existing green.\n\n## Deliverables\n\n- A tagged, packaged `0.1.0`.\n- Confirmation that the tarball carries the tool and nothing about how the tool is made. `.gitattributes` declares this with `export-ignore` and a test pins it **positively** -- a list of what must be absent cannot notice a new thing that should have been.\n- A decision on whether to push the tag. **Pushing is opt-in by ruling**: `cut` stops after tagging and will not push without `--push`, because it is the one step that leaves the machine and cannot be quietly undone.\n\n## Notes\n\n- Run the dry run first and read it. That is the house habit and it has earned itself twice.\n- The release gates detect `BATS_TEST_FILENAME` and **fail** if the suite is run from inside the suite, which prevents an infinite recursion. Do not \"fix\" that by making it skip -- **a gate that cannot run is not a pass.**\n- CI must be green on both platforms at the tagged commit, not merely on `main` at some earlier point.\n\n## Dependencies\n\nNone. This is the one item in the thread that blocks on nothing and nobody.",
+      "preamble": ""
+    },
+    {
+      "seq": 2,
+      "title": "Rule 4 -- two rulings and what follows",
+      "scope": "M",
+      "status": "not-started",
+      "objective": "Rule 4, the colour leak guard, was taught the modern colour spaces on 2 August. The first real kit it could then read produced **15 blocking findings on matthewsinclair, and only 6 of them are leaks.** Two questions came out of that, and **neither was decided unilaterally** because both change what the rule means rather than what it can see.\n\nUntil they are settled, rule 4 is noisy on any kit that documents its own colours -- and **a guard people learn to ignore is worse than no guard.**",
+      "body": "## The two questions\n\n### 1. A hex tabulated beside its own token -- fourteen of the fifteen findings\n\n`kit/colour.md` carries a table with an *Approx hex* column:\n\n```\n| Token    | oklch                 | Approx hex | Use                            |\n| `--bone` | `oklch(96% 0.014 92)` | `#F5F0E4`  | Page ground. The default plane |\n```\n\n`tokens.json` publishes only the `oklch`. The check cannot tell the two spell one colour, and **deliberately does not try** -- comparing across colour spaces needs a transform, and approximating it would make two distinct kit colours collide and report a leak that is not there. That ruling stands and is not what is in question.\n\nWhat is in question is which side moves:\n\n- **`tokens.json` publishes the approximations too**, making them kit colours, and the finding disappears honestly. Costs a round with Claude Design.\n- **The rule learns that a value tabulated beside a known kit colour is documentation of it.** Narrow, defensible, and a heuristic -- so it needs stating as a rule rather than sliding in as a fix.\n- **The column goes.** Cheapest, and loses something a reader of the kit actually uses.\n\n### 2. A colour named in order to forbid it\n\n`kit/colour.md:31` reads *\"Blue-shifted near-black, never `#000`\"*. The kit names the colour **to prohibit it**, and rule 4 reports it as a leak.\n\n`scan.sh` already met this shape twice and ruled both times -- `each_blank_in_file` skips code spans and fences, because a bracketed placeholder inside a \"no blanks remain\" checklist documents the marker rather than being an instance of it, and `each_metric_in_file` skips `<script>`.\n\n**The analogy does not carry over unexamined, and that is the whole difficulty.** A colour inside a **fenced** block is usually a *declaration* -- CSS in a code example is exactly where a real leak would live. An **inline** code span in prose is far likelier to be naming than declaring. So the two may need different treatment, which neither existing exclusion gives them.\n\n### 3. Vendored upstream material, and whose tokens a leak is measured against\n\nAdded 2 August, from G&G round 4. The drop now vendors the Organic system whole at\n`kit/_ds/organic-22b2e68b-.../`, and `check` reports **8 blocking rule-4 findings, every one\nof them inside that directory** -- `styles.css`, `theme.json`, `_ds_manifest.json`,\n`readme.md`, and the deck/landing template runtimes.\n\nNone is a leak. **Organic's palette is upstream material and was never meant to be Gyre &\nGymble's token set** -- `kit/tokens.css` is precisely the override layer that retunes it, so\nthe two disagreeing is the design working rather than failing. Some of the reported values\nare not even Organic's: `deck-stage.js` and `image-slot.js` carry the design tool's own\nchrome colours.\n\nSo the question is **which tree rule 4 measures against**, and it is a third shape distinct\nfrom the two above -- not documentation-versus-declaration, but **ours versus upstream**.\nCandidates: rule 4 skips a vendored dependency directory; or `_ds/`-style vendor trees are\ndeclared not-kit the way `addenda/` is declared protected; or the kit declares its own vendor\npaths. **Not decided, and not guessed at.** Until it is, rule 4 blocks on any drop that\nvendors what it depends on -- which is the shape round 4 was built to deliver.\n\n## Deliverables\n\n- A ruling on each, recorded on the `cc` board under `## Decisions` with its reasoning.\n- Whatever implementation follows, with tests mutation-proven **and** confirmed to exercise the changed code path.\n- `help/check.md` updated if the reach or the meaning moves. **A rule's published reach is part of the rule** -- guarded by a test against `CDSYNC_COLOUR_RE`.\n- `check` re-run across all six trees afterwards, with the before/after recorded. This changes what a rule *means*, so the blast radius is the evidence.\n\n## Dependencies\n\nNeeds hv. Both are scope questions about what the rule asserts, not bugs.\n\n## Notes\n\nThe six genuine leaks are a separate matter and belong to the venture, not the tool: `oklch()` values in `accessibility.md`, `colour.md` and `components.md` that are not tokens in `tokens.json`, so there is nothing to implement them from. They are named in the Laksa handoff note. **Cdsync never repairs a drop.**\n\n## Parked, 9 August\n\n**hv's word: \"park.\"** The three shapes stay recorded above with their evidence, plus the recommendations from the 9 August explanation: teach the rule that a value tabulated beside a declared token is documentation; skip inline code spans in prose while keeping fenced blocks scanned; skip a declared vendor path. **Nothing changes in rule 4 until a live venture trips one of these.** Not to be picked up without hv re-opening it.",
+      "preamble": ""
+    },
+    {
+      "seq": 3,
+      "title": "Grow the spec library, and repair its text",
+      "scope": "L",
+      "status": "done",
+      "objective": "**Most of the taxonomy has no spec** -- **`cdsync doctor` prints both figures, and this file states neither**, because a count copied into prose stops tracking the table it describes. That gap is not debt from ST0001: the ratified model is that the specs are a library and a brief is an order against it, so a spec gets written when an order needs one.\n\nIt also carried known inconsistencies in library *text*, left alone deliberately, because editing library text silently changes what its `spec_version` means -- so they had to move together behind one `spec_library_version` bump.\n\n**Closed 9 Aug 2026 at library edition 4.**",
+      "body": "## What the bump means -- the decision this WP existed to make\n\n`spec_library_version` is the library's **edition**. A brief stamps it into every round, so a drop records which edition it was ordered against.\n\n- **A bump restamps nothing and invalidates nothing.** A drop stamped against an earlier edition stays correctly stamped; raising the number afterwards would falsify the one fact the stamp records.\n- **Staleness is per asset, and it is `spec_version`'s job.** A spec whose *text* moves raises its own `spec_version`; `check` then reports only the assets built from that spec.\n- **If an edition bump restamped everything, one editorial fix would make the whole world stale at once and the signal would mean nothing** -- two counters that never disagree for a reason cannot measure a distance, which is the G&G lesson applied to the other number.\n\nEdition 4 moved exactly three specs: `kit` 3->4, `pitch-deck` 1->2, `positioning-icp-personas` 2->3. **Verified rather than asserted**: `check` against `templprj` reports those three stale and nothing else.\n\nThe rule is now stated in `specs/library.md` (\"What a library edition bump does, and does not do\") and in `help/brief.md`. It is the library's, not this file's -- this is the record of the decision, not a second copy of it.\n\n## The text repairs, behind the one bump\n\n**The WP named three sites. A `git grep` over every tracked file found six**, and naming files rather than counting them is what the 8 August correction had already been forced to learn twice.\n\n- `specs/kit.md` said \"fifty-one artefacts\" against a taxonomy of a different size. **The copy that mattered most**: the kit spec is inlined into every brief whether or not the kit was ordered, so this figure went to the supplier every round for six weeks *while the guard added on 8 August reported the number settled*. It now states no figure.\n- `specs/library.md` said \"32 of the 50\", and separately opened its taxonomy section with a spelled-out total. Both gone; the table is the only record of its own size, and prose that wants the number says to run `cdsync doctor`.\n- `lib/specs.sh` and `test/cdsync.bats` carried comments describing the unfixed state, including the stale figure itself. Corrected.\n\n## Three dangling references, repaired rather than preserved\n\n`pitch-deck` named `positioning` in `hard_assets` and `reciprocal`; `positioning-icp-personas` named `pricing` in `reciprocal`. No such slugs -- the assets are `positioning-icp-personas` and `pricing-and-packaging`.\n\nThe library had recorded them as known-and-deliberate, \"left as delivered because they belong in the next round's findings\". **The wind-back spent that reason**: there is no round left for the finding to reach. A reference that can never resolve, preserved for a report that will never be written, is worse than a repair with the finding kept -- so the library's own section now records what was found, when, and why it was finally fixed.\n\n**A fourth thing surfaced and was flagged rather than invented.** `positioning-icp-personas` declares `pricing-and-packaging` reciprocal and `pricing-and-packaging` does not declare it back. `reciprocal` is symmetric by its name, nothing enforces that, and no check can see it. Writing the missing half would be this library inventing a dependency Claude Design never declared -- the drop-repair mistake one level up. Recorded, not resolved.\n\n## `formats_required`, ruled advisory by hv on 9 Aug\n\nWritten into `specs/library.md` and `help/brief.md`, **and into the brief itself**, which is the only one of the three the supplier ever reads. Two suppliers independently held finished assets back for a rendering nobody was blocking on; that is the document-as-instrument failure for the fourth time in this project, and the misreading is expensive in one direction only.\n\n## What was deliberately NOT done, and why\n\n- **`pattern-library` was not written.** The ratified model is that a spec is written when an order needs one, and the wind-back means no order is coming. Writing it in bulk would contradict the model, and it would have forced the two-part exemplar dance for no gain. It stays the live exemplar of a slug that is real, in the taxonomy, and unwritten -- true today, and the test that pins it stays green as-is. **If an order ever names it, the dance is still required**: write the spec and re-point the exemplar and its test in the same change.\n- **`templates/claude_design/templprj/` was left as delivered**, including its \"fifty-one\" and its `spec_library_version: 2`. It is a worked example of a delivered drop, and a drop keeps the edition it was ordered against. Editing it would falsify the delivery it records, and would be the same error as restamping a venture's tree. Its README now says so.\n- **No new specs were written.** No order needs one.\n\n## Two premises that were false, both inherited\n\n**`cdsync new` does not scaffold `templprj`.** This WP asserted the two template files were \"scaffolded into every venture `cdsync new` creates\", and a `lib/specs.sh` comment repeated it. The as-built renders `templates/venture/*.tmpl` and nothing else; **no code path reads `templates/claude_design/` at all.** The claim came from `templprj/README.md`, written in round one when that *was* the plan, and it survived the plan changing. Checked against `cmd_new.sh`, not against the sentence. **A premise restated often enough starts reading as evidence** -- the second time this thread has been bitten by exactly that, after WP-07.\n\n**A test was pinning the defect.** \"a bad dependency slug is declared as outside the taxonomy\" used `pitch-deck`'s real `positioning` as its fixture, so it could only pass while the library stayed broken. Repairing the library turned it red -- the test reporting the fixture it had been depending on rather than the behaviour it is named for. It runs against a doctored library now, with a guard that the doctoring landed.\n\n## Evidence\n\nSuite 357 -> 360, green; shellcheck clean. Three new guards, each mutation-proven with landing proof by diff and each killing exactly its own test:\n\n- **every dependency the library names resolves in the taxonomy** -- the guard that did not exist. `check`'s rule 2 catches a dangling `depends_on` in a *drop*; nothing looked at the *library*, which is how three sat there from July. Mutant: reintroduce `positioning`.\n- **the shipped library states no taxonomy-wide count** -- **the 8 August guard's sampling frame widened.** That sweep searched `bin/`, `lib/` and `help/`, and nothing asked what had chosen those three; `specs/` was never searched and was the copy that travelled. Narrower pattern than the help-file guard on purpose, because `library.md` carries two legitimate *subset* counts the broad pattern matches. `templates/claude_design/` is out of scope by the ruling above. Mutant: restore \"fifty-one artefacts\".\n- **the brief tells the supplier formats are advisory** -- a ruling that never reaches the supplier changes nothing. Mutant: truncate the sentence.\n\n**The verification probe modified the thing it was verifying.** `cdsync check` is not read-only -- it recomputes `blanks` and `blanks_unique` and writes them back into every `spec.md` in the drop it walks. Running it against `templprj` to confirm AC-03.5 silently changed eight tracked files, **in the same breath as this WP ruling that directory a delivery record not to be edited.** Caught by `git status` at commit time and nothing in the run; reverted, and causation established by reverting and re-running rather than assumed. On the board now: **a probe with a side effect is still a side effect.** Worth hv's attention as a possible `--no-write` or a rename, which is not a call to make at a close.\n\n**The mutation harness lied once, in a new way.** `if diff a b; then echo \"did not land\"` inverts the test -- `diff` exits non-zero *when files differ* -- so it reported \"MUTATION DID NOT LAND\" while printing the landed diff directly above the claim. Third harness failure in this project and the first of this shape; the standing instruction to print proof is what made it obvious in one read.\n\n## Notes\n\n`cdsync doctor` prints spec, taxonomy and bundle counts. **Read the counts from it rather than from any document**, including this one.",
+      "preamble": ""
+    },
+    {
+      "seq": 4,
+      "title": "Transport, and the conversion round behind it",
+      "scope": "M",
+      "status": "done",
+      "objective": "Several finished documents are **written and unsent**. Claude Design cannot read this repository -- not by git, not by mount -- so every input arrives as an upload from hv, and **a document nobody has sent has had no effect at all.**\n\nThis WP is that queue, plus the round that unblocks once the three port briefs land.",
+      "body": "## What is waiting to be sent\n\n| Document | Where | What it does |\n| -------- | ----- | ------------ |\n| `port-brief-lamplight.md` | ST0002 (COMPLETED) | Converts Lamplight into the checkable shape |\n| `port-brief-baize.md` | ST0002 (COMPLETED) | Same, for Baize |\n| `port-brief-snorkeltoast.md` | ST0002 (COMPLETED) | Same, for snorkeltoast |\n| Acme round two | `templates/_test/Acme/design/brief.md` | The next round of the neutral test venture |\n| `round-5-answer.md` | ST0001 (COMPLETED) | Answers round five's findings |\n| Two protocol documents | `intent/docs/` | `claude-design-contract.md`, `receiving-a-design-system.md` -- both self-contained |\n\nG&G needs no port brief. It is already Cdsync-shaped and checks clean.\n\n## The round that follows\n\nThree of the six trees currently refuse `check` with `0 assets checked`, because their tokens sit outside `kit/` and their assets are not `assets/<slug>/spec.md`. **That is the tool being honest about a tree it cannot read**, not a defect in the port -- ST0002 delivered the record, which was its bar.\n\nConverting them is **its own round, by the 31 July ruling**: a conversion arrives with its own brief and is never ordered implicitly by a document describing a shape. The briefs exist for exactly that reason.\n\nAfter the conversion lands: **clear the vestigial paths.** That sweep's precondition was \"after each export is reviewed\", which is satisfied.\n\n## Deliverables\n\n- The six documents sent.\n- Three conversions installed and committed, each with its removals audited by `git status` rather than by the install plan.\n- Vestigial paths cleared.\n- `check` re-run across all six trees, results recorded as measured.\n\n## Dependencies\n\n**Blocked on hv for transport, and only on that.** A thread cannot be gated on transport it does not control -- which is exactly why ST0002 closed without this rather than waiting.\n\n## Notes\n\n- **Use `install`, not `import`, for an as-is export.** Opposite semantics; choosing wrong is the most destructive mistake in the tool.\n- **Read the dry run first**, and remember the top-level plan is not the removal audit.\n- Round three's precedent: every deletion matched a sentence in that project's own `RETURN.md` -- Lamplight 42, Baize 8, snorkeltoast 4 plus six renames, G&G 0. Expect to be able to say the same here.\n\n## Closed 9 August, by the wind-back ruling\n\n**hv ruled the delivered projects delivered**: no more syncing from here, the tree a record of what was asked for, further rounds rare and as-needed. The queue this WP *was* dissolves under that ruling. **The three port briefs and the round-5 answer die unsent** -- they existed to make the delivered trees checkable for future rounds that will not happen. The two protocol documents are simply published documents in `intent/docs/`, read when the next venture spins up. **Acme is Cdsync's own test fixture**, not a delivered project: its round two stays available as test apparatus, and its brief regenerated on 9 August against library v3 when `cdsync.json` moved to its tree root. Nothing was transported, nothing will be, and the conversion round and vestigial-path sweep die with the transport.",
+      "preamble": ""
+    },
+    {
+      "seq": 5,
+      "title": "Make scope durable: cdsync.json and spec_version",
+      "scope": "M",
+      "status": "done",
+      "objective": "Two questions that have each been asked by more than one venture and answered by hand every time. Both are places where **the generated document explains a field and never supplies its value** -- the failure shape this project has now hit four times.",
+      "body": "## 1. Where scope comes from\n\n`BOOTSTRAP-CD.md` gives Claude Design the shape and the rules but **not which assets to build.** On a 52-slug taxonomy that invites sprawl, and on two simple content sites it very nearly did. hv supplied scope by hand for both spikes.\n\nScope properly comes from `cdsync brief`, which orders against the spec library. `brief` needs a `cdsync.json` -- and **that file cannot live in the site**, by canon: an existing project must never get the `new` treatment, no `cdsync.json`, no agent contract, no nested repository. `cdsync init` exists precisely because of that boundary.\n\n**So the open question is where a venture's `cdsync.json` lives when the venture is a repository Cdsync does not own.** Options not yet weighed properly: alongside the Cdsync install, in a per-venture directory under `templates/`, or somewhere new. The same question blocks `Acme/cdsync.json`.\n\n## 2. `spec_version` for a new asset\n\n**Four projects have now asked this in four shapes.** The bootstrap supplies a number for assets the library already specifies. It supplies nothing for an asset the round is *creating*, and the round is correctly refusing to invent one -- **matthewsinclair's thirteen assets all carry `spec_version: unassigned`.**\n\nThat is the right behaviour from the supplier and the wrong state to leave the field in. Needs one of:\n\n- A number to stamp on anything new.\n- Confirmation that a new asset inherits the kit's.\n- A declared convention that `unassigned` is the correct permanent answer until the library gains an entry.\n\n**Three suppliers asking the same question is one defect in the document, not three mistakes by them.** It is four now.\n\n**8 August: a fifth asker, and it is the tool rather than a supplier.** WP-08 carries a gap -- `brief` cannot order a slug the spec library does not hold, so a genuinely new asset type cannot be commissioned at all. Building that requires the brief to tell the round what `spec_version` to stamp on the asset it is creating, **which is exactly the question above.** So this ruling now blocks a second work package, and WP-08 recorded itself as depending on nothing until the chain was traced.\n\n**Whatever is ruled here should be phrased so the generator can state it**, not only so a human can apply it. The recurring shape in this project is a document that explains a field and never supplies its value, and an answer that lives only in a ruling would be the fifth instance rather than the fix.\n\n## Deliverables\n\n- A ruling on where `cdsync.json` lives for a repository-owning venture, and `brief` reading it from there.\n- `Acme/cdsync.json` filled, and the four slugs re-ordered.\n- A ruling on `spec_version` for new assets, carried into the generator so the document states it rather than implying it.\n- **Regenerate every project's `BOOTSTRAP-CD.md`** after any generator change. Regeneration fires on sync only, so a generator change stales every copy at once **with no local symptom**.\n\n## Dependencies\n\nNeeds hv for both rulings. WP-03 benefits from the first being settled.\n\n## Notes\n\ngeodica also asked, differently: its kit is prose only -- `tokens.md` and `primitives.md`, no `tokens.json` -- so rule 4 cannot run against it at all. Either request machine-readable tokens next round, or accept the rule is dark for that venture and say so. *(Under the 9 Aug wind-back this stays as record: no round is going back to geodica.)*\n\n## Ruled and built, 9 August\n\nBoth rulings landed in conversation and the build shipped the same day. **Suite 353/353, shellcheck clean, the four core behaviours mutation-proven** (each mutant confirmed landed by diff and killed exactly its test).\n\n- **`cdsync.json` lives at the design tree root, always** -- one home for `new` ventures and `init` projects alike. Resolution probes `design/system/` then `design/`; the file's own directory IS the target; the `.target` field is retired and a leftover one warns. The file joins `CDSYNC_DROP_PROTECTED_PATHS`, and a drop may not deliver one at any depth. `new` scaffolds it into the tree; **`init` writes the stub**, which is what makes `brief` runnable for a project Cdsync does not own -- the case where scope used to be supplied by hand.\n- **`spec_version` for a new asset is the literal `unassigned`.** `brief` now orders a named in-taxonomy slug the library has not specified -- the round creates the asset, the document carries the contract its specification cannot, and the stamp is `unassigned` until the library gains an entry, at which point rule 2 asks for a rebuild. **Outside the taxonomy still refuses**: the taxonomy is the identity space. Bundle expansion unchanged. Both generators state the whole convention, so no supplier asks a sixth time -- and WP-08's order-an-unspecified-slug gap closed with it.\n- **Acme migrated**: `cdsync.json` at `design/`, `.target` gone, brief regenerated against library v3 (`91e9408`, `adc50f2` in its own repository).\n- **The regenerate-every-project step retired with the wind-back**: the four delivered projects' documents froze; generator changes regenerate live ventures only.\n- Carried here from WP-06's dissolution: **the brief now states `hard_facts` and bundle membership per specification** and defines both in the contract block -- the two fields the document asked back and never supplied.",
+      "preamble": ""
+    },
+    {
+      "seq": 6,
+      "title": "Settle round three's outstanding rulings",
+      "scope": "M",
+      "status": "done",
+      "objective": "Round three returned four real drops and raised questions the tool cannot answer for itself. Each has its evidence gathered and is waiting on hv. **None of them blocks any of the others**, so they can be taken in any order or in one sitting.\n\nTwo items came *off* this list rather than being settled, and are recorded so they are not re-opened: **rule 5 shipped on 1 August**, and **rule 3 came off** because read properly its residual is mostly true positives -- exactly one of six findings is noise, and suppressing `alt` text to clear it was not worth it.",
+      "body": "## The rulings\n\n### Per project\n\n- **Lamplight -- does `ref` want splitting?** `gn/` is licensed, `art/` and `gwidget/` are not, so as one asset the whole thing goes confidential. **Is classification per asset, or below it?** This is the only open ruling that could move paths, so hold Lamplight integration until it lands.\n- **Lamplight -- seven working check renders** inside `portraits/`/`shots/` plus `docs/investor/*/_out/`. Flagged rather than deleted, deliberately.\n- **snorkeltoast -- no `spec.md` exists anywhere.** Classification went into `index.md` per asset and `build-docs.mjs` per tree, rather than into 66 section frontmatters. **Ratify or redirect.**\n- **G&G -- `hard_facts` and `bundles` are `[]` on all sixteen** because the bootstrap never defines them. One line each and they populate next round.\n- **G&G -- `print-collateral` complete to partial.** Three documents say a trust band appears on the fliers and none carries it. **Ratify the downgrade.**\n- **Baize -- `tiles/` has no consumer.** 25 photographs of a real table that nothing in the tree uses, kept as source material.\n- **Baize -- eight ADRs stay**, each carrying a frozen-plan banner naming the ratified copy.\n\n### Cross-cutting\n\n- **Finding 5: is `formats_required` a narrowing of done, or advisory?** It appears in none of G&G's sixteen specs, and **two suppliers independently concluded an asset can be complete without its formats.** Two independent agreements is evidence about the document.\n\n## Deliverables\n\n- A ruling on each, recorded on the `cc` board under `## Decisions` with its reasoning, so none is re-litigated from memory.\n- Any that change tool behaviour implemented with tests; any that change library text folded into WP-03's version bump rather than done separately.\n\n## Dependencies\n\n**Needs hv.** Every item is a scope or policy question with its evidence already gathered.\n\n## Notes\n\nThe Lamplight `ref` ruling gates WP-07 for Lamplight only -- and since 8 August that is the *whole* of what is left in WP-07, because the other three projects turned out to be integrated already. **This ruling is now the only thing between WP-07 and its close.**\n\n## Dissolved 9 August, two survivors extracted\n\n**hv's wind-back settled this list without ruling it item by item**: the rulings existed to keep the *next* round clean, and there is no next round for the delivered projects -- **the record stands as delivered.** Lamplight's `ref` split and its seven renders, snorkeltoast's conventions, G&G's `print-collateral` downgrade, Baize's `tiles/` and ADRs: all dissolve into the record as it stands, none to be re-litigated, and the `ref` question dies with WP-07's Lamplight leg (integration is the application's business).\n\nTwo items were tool-shaped and survive the projects they were found in:\n\n- **`hard_facts` and `bundles` never defined by the generator: DONE 9 August, in the WP-05 build.** The brief now states both per specification and defines both in the contract block. G&G's sixteen `[]` entries stay as delivered -- the fix is for future ventures.\n- **`formats_required` (narrowing of done, or advisory): migrated to WP-03**, recommendation on record -- advisory, because two suppliers independently read it that way -- awaiting hv's word alongside the library-text version bump.",
+      "preamble": ""
+    },
+    {
+      "seq": 7,
+      "title": "Integrate the original four",
+      "scope": "M",
+      "status": "done",
+      "objective": "This work package opened on a premise: that Lamplight, Baize, snorkeltoast and Gyre & Gymble each hold a design-system record and **none has been built against.**\n\n**The premise was false, and not once but in every project it could be checked against.** Gyre & Gymble on 6 August, then Baize and snorkeltoast on 8 August: **three of three already integrated.** Only Lamplight is unchecked, and it is held on WP-06.\n\n**The objective was written from the drop's side of a boundary the drop cannot see across.** An integration is invisible from there -- a drop cannot see an application -- so \"nothing downstream\" was a statement about what the evidence could reach, read as a statement about the world. Three projects then contradicted it in three different idioms. **Check what the application does before recording that it does nothing.**\n\n**The deliverable of this WP is therefore the finding, not four integrations performed.** What remains is Lamplight, and it waits on a ruling.",
+      "body": "## What was actually found\n\n| Project | `check` says | What the application does | Verdict |\n| ------- | ------------ | ------------------------- | ------- |\n| **Gyre & Gymble** | Clean at 17 assets | `theme/theme.css` carries the whole Oat & Olive palette; `theme/layout.liquid:92` loads the compiled result | **Integrated** (6 Aug) |\n| **snorkeltoast** | Refuses, `0 assets checked` | 41 of 41 hex literals in `design/system/brand/tokens/colors.css` are in `theme/theme.css`, which states its own provenance at line 9; `theme/layout.liquid:94` loads the build | **Integrated** (8 Aug) |\n| **Baize** | Refuses, `0 assets checked` | 45 of 46 `oklch()` values in `design/system/handoff/app.css.theme-blocks.css` are in `apps/rack/assets/css/app.css`, both theme blocks named at `:438` and `:489`, and the non-colour claims land too | **Integrated** (8 Aug) |\n| **Lamplight** | Clean at 4 assets | Unchecked | **Held** on WP-06's `ref` ruling |\n\n**`check` refusing says nothing about whether a project is integrated.** It refused on both projects checked on 8 August and both were integrated. It is a check on a drop's *shape*, and three of these carry a convention older and more elaborate than anything Cdsync models. **Cdsync has no application-side check, by design** -- the tree is an end-state view, and a gap between it and the app is expected and never a defect.\n\n**Baize's one divergence is deliberate, not drift.** The handoff specifies `oklch(96% 0.006 150)` for the gaffer theme's `--color-base-200` and `--color-secondary-content`; the app carries `oklch(95% 0.006 150)` for both. One percentage point of lightness, moved consistently in both places it appears. **The app refined the specification.** By canon that is not a defect -- but it is what `addenda/` exists to carry back, and it is unwritten.\n\n**No two of these could be checked with the same probe.** G&G and snorkeltoast are hex; Baize is `oklch()` exclusively, with **zero hex literals**, so the probe that answered snorkeltoast reports a confident `0/0` on Baize. **A colour probe is per-project until proven otherwise.**\n\n## Deliverables\n\n- **Done:** each of the three checkable projects asked what its application does, by content and never by filename, with the probe validated in both directions before its answer was believed.\n- **Done:** the premise corrected here rather than worked around.\n- **Open, and hv's to release:** Baize's 96%/95% divergence recorded in **Baize's** `design/system/addenda/`. Nothing was written into that repository this session -- it carries hv's own uncommitted work.\n- **Open:** Lamplight, once WP-06 rules on `ref`.\n\n## Dependencies\n\nLamplight waits on WP-06's `ref` ruling. **The other three waited on nothing and are resolved.**\n\n**This WP cannot close while Lamplight is held.** Its criteria stay unwritten until then, and they will not be written to match what happens to have been done.\n\n## Notes\n\n- **The app never reads from `design/system/`.** It is specification, not running code. Anything the application needs at runtime is delivered separately, exactly as the two Laksa theme packs were -- and in Baize's case as `handoff/app.css.theme-blocks.css`, which is a drop-in for a file the app owns.\n- After touching `addenda/`, **regenerate `BOOTSTRAP-CD.md` by hand.** Regeneration fires on sync only, so a repo-side edit has nothing to hang it on.\n- **`handoff/` is where an integration leaves its fingerprints, when there is one.** **Two of the three carry one -- Baize and snorkeltoast. Gyre & Gymble has none and is integrated anyway**, so a handoff directory is evidence of an integration and never a requirement for one. Where it exists it names the application-side path the drop itself could not reach: Baize's names `apps/rack/assets/css/app.css`, one level deeper than the repository root suggests. **Read the handoff for the path rather than constructing it** -- a root-level `find assets -name '*.css'` on Baize returns nothing at all.\n- **Three projects, three integration idioms.** G&G hex with no handoff; snorkeltoast hex with a handoff naming its provenance in the file itself; Baize `oklch()` with a handoff written as a drop-in for a file the app owns. **Nothing about the shape of one predicted the next.**\n\n## Closed 9 August\n\n**The deliverable was the finding, and the finding is complete**: three of three checkable projects were already integrated, in three different idioms, with every probe validated in both directions, and the premise corrected here rather than worked around. The fourth leg dissolved with hv's wind-back: **integration is the application's business** -- canon already said the tool has no application-side check -- so **Lamplight is recorded unchecked by design, not pending.** The `ref` ruling it waited on dissolved with WP-06. Baize's 96%/95% divergence: hv ruled **\"leave it\"** on 9 August -- no addendum, consistent with the wind-back.",
+      "preamble": ""
+    },
+    {
+      "seq": 8,
+      "title": "Housekeeping and small gaps",
+      "scope": "S",
+      "status": "done",
+      "objective": "The small things that are individually not worth a work package and collectively worth one. Each is independent; none blocks anything.\n\n**8 August: the list was re-measured against the world before anything was actioned, and three of its six items had drifted** -- one had been silently done, one had been done and undone itself, and one had quietly gone further than anyone intended. **A housekeeping list is exactly the kind of document that rots**, because nothing depends on it and so nothing catches it. **Measure this list before working from it, every time.**",
+      "body": "## The list\n\n### Baize's `BOOTSTRAP-CD.md` is genuinely stale\n\nSteel-thread high-water 23 against a tree at 24. **Not noise** -- the other projects regenerate byte-identical, so this one is a real difference. It was regenerated and deliberately left uncommitted, because that repository carries hv's own uncommitted work and committing over it was not mine to do.\n\n**8 August, and both halves of that sentence have stopped being true.**\n\n**It was committed, and not deliberately.** It is in `4960f27` (6 Aug), a commit titled *\"docs: the design-system tool is now called Cdsync\"*. **The rename swept it up.** That is the *explicit file list is not an explicit pathspec* failure the board already records against this repository, happening a second time in another one -- and this time nothing caught it, because there was no occurrence count to reconcile against.\n\n**And it is stale again already.** It states steel-thread high-water `0024`, next free `0025`; Baize's tree now holds **ST0025**, so the next free is `0026`. The regeneration fixed 23 against 24 and the tree walked past it.\n\n**That is the whole argument for the item below**, and it is now a stronger one than when it was written: the objection to an advisory staleness rule was that a hand-regeneration fixes the problem. **It does not. It fixes the problem once, and the tree keeps moving.**\n\n**9 August: ruled and done.** hv ruled that a stale document is never accepted -- regenerate. Regenerated against the live tree and committed in Baize as `7211fc1`, via explicit pathspec with hv's uncommitted `mix.lock` left untouched. The regeneration caught what the 8 August measurement had not: **the ADR series had drifted too**, recorded 0030 against a tree at 0035 -- a second series moving on a list whose whole lesson is that lists rot. Whether staleness becomes *detectable* is the rule item below.\n\n### Two gaps in `cdsync brief`\n\nBoth recorded against `brief` and neither addressed:\n\n- **It cannot express a repackaging round** -- a round whose job is to reshape what already exists rather than build something new.\n- **It cannot order a slug the library does not hold.** Correct as a refusal, but it means a genuinely new asset type cannot be ordered at all until WP-03 writes its spec, which is a chicken-and-egg for anything novel.\n\n**8 August: the second one is BLOCKED, and this WP said the whole package depended on nothing.** That was written before anyone traced it.\n\nFollow the chain and it ends on a ruling that has not been made:\n\n1. Order a slug the library has no spec for.\n2. The brief must still carry everything the round needs, so it carries the `spec.md` contract -- which `brief_spec_contract` already emits, so far so good.\n3. That contract requires `spec_version: <n>`, described in the brief as *\"copied from the specification below\"*.\n4. **For a new asset there is no specification below.** So what does the round stamp?\n5. **That is WP-05 section 2, word for word** -- and four ventures have now asked it, with matthewsinclair's thirteen assets sitting at `spec_version: unassigned` because the supplier correctly refused to invent one.\n\n**So building this would mean choosing WP-05's answer by implementing it**, which is the one thing this thread says not to do. The refusal stays until WP-05 rules.\n\n**9 August: WP-05 ruled, and the gap closed the same day.** A named in-taxonomy slug now orders ahead of the library -- the brief carries the contract its specification cannot, the asset stamps the literal `unassigned`, and rule 2 asks for a rebuild the day the library gains the entry. Outside the taxonomy still refuses, because the taxonomy is the identity space. The build is WP-05's; this item just stopped being blocked by it.\n\n**The first gap is genuinely unblocked** -- a repackaging round reshapes assets that already exist, so every one of them already has a spec and a `spec_version`, and step 4 never arises. **It is now closed.**\n\n`cdsync.json` takes an optional **`round_job`**: free text, one line, what this round is *for*. Free text rather than an enum, matching `effort` and `inherits_from`, **because nobody ordered a vocabulary of round types and inventing one would be the tool deciding what kinds of round exist.**\n\nBeside it the brief now states, **measured rather than declared, which ordered assets are already in the target.** Two different kinds of fact, and the distinction is the design:\n\n- **A round's purpose is not derivable from the tree.** Repackage, revise, extend and correct are four different jobs with one filesystem signature.\n- **What is already present is not worth asking the venture to declare**, because the tool can see it -- `brief_prerequisites` has tested that same path all along and simply never said so.\n\n**The second half earns its place in every round, not just a repackaging one.** A supplier who orders a slug that already exists and is not told will build it from scratch, and **what it delivers replaces what is there** -- so the rebuild silently discards whatever the existing asset carried, with neither side seeing it happen.\n\n**What was done instead, because it was in the refusal message this item is about:** the message told users *\"the taxonomy names fifty-one assets\"* and the taxonomy names 52. The figure was hand-written in four places across `lib/` and `help/` and disagreed **three ways** -- fifty-one, fifty-two, and fifty in a test comment. It is computed from the manifest now, by one function with two callers, and no count is written out in `lib/` or `help/`. **A count restated in prose drifts from the table it describes**, which is on the watch-out list by name.\n\n**COPIES SURVIVE, AND THEY ARE THE ONES THAT TRAVEL.** Named rather than counted, because counting them is what went wrong twice:\n\n| File | How it travels |\n| ---- | -------------- |\n| `specs/kit.md:72` | Ships in the tarball, and **the kit spec is inlined into every brief whether or not the kit was ordered** |\n| `templates/claude_design/templprj/kit/kit.md:9,11` | Scaffolded into every venture `cdsync new` creates |\n| `templates/claude_design/templprj/brief.md:15` | Same, and it says it twice in one sentence |\n\n**None is fixed here.** Library text cannot move piecemeal -- changing it changes what its `spec_library_version` means -- so the known inconsistencies go together behind one bump. **WP-03 owns them.**\n\n**How this was missed, and then missed again.** The sweep that found the four in `lib/` and `help/` searched `bin/`, `lib/` and `help/`, and **nothing asked what had chosen those three directories** -- the sampling-frame error the board already names, committed inside the fix for the drift hazard it also names. The first correction then announced *\"a fifth copy survives\"*, which was also wrong, because it counted instead of sweeping. **A count of wrong counts is still a count.** The sweep that finally worked ran over every tracked file and named the results.\n\n### Should a stale generated document be detectable?\n\nAn advisory rule comparing `BOOTSTRAP-CD.md`'s mtime against the newest file in the tree.\n\n**Every instance, with its detail -- this is the only place that now carries it**, because the board was holding a hand-maintained count of exactly the kind it warns against, and that count was the thing drifting:\n\n| When | Copy | What was stale | Now |\n| ---- | ---- | -------------- | --- |\n| -- | Baize | Steel-thread high-water 23 against a tree at 24 | **Regenerated, then stale again at `0024` against ST0025** |\n| -- | All four at once | A generator change staled every copy **with no local symptom at all** -- they were regenerated only because the board said to | Regenerated |\n| 6 Aug | Gyre & Gymble | Inventory missing `business/`, and it embedded a **superseded revision of its own addendum** | Fixed 6 Aug |\n| 6 Aug | snorkeltoast | `docs/` 92 against 93, `email/` 3 against 7, **one whole section absent** | **Not fixed** -- a live session was in that tree |\n| 8 Aug | Baize | High-water `0024`, tree at ST0025 | **Open** |\n\n**Two copies are stale right now: snorkeltoast's and Baize's.** The first was left because another session held the tree; the second because a hand-fix does not survive the tree moving.\n\nCheap to build. **Still not built, because it is unasked scope**, and this project has a standing preference for not inventing rules nobody ordered. **It should be ordered or declined rather than carried a sixth time.**\n\n**9 August, ordered and BUILT -- shape (a), hv's word after the explanation finally landed.** A warning, never blocking, and deliberately not a numbered rule (the six rules judge what Claude Design delivered; this judges Cdsync's own output). `report_bootstrap_staleness` in `lib/scan.sh` -- one definition, two callers: `doctor`'s target section and `check`'s preamble, **before the shape gate**, because the poster cases for staleness are exactly the trees the asset walk refuses. Repository-scoped per the reach ruling below; **tracked and untracked-unignored files only**, so `_build/` churn cannot make it cry wolf. Four tests, the probe's direction mutation-proven -- and the mutation itself refused to land twice first, once on the sed-`||` watch-out and once on `$` read as a regex anchor, both already on the board. The (b) shape -- `check` regenerating as a byproduct -- was offered and declined. **This item is DONE.**\n\n**One design constraint, found by testing the proposal against the case above rather than assuming it.** *\"The newest file in the tree\"* is the wrong reach, and it fails in the dangerous direction:\n\n- Baize's `BOOTSTRAP-CD.md` is 6 Aug 09:46. **It is the newest file in `design/system/`** -- tied with `index.md` and `RETURN.md`, which the same sync wrote.\n- What staled it is `intent/st/ST0025`, 7 Aug 17:38, **outside that tree entirely.**\n- **So a rule scoped to the design tree reports CLEAN on a document that is provably stale.** Scoped to the repository, it flags it by 1.3 days.\n\nThe generator already reads outside the design tree -- the numbering scan roots on the target's *repository*, pinned by a test (`test/cdsync.bats:3983`). **The check's reach has to match the generator's reach**, or it is another instrument that cannot see the thing it is looking for. **A rule's published reach is part of the rule**, and this one has two candidate reaches that disagree on the only case anyone has tested.\n\n### Intent's template bakes an absolute path\n\n`[[INTENT_HOME]]` is substituted into `.claude/settings.json` at install time, so every project built from the template carries an absolute path to one machine. **Cdsync's is fixed** and a test guards it. **Baize's and Lamplight's still carry theirs.** Upstream issue, worth reporting to Intent rather than patching per project forever.\n\n**Re-measured 8 August and unchanged:** Cdsync 0, Baize 2, Lamplight 2. **This item stands exactly as written**, which is worth saying out loud on a list where three neighbours had drifted.\n\n**9 August: reported upstream on hv's instruction -- Intent issue `0016`** (`intent/issues/OPEN/0016/` in the Intent repository), carrying the measurement, the root cause (`lib/templates/.claude/settings.json:9,21` substituted at install time), and a runtime-resolution fix proposed. Baize's and Lamplight's copies stay as they are until Intent ships it; no per-project patching.\n\n### Downloads housekeeping\n\nAll optional and **none of it vestigial** -- this is the 31 July consolidation, not junk. **8 August: every one of these is now absent from `~/Downloads`, including the one that was to stay.**\n\n| Directory | Size | 8 Aug |\n| --------- | ---- | ----- |\n| `claude-design-superseded-rounds-202607/` | 1.3G | Gone |\n| `lamplight-design-drops/` | 1.1G | Gone |\n| `Lamplight Design System/` | 281M | Gone |\n| `baize-repo-snapshots-202606-202607/` | 233M | Gone |\n| **`baize-design-drops/`** | **441M** | **Gone, and it was to STAY** |\n\n**Escalated to hv on 8 August and ruled the same day: all five were cleared deliberately, `baize-design-drops/` included. This item is DONE.**\n\n**The instruction that it stays is withdrawn, and is deleted rather than softened wherever it appeared** -- on the board and here. It was written on 31 July when that directory was the off-repo home for two delivery zips (219MB + 222MB), and it outlived the reason for it. **A standing \"do not delete\" left lying around after its owner has deleted the thing is worse than no note at all**: the next reader finds an instruction contradicted by the world and cannot tell which one is stale.\n\nFor the record of what went, since nothing else now holds it: Baize's own whiteboard history (`intent/whiteboard/vc/.history/20260730/wip.md:30`) records that the zips moved there when `design/.gitignore` was deleted, that the current generation was proved redundant first -- **all 437 files already tracked** -- and that the superseded 09:49 generation was kept because git never held it. **That superseded generation is the only thing that was unique, and it is gone by decision.**\n\nCorrection while here: the board called that directory *\"the off-repo home named in Baize's own root `.gitignore`\"*. The `.gitignore` carries the residual-risk narrative; **the path itself was named only in that whiteboard history.** Two documents, one slightly wrong, exactly as the standing watch-out predicts.\n\n**Six spent `_inbox/` directories, and the count reconciles exactly** -- Baize, Lamplight, gyreandgymble, geodica, snorkeltoast, matthewsinclair, one apiece under `design/system/`. All gitignored and local-only, and the two newest hold the Laksa theme packs, **which exist nowhere else** -- do not clear those two until Laksa has taken them.\n\n### The whiteboard roster\n\n`intent/whiteboard/README.md` is still deferred. **No `hv` node here, by hv's ruling -- `cc` is the whole roster in Cdsync for now**, so the roster document has had nothing to say.\n\n## Deliverables\n\nEach item either done, or explicitly declined with a reason. **An item declined on the record is finished; an item that quietly stays on a list forever is not.**\n\nWhere the six stand after the 8 August re-measurement:\n\n| Item | State |\n| ---- | ----- |\n| Baize's `BOOTSTRAP-CD.md` | **Done 9 Aug.** hv ruled stale is never accepted; regenerated and committed in Baize (`7211fc1`), which also caught the ADR series at 0035 against a recorded 0030 |\n| Two gaps in `cdsync brief` | **Both DONE.** Repackaging round 8 Aug (`round_job` plus the measured already-present list); ordering an unspecified slug 9 Aug, with WP-05's `unassigned` ruling |\n| Stale-document rule | **Done 9 Aug.** Built as shape (a): advisory in `doctor` and `check`, repository-scoped, tracked-and-unignored files, mutation-proven |\n| Intent's absolute path | **Done 9 Aug.** Reported upstream as Intent issue `0016` |\n| Downloads | **Done.** All five cleared by hv deliberately; the \"stays\" instruction is withdrawn |\n| Whiteboard roster | Deliberately deferred, and still correctly so |\n\n## Dependencies\n\nNone.\n\n## Closed 9 August\n\n**All six items done, or declined on the record -- which is this WP's own bar.** Baize's document regenerated and committed upstream; both `brief` gaps built; the staleness advisory built as shape (a); the Intent defect reported upstream as issue `0016`; Downloads closed by hv's deliberate clearing; the whiteboard roster deliberately deferred, which is a decline with its reason. The one standing hazard outlives the WP and stays on the board: the two newest `_inbox/` directories hold the Laksa theme packs, which exist nowhere else.",
+      "preamble": ""
+    }
+  ],
+  "criteria": [
+    {
+      "id": "AC-00.1",
+      "text": "**Every work package this thread opened has reached a terminal state on the record, and its finding lives in its own `info.md` rather than in a snapshot**",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`intent wp list ST0003` shows seven Done and one Not Started; the one is WP-02, parked by hv on 9 Aug with its evidence and recommendations written up in `WP/02/info.md`"
+      }
+    },
+    {
+      "id": "AC-00.2",
+      "text": "**Nothing in this thread is awaiting a ruling.** The state this thread sat in on 8 August -- every remaining item blocked on hv -- is cleared, not inherited by the next reader",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`intent/whiteboard/cc/wip.md` `## Wants hv` records both remaining asks answered on 9 Aug; no WP `info.md` names an open question"
+      }
+    },
+    {
+      "id": "AC-00.3",
+      "text": "**The boundary is stated and the remainder is carried forward rather than dropped**",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "WP-02 parked with the condition for re-opening named (\"nothing moves until a live venture trips one\"); `pattern-library`'s two-part dance recorded in `WP/03/info.md` against the day an order names it; the reciprocal asymmetry recorded in `specs/library.md`"
+      }
+    },
+    {
+      "id": "AC-00.4",
+      "text": "**Four decisions this thread produced are written where the tool's readers will find them, not only in Intent**",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`cdsync.json`'s home and the `unassigned` lifecycle in `help/` and the generators; the staleness advisory in `doctor` and `check`; the edition-bump rule and `formats_required` in `specs/library.md` and `help/brief.md`; the last of these also in the brief the supplier reads"
+      }
+    },
+    {
+      "id": "AC-00.5",
+      "text": "**The suite is green and shellcheck silent at the close**, and every behaviour this thread added is fenced by a test that fails without it",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "360 tests green, shellcheck clean at default severity; mutation cycles with landing proof recorded in WP-03, WP-05 and WP-08"
+      }
+    },
+    {
+      "id": "AC-03.1",
+      "text": "**The shipped library states no count of itself.** The figure in `specs/kit.md` is inlined into every brief, so it went to the supplier every round while the 8 August guard reported the number settled -- that guard's sampling frame never included `specs/` -- covered by AT-03.1",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-03.2",
+      "text": "**Every dependency the library names resolves in the taxonomy.** `check`'s rule 2 catches a dangling `depends_on` in a drop; nothing looked at the library, which is how three sat there from July -- covered by AT-03.2 and AT-03.4",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-03.3",
+      "text": "**The supplier is told that `formats_required` is advisory**, in the brief and not only in the library. A ruling that never reaches the supplier changes nothing -- covered by AT-03.3",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-03.4",
+      "text": "**What a library edition bump means for already-stamped drops is decided and written where the library's readers find it**",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`specs/library.md` \"What a library edition bump does, and does not do\"; restated for the CLI reader in `help/brief.md`; the decision itself recorded in `WP/03/info.md`"
+      }
+    },
+    {
+      "id": "AC-03.5",
+      "text": "**Exactly the specs whose text moved went stale, verified rather than asserted**",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`cdsync check --target templates/claude_design/templprj` reports `pitch-deck` and `positioning-icp-personas` stale against the new numbers and no asset stale that should not be; `cdsync doctor` reports library version 4"
+      }
+    },
+    {
+      "id": "AC-03.6",
+      "text": "**What was deliberately not done is named with its reason, so the next reader does not read it as an omission**",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`WP/03/info.md` \"What was deliberately NOT done\" covers `pattern-library` (no order needs one; the two-part dance recorded for the day one does), `templprj` (a delivery record, left as delivered), and the reciprocal asymmetry (flagged, not invented)"
+      }
+    },
+    {
+      "id": "AC-03.7",
+      "text": "**Each new guard was proven able to fail, against a mutation proven to land**",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "three mutants, each shown landed by diff and each killing exactly its own test; the harness's own inverted-`diff` bug caught and recorded"
+      }
+    },
+    {
+      "id": "AC-01.1",
+      "text": "**The tool can cut the version a project is currently on.** Every bump part moves forward, so the first release of any project was unreachable through `cut` -- covered by AT-01.1 through AT-01.6",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-01.2",
+      "text": "**The ceremony completes when `VERSION` does not change.** Cutting the version already held writes the same bytes, so there is nothing to commit; the tag goes on the commit that is already the release rather than on an empty one manufactured beside it -- covered by AT-01.7",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-01.3",
+      "text": "**`v0.1.0` exists as an annotated tag** on the release commit",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`git tag -l -n99 v0.1.0` reports an annotated tag object on `e54ebbc`"
+      }
+    },
+    {
+      "id": "AC-01.4",
+      "text": "**All six release gates passed on the real cut**, not on a dry run",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "working tree clean, on main, not behind upstream, doctor, shellcheck, tests"
+      }
+    },
+    {
+      "id": "AC-01.5",
+      "text": "**The tarball carries the tool and nothing about how the tool is made**, verified against the artefact rather than against the intent",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`dist/cdsync-0.1.0.tar.gz`, 474,181 bytes, 140 entries; top level is `bin help lib specs templates VERSION README.md LICENSE.md`; each of `intent/`, `test/`, `.github/`, `.claude/`, `.gitattributes`, `AGENTS.md`, `CLAUDE.md`, `usage-rules.md`, `.intent_critic.yml`, `design/` confirmed absent by enumeration"
+      }
+    },
+    {
+      "id": "AC-01.6",
+      "text": "**The tarball is built from the tag, not from the working tree**",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`release_package` runs `git archive` against the tag; `VERSION` inside the artefact reads `0.1.0`"
+      }
+    },
+    {
+      "id": "AC-01.7",
+      "text": "**Both defects were found by running the tool for a real purpose, and each is fenced by a test that fails without its fix**",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "four mutations (string-compare, refuse-equality, remove-the-case, remove-the-commit-guard), each confirmed landed by diff, each killing exactly the test meant to catch it"
+      }
+    },
+    {
+      "id": "AC-01.8",
+      "text": "**Nothing was published.** `cut` stops after tagging unless `--push` is passed",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "remote carries 0 tags and is 2 commits behind at close"
+      }
+    }
+  ],
+  "tests": [
+    {
+      "id": "AT-01.1",
+      "kind": "test",
+      "covers": [
+        "AC-01.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"release accepts an explicit target version, not only a bump part\""
+      }
+    },
+    {
+      "id": "AT-01.2",
+      "kind": "test",
+      "covers": [
+        "AC-01.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"release accepts the current version as an explicit target, so a first release can be cut\""
+      }
+    },
+    {
+      "id": "AT-01.3",
+      "kind": "test",
+      "covers": [
+        "AC-01.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"release refuses an explicit target older than the current version\""
+      }
+    },
+    {
+      "id": "AT-01.4",
+      "kind": "test",
+      "covers": [
+        "AC-01.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"release compares version components numerically, not as strings\""
+      }
+    },
+    {
+      "id": "AT-01.5",
+      "kind": "test",
+      "covers": [
+        "AC-01.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"release refuses an explicit target that is not bare semver\""
+      }
+    },
+    {
+      "id": "AT-01.6",
+      "kind": "test",
+      "covers": [
+        "AC-01.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"release cut plans the explicit version it was given\""
+      }
+    },
+    {
+      "id": "AT-01.7",
+      "kind": "test",
+      "covers": [
+        "AC-01.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"release commits a version change, and tags in place when VERSION is already correct\""
+      }
+    },
+    {
+      "id": "AT-03.1",
+      "kind": "test",
+      "covers": [
+        "AC-03.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"the shipped library states no taxonomy-wide count either\""
+      }
+    },
+    {
+      "id": "AT-03.2",
+      "kind": "test",
+      "covers": [
+        "AC-03.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"every dependency the spec library names is a slug the taxonomy holds\""
+      }
+    },
+    {
+      "id": "AT-03.3",
+      "kind": "test",
+      "covers": [
+        "AC-03.3"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"brief tells the supplier that formats are advisory\""
+      }
+    },
+    {
+      "id": "AT-03.4",
+      "kind": "test",
+      "covers": [
+        "AC-03.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"a bad dependency slug is declared as outside the taxonomy\""
+      }
+    }
+  ]
+}

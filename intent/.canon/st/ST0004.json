@@ -1,0 +1,142 @@
+{
+  "schema": "intent/thread@3.0",
+  "id": "ST0004",
+  "title": "Rename the tool to Cdsync",
+  "slug": "rename-the-tool-to-cdsync",
+  "status": "completed",
+  "created": "2026-08-06",
+  "completed": "2026-08-06T09:03:27Z",
+  "objective": "Rename the tool to Cdsync (\"Claude Design Sync\") with **no remnant of the former name** -- filenames, code and docs -- across this repository and every sibling repository that carried it. The former name described bootstrapping a venture; the tool now syncs design systems, and the name had stopped matching the job.\n\n**This document deliberately does not spell the former name.** A thread titled after both names cannot survive its own rename -- the substitution would render it \"rename Cdsync to Cdsync\" -- so the record names the outcome and the mechanism instead. That is the one place where \"no remnant\" and \"an honest record\" pulled against each other, and this is how it was resolved. The former name is recoverable from git history, which is where superseded names belong.",
+  "context": "**The rename is free of published artefacts.** `git tag -l` was empty and nothing had ever been released, so no tarball, tag or release note carried the former name. This was the cheapest the rename would ever be, and the cost only rises from here.\n\n### Baseline, recorded BEFORE any mutation\n\nThe number below is the evidence that the later zero came from a probe able to hit. A uniform zero is a broken probe until proven otherwise; this is the proof.\n\n| Form of the former name | Occurrences | Becomes  |\n| ----------------------- | ----------: | -------- |\n| lowercase               |         653 | `cdsync` |\n| capitalised             |         284 | `Cdsync` |\n| uppercase               |         483 | `CDSYNC` |\n| **Total**               |    **1420** |          |\n\nAcross **123 tracked files**, plus **6 filenames** -- the entry point under `bin/`, its help page, the test suite, the venture config template, and both logo assets.\n\nTest baseline: **328 tests, 0 failures**. Tags: **0**.\n\n**Confirmation after the passes: 1420 occurrences of the new name, reconciling exactly against the baseline total**, with zero of the former name remaining and zero filenames carrying it.\n\n### Why a plain substitution was safe here\n\nEvery character adjacent to every one of the 1420 matches was enumerated before the mechanism was chosen. The only characters preceding a match were ``$ ` / \" * ' _ - { . }`` and space; the only ones following were `_ . - ' / , \" * ) } \\ ;` and space. **No alphanumeric ever touched a match**, so the old token was never a substring of a larger word and a case-sensitive replace could not corrupt a neighbour. The underscore-prefixed hits were shell function names, all intended to change.\n\n### Three mechanism decisions, all deliberate\n\n**Substitute over ALL tracked text files, not over a match-list.** A file list built from a probe inherits that probe's blind spots, and this project has been bitten three times by exactly that shape. A superset has no blind spot. The two binaries -- the logo PDF and a template `.pptx` -- were excluded by `git grep -I`.\n\n**Rename files with `git mv`,** so history follows the file rather than reading as an unrelated delete and add. All six were confirmed staged as `R`.\n\n**Regenerate generated artefacts; never substitute them.** `AGENTS.md`, `intent/.treeindex/*` and `intent/todo.md` are generated. A sed against a generated file either reverts on the next generation or diverges from it silently.\n\n### The first substitution attempt did not apply, and the proof caught it\n\nBSD `xargs` has no `-a`, so the first pass silently changed nothing while the loop ran to completion. The before/after counters printed `before=654 after=654` and the run was rejected. **This is the standing reason every mutation prints proof it landed**: the failure mode is that the tool reports the reassuring answer. Nothing had partially applied, so there was nothing to unwind.\n\n### One test failed for a reason that was not the rename\n\n`a release archive carries the tool and not how it is made` builds its listing with `git archive HEAD` -- deliberately, so it pins the real `.gitattributes` export-ignore mechanism rather than a list restated in the module. It reads **committed** state, so it failed while the rename was staged but uncommitted, and passed once committed. The test was right; the working tree was simply ahead of `HEAD`.\n\n### Cross-repository reach\n\n**149 occurrences across 54 files in four sibling repositories.**\n\n| Repo      | Files | Occurrences | Shape                                                           |\n| --------- | ----: | ----------: | --------------------------------------------------------------- |\n| Lamplight |    18 |          43 | generated `BOOTSTRAP-CD.md`, `RETURN.md`, ignore files, history  |\n| Laksa     |    14 |          39 | closed ST0084 and whiteboard history only                        |\n| Utilz     |    12 |          42 | docs, plus a whiteboard sender moniker in two inbox filenames     |\n| Baize     |    10 |          25 | generated `BOOTSTRAP-CD.md`, `RETURN.md`, ignore files, history  |\n\n**Utilz does not invoke the binary.** The initial reading of the risk was that it shelled out to the tool; it does not. Its exposure is a whiteboard sender moniker, which is a cross-repo routing key rather than a call.\n\n**Lamplight and Baize carry generated `BOOTSTRAP-CD.md`.** Regeneration fires on sync only, so a generator change stales every copy at once with no local symptom. These are reconciled by regenerating with the renamed tool and diffing against the substituted text -- an empty diff proves the substitution matched what the generator now emits.\n\n**Three of the four had live sessions running during this work**, with whiteboard heartbeats inside the hour and modified `wip.md` boards. Their dirty files were checked for overlap against the files this thread edits: none. Every sibling commit therefore uses an explicit pathspec and never `git add -A`.\n\n### Two symlinks were already broken before this thread started\n\n`~/.local/bin/` and `~/bin/` both pointed into the old project directory, which the earlier filesystem move had already destroyed. They are repointed at the renamed entry point as part of this work.",
+  "body": "## Related Steel Threads\n\n- ST0003 Post-release 0.1.0 clean-up -- WP-05 asks where the venture config file lives. This thread renames that file to `cdsync.json` and so settles half of WP-05 by side effect. Zero deployed instances existed in any sibling, so the wire-format change was free.",
+  "preamble": "",
+  "related": [
+    {
+      "id": "ST0003",
+      "note": "WP-05 asks where the venture config file lives. This thread renames that file to `cdsync.json` and so settles half of WP-05 by side effect. Zero deployed instances existed in any sibling, so the wire-format change was free."
+    }
+  ],
+  "criteria": [
+    {
+      "id": "AC-00.1",
+      "text": "**No occurrence of the former name remains in this repository** in tracked content, in any filename, or on disk including untracked and ignored files",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`git grep -oi` = 0, `git ls-files | grep -ic` = 0, `grep -ril` over the working tree = 0 files"
+      }
+    },
+    {
+      "id": "AC-00.2",
+      "text": "**The probe reporting that zero is proven able to hit**, by a positive control reconciling exactly against the pre-mutation baseline",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "baseline 653 + 284 + 483 = 1420 recorded in `info.md` before any mutation; post-substitution count of the new name = 1420, exact"
+      }
+    },
+    {
+      "id": "AC-00.3",
+      "text": "**The tool still does what it did**, under the new name, with no test weakened or removed to achieve it -- covered by AT-00.1; test count must remain 328",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-00.4",
+      "text": "**Static analysis stays silent and the tool's own self-check passes**",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`shellcheck bin/cdsync lib/*.sh` silent at default severity; `cdsync doctor` passes"
+      }
+    },
+    {
+      "id": "AC-00.5",
+      "text": "**CI is green on every job, read per job rather than off the summary line**",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "run `31086141984` on PR #1, `success` on hygiene, `tests (ubuntu-latest)` and `tests (macos-latest)`, read from `gh run view --json jobs` per job"
+      }
+    },
+    {
+      "id": "AC-00.6",
+      "text": "**The six file renames preserve history** rather than reading as unrelated deletes and adds",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "all six staged as `R` in `git status --porcelain`"
+      }
+    },
+    {
+      "id": "AC-00.7",
+      "text": "**No occurrence of the former name remains in the four sibling repositories**, each verified with the same paired positive control",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "Utilz, Laksa, Lamplight and Baize all at 0 tracked, 0 filenames and 0 on disk; each one's positive control equals its own pre-mutation baseline exactly (42, 39, 43, 25)"
+      }
+    },
+    {
+      "id": "AC-00.8",
+      "text": "**Both user-level symlinks resolve** to the renamed entry point, having been left dangling by the earlier directory move",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "the two dangling links were removed and replaced; `~/bin/cdsync` and `~/.local/bin/cdsync` each execute and report `cdsync 0.1.0`"
+      }
+    },
+    {
+      "id": "AC-00.9",
+      "text": "**Every generated document carrying the name agrees with what the renamed generator now emits**, rather than merely having been substituted to look right",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "both regenerated with the renamed tool via `bootstrap --stdout` and diffed against the substituted text; **zero name-related differences** in either. The residual diff is pre-existing numbering drift (Lamplight's steel-thread count, Baize's ADR and steel-thread counts) that predates this thread and is those projects' own to reconcile"
+      }
+    },
+    {
+      "id": "AC-00.10",
+      "text": "**Nothing was swept up from a sibling repository's uncommitted work.** Three of the four had live sessions with modified boards while this ran",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "overlap computed with `comm -12` between each repo's dirty set and this thread's target set before any mutation, empty in all three; every sibling commit made with `git commit --only` and an explicit pathspec, never `git add -A`; after each commit their modified boards remained unstaged (Laksa 4, Lamplight 5, Baize 4)"
+      }
+    },
+    {
+      "id": "AC-00.11",
+      "text": "**The AC-00.9 reconciliation was itself run against a target proven able to see the tree.** The first attempt pointed at `design/` rather than `design/system/` and reported 0 assets for a tree that has four, each with its `spec.md`. It did not error -- it produced a well-formed document making a false claim. A zero from a generator is not evidence until the generator is shown able to find something",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "re-run against `design/system/` reports `**4 assets**` for Lamplight, matching the document it was being diffed against"
+      }
+    }
+  ],
+  "tests": [
+    {
+      "id": "AT-00.1",
+      "kind": "test",
+      "file": "test/cdsync.bats (whole suite, 328 tests)",
+      "covers": [
+        "AC-00.3"
+      ],
+      "status": "green"
+    },
+    {
+      "id": "AT-00.2",
+      "kind": "test",
+      "covers": [
+        "AC-00.3"
+      ],
+      "status": "green",
+      "note": "called out separately because it builds its listing with `git archive HEAD` and so failed until the rename was committed; it reads committed state by design, which is what makes it the honest check of the packaging contract",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"a release archive carries the tool and not how it is made\""
+      }
+    }
+  ]
+}

@@ -27,3 +27,12 @@ Icon?
 # Release tarballs, built from a tag by `cdsync release cut`. Regenerable;
 # git already holds every tagged state they are built from.
 dist/
+
+# Treeindex cache (derived, machine-local; regenerate with 'intent treeindex <dir>').
+intent/.treeindex/
+
+# The Intent runtime store: per-machine, rebuilt from the committed extract.
+intent/.cache/
+
+# D53: the event log lives in the store; its file form is produced by `intent export`.
+intent/events.jsonl

@@ -1,0 +1,240 @@
+{
+  "schema": "intent/thread@3.0",
+  "id": "ST0002",
+  "title": "Port four established projects to the Cdsync protocol",
+  "slug": "port-four-established-projects-to-the-cdsync",
+  "status": "completed",
+  "created": "2026-07-30",
+  "completed": "2026-08-02T09:54:45Z",
+  "objective": "Give four established projects -- Lamplight, Baize, gyreandgymble and snorkeltoast\n-- a design-system record under the Cdsync protocol at `design/system/`, delivered by\nClaude Design as one zip per project and installed with `cdsync import`. Each ends up\nwith a browsable design system, interlinked and with tables of contents, servable\nlocally from its own repository.\n\n**Nothing that already exists may be lost.** Two of the four carry a complete,\nagreed, delivered design programme. That constraint outranks everything else in this\nthread.",
+  "context": "These projects massively pre-date Cdsync, and two of them already have a design\nconvention more mature than anything Cdsync models -- three representations from one\ncanonical source, with a reading room and a confidentiality split. The job is to\nexpress that under the Cdsync protocol without re-authoring any of it.\n\nThe four are not one job but two. Lamplight and Baize have been extracted already\nand their drops sit in `intent/_inbox/`; they need **porting**. gyreandgymble and\nsnorkeltoast were designed inside Claude Design and have never been extracted; they\nneed **extracting straight into Cdsync's shape** -- which only works if the brief is\nwritten first, because an extract run today would emit the old shape and turn two\nports into four.\n\nSurvey completed 30 Jul 2026. Five blockers found and verified, plus one measured.\n**Three decisions gate all further work** and are stated at the top of `tasks.md`.\nRead that before touching anything: the expensive part of this thread is already\ndone and written down.",
+  "body": "",
+  "preamble": "",
+  "criteria": [
+    {
+      "id": "AC-00.1",
+      "text": "All four projects hold a design-system record at `design/system/`, installed by the tool rather than by hand, and committed",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "Lamplight, Baize, gyreandgymble and snorkeltoast all installed and committed by 31 Jul; `intent/st/ST0002/tasks.md` carries the per-project table"
+      }
+    },
+    {
+      "id": "AC-00.2",
+      "text": "**Nothing that already existed was lost.** Every deletion is accounted for against the supplier's own statement of what it delivered",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "every deletion matched a sentence in that project's `RETURN.md`"
+      }
+    },
+    {
+      "id": "AC-01.1",
+      "text": "An install preserves anything the drop does not carry, so a port cannot silently drop pre-existing material",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-01.2",
+      "text": "Repo-authored material inside the target survives an install by declaration, not by luck",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-01.3",
+      "text": "A generated site is not eaten by the next round",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-01.4",
+      "text": "The two projects that had never been extracted were extracted straight into Cdsync's shape, rather than extracted twice",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`extract-brief-gyreandgymble.md` and `extract-brief-snorkeltoast.md` were written before any extract ran, which was the stated precondition in `info.md`"
+      }
+    },
+    {
+      "id": "AC-02.1",
+      "text": "A design system tree renders to a browsable site from its own repository, without serving",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-02.2",
+      "text": "The generator refuses a target that is not a drop, rather than producing an empty site",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-02.3",
+      "text": "Each of the four carries a manifest",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`index.md` landed in all four on 31 Jul; two had no manifest of any kind before it"
+      }
+    },
+    {
+      "id": "AC-03.1",
+      "text": "`check` was run against all four and the results recorded as measured rather than as hoped",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`check-against-all-four-drops.md`; G&G clean, Lamplight clean, Baize and snorkeltoast refusing with `0 assets checked`"
+      }
+    },
+    {
+      "id": "AC-03.2",
+      "text": "A tree the checker cannot read is refused rather than passed, so `0 assets checked` can never read as a clean bill",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
+    },
+    {
+      "id": "AC-03.3",
+      "text": "The conversion needed to make the remaining trees checkable is specified and ready to send, not merely identified",
+      "kind": "non-test",
+      "state": {
+        "is": "satisfied",
+        "evidence": "`port-brief-lamplight.md`, `port-brief-baize.md`, `port-brief-snorkeltoast.md`, all complete and unsent; G&G needs none"
+      }
+    }
+  ],
+  "tests": [
+    {
+      "id": "AT-01.1",
+      "kind": "test",
+      "covers": [
+        "AC-01.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"a target file absent from the drop survives the import\""
+      }
+    },
+    {
+      "id": "AT-01.2",
+      "kind": "test",
+      "covers": [
+        "AC-01.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"import leaves an unmentioned path standing where install removes it\""
+      }
+    },
+    {
+      "id": "AT-01.3",
+      "kind": "test",
+      "covers": [
+        "AC-01.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"a repo-authored addendum survives the import\""
+      }
+    },
+    {
+      "id": "AT-01.4",
+      "kind": "test",
+      "covers": [
+        "AC-01.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"addenda is declared protected in the drop contract\""
+      }
+    },
+    {
+      "id": "AT-01.5",
+      "kind": "test",
+      "covers": [
+        "AC-01.3"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"a generated site survives the import\""
+      }
+    },
+    {
+      "id": "AT-02.1",
+      "kind": "test",
+      "covers": [
+        "AC-02.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"site --build generates a page without serving\""
+      }
+    },
+    {
+      "id": "AT-02.2",
+      "kind": "test",
+      "covers": [
+        "AC-02.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"site refuses a target that is not a drop\""
+      }
+    },
+    {
+      "id": "AT-02.3",
+      "kind": "test",
+      "covers": [
+        "AC-02.1"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"new, brief, import, check and site compose end to end\""
+      }
+    },
+    {
+      "id": "AT-03.1",
+      "kind": "test",
+      "covers": [
+        "AC-03.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"check refuses a target that is not a drop\""
+      }
+    },
+    {
+      "id": "AT-03.2",
+      "kind": "test",
+      "covers": [
+        "AC-03.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"check refuses when assets/ holds files rather than slug directories\""
+      }
+    },
+    {
+      "id": "AT-03.3",
+      "kind": "test",
+      "covers": [
+        "AC-03.2"
+      ],
+      "status": "green",
+      "legacy": {
+        "raw": "test/cdsync.bats::\"check refuses an assets/ that exists but is empty\""
+      }
+    }
+  ]
+}
