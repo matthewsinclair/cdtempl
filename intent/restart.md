@@ -16,7 +16,7 @@ verblock: "09 Aug 2026:v2.0: Matthew Sinclair - Globalfold: orientation only; th
 | Rulings, settled and not to be re-opened          | `intent/whiteboard/cc/wip.md` `## Decisions`  |
 | Watch-outs, the standing hazards                  | `intent/whiteboard/cc/wip.md` `## Watch-outs` |
 | Threads, gates, release record, structural guards | `intent/wip.md`                               |
-| What each work package found                      | `intent/st/COMPLETED/ST0003/WP/*/info.md`     |
+| What each work package found                      | ST0003's WP info (`intent wp list ST0003`)     |
 | What a Claude Design session needs                | `intent/docs/claude-design-contract.md`       |
 | What a receiving project needs                    | `intent/docs/receiving-a-design-system.md`    |
 

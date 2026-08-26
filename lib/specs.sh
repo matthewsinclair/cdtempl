@@ -58,7 +58,7 @@ spec_exists() {
 # accumulates is discarded when the subshell ends and the caller reports
 # nothing -- successfully, which is what makes it expensive to find. That bug
 # shipped in the sibling tool this pattern comes from; the reasoning is in
-# ../Utilz/intent/st/COMPLETED/ST0009/design.md.
+# Utilz ST0009's design.md attachment (`intent st show ST0009`).
 each_spec() {
   local file name
 

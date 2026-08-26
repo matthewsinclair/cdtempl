@@ -146,7 +146,7 @@ require_command() {
 # command substitution dies with its subshell, so a per-call guard prints its
 # install hint once per item instead of once per invocation. That is a real
 # bug that shipped in the sibling project this pattern comes from; see
-# ../Utilz/intent/st/COMPLETED/ST0009/design.md.
+# Utilz ST0009's design.md attachment (`intent st show ST0009`).
 require_jq() {
   require_command jq "brew install jq"
 }

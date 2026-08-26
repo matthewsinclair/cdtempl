@@ -25,7 +25,7 @@ ST0003 closed 20/20 on 9 August, and **every steel thread is now Completed**. No
 | Canon, which outranks everything                  | `intent/docs/design-system-lifecycle.md`      |
 | Rulings, settled and not to be re-opened          | `intent/whiteboard/cc/wip.md` `## Decisions`  |
 | Watch-outs, the standing hazards                  | `intent/whiteboard/cc/wip.md` `## Watch-outs` |
-| What each work package found                      | `intent/st/COMPLETED/ST0003/WP/*/info.md`     |
+| What each work package found                      | ST0003's WP info (`intent wp list ST0003`)     |
 | Orientation, and what was carried forward         | `intent/restart.md`                           |
 | Threads, gates, release record, structural guards | `intent/wip.md`                               |
 
