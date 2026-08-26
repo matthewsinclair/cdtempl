@@ -120,11 +120,12 @@
     {
       "id": "AT-00.1",
       "kind": "test",
-      "file": "test/cdsync.bats (whole suite, 328 tests)",
+      "file": "test/cdsync.bats",
       "covers": [
         "AC-00.3"
       ],
-      "status": "green"
+      "status": "green",
+      "note": "whole suite, 328 tests"
     },
     {
       "id": "AT-00.2",
