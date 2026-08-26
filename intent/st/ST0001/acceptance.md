@@ -53,6 +53,7 @@ _(no tests in this group)_
 ### Group 01
 
 - AT-01.1 (legacy) test/cdsync.bats::"brief writes to the target and inlines the full specification" -- covers AC-01.1 -- status: green
+- AT-01.2 (legacy) test/cdsync.bats::"brief still refuses a named slug outside the taxonomy" -- covers AC-01.2 -- status: green -- **Superseded in part, 9 Aug 2026**: hv ruled an in-taxonomy slug may be ordered ahead of the library (`spec_version: unassigned`), so the refusal this AT pinned now applies only outside the taxonomy. The original test was renamed to "an ordered-ahead slug gets the contract section, not an invented spec"; the refusal boundary lives in the test named here.
 - AT-01.3 (legacy) test/cdsync.bats::"brief orders what a partial bundle has and declares the rest absent" -- covers AC-01.2 -- status: green
 
 ### Group 02

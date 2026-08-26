@@ -31,7 +31,7 @@ title: Rename the tool to Cdsync
 
 ### ST-level
 
-- AT-00.1 `test/cdsync.bats` -- covers AC-00.3 -- status: green -- whole suite, 328 tests
+- AT-00.1 `test/cdsync.bats` -- covers AC-00.3 -- status: green -- (whole suite, 328 tests)
 - AT-00.2 (legacy) test/cdsync.bats::"a release archive carries the tool and not how it is made" -- covers AC-00.3 -- status: green -- called out separately because it builds its listing with `git archive HEAD` and so failed until the rename was committed; it reads committed state by design, which is what makes it the honest check of the packaging contract
 
 ---
