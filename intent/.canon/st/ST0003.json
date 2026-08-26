@@ -393,5 +393,25 @@
         "raw": "test/cdsync.bats::\"a bad dependency slug is declared as outside the taxonomy\""
       }
     }
+  ],
+  "attachments": [
+    {
+      "path": "design.md",
+      "text": "# Design - ST0003: Post-release 0.1.0 clean-up\n\n**There is no thread-level design, and that is deliberate rather than unfinished.**\n\nST0003 is a holding pen with structure, not a plan -- its work packages are independent by design, can be taken in any order, and most wait on a ruling rather than on effort. A design section here would have to invent a shape the thread does not have.\n\n**Each work package carries its own design in its own `info.md`**, next to the evidence that motivated it. `WP/*/info.md` is the one home.\n\nRulings that outlast this thread go to `intent/whiteboard/cc/wip.md` `## Decisions`. Canon outranks both: `intent/docs/design-system-lifecycle.md`.\n\n**This file replaced an unfilled template on 8 August.** The boilerplate read as a place where design lived, so a reader opened it and found prompts, and a writer might reasonably have put a WP's reasoning here instead of beside its evidence.\n",
+      "bytes": 918,
+      "sha256": "60b26268c17afefcf65979edbf9967fa2331d9ce4ce8290306bf8d00b168f9da"
+    },
+    {
+      "path": "impl.md",
+      "text": "# Implementation - ST0003: Post-release 0.1.0 clean-up\n\n**Nothing is implemented at thread level.** Every work package that has moved records what it did, and what that cost, in its own `info.md`:\n\n- **WP-01** -- cutting 0.1.0 for real found two defects in `release` that reading the code had not.\n- **WP-07** -- its premise was false in every project it could be checked against, and the correction is the finding.\n- **WP-08** -- three of six items had drifted before anyone worked from the list; one turned out to be blocked on WP-05.\n\nThe as-built architecture of the tool is `intent/llm/ARCHITECTURE.md`; per-module ownership is `intent/llm/MODULES.md`, written from the code's own headers.\n\n**This file replaced an unfilled template on 8 August**, for the reason given in `design.md`.\n",
+      "bytes": 790,
+      "sha256": "7eadc1a5f03a65180ffbe279948c45a328054ab47708758d95490ca246e2df3c"
+    },
+    {
+      "path": "tasks.md",
+      "text": "# Tasks - ST0003: Post-release 0.1.0 clean-up\n\n## Status\n\nCreated 2 August at the close-out of ST0001 and ST0002, to hold what those threads carried forward plus what the first cold round trip raised. **Closed 9 August, 20/20.**\n\n**This file is the flat view and the sequencing. Every \"why\" lives in the work package's own `info.md`** -- if a line here needs a reason, the reason belongs there and this line should point at it.\n\n## If picking this up cold\n\n**Nothing here is open.** The thread's bar was that every work package reached a terminal state **on the record**, not that every one was built -- the 9 August wind-back dissolved three of them and hv parked a fourth. `acceptance.md` states that boundary and its evidence.\n\n**What was carried forward, and the condition that would re-open each item, is in `intent/restart.md`.** It is written down so it is not lost, not so it is picked up.\n\n## Tasks\n\n### Done\n\n- [x] **WP-01 -- Cut 0.1.0.** Done 6 Aug, 8/8. Running it for real found two defects in `release` itself\n- [x] **WP-03 -- The spec library.** Done 9 Aug, 7/7. Library edition 4: three dangling dependencies repaired, every count out of library prose, `formats_required` written as advisory into the brief the supplier reads. Two inherited premises found false\n- [x] **WP-04 -- Transport.** Closed 9 Aug by the wind-back: the queue died unsent, deliberately\n- [x] **WP-05 -- `cdsync.json` and `spec_version`.** Ruled and built 9 Aug: the tree-root home, the `unassigned` lifecycle, ordering ahead of the library\n- [x] **WP-06 -- Round three's rulings.** Dissolved 9 Aug to two survivors: `hard_facts`/bundles built into the brief; `formats_required` ruled advisory and landed in WP-03\n- [x] **WP-07 -- Integrate the original four.** Closed 9 Aug on its finding: three of three checkable projects were already integrated; Lamplight unchecked by design\n- [x] **WP-08 -- Housekeeping.** Closed 9 Aug: all six items done or declined on the record, the staleness advisory (shape (a)) the last to land\n\n### Parked, and not to be picked up\n\n- [ ] **WP-02 -- Rule 4's three noise shapes.** Parked by hv 9 Aug; evidence and recommendations on record in its `info.md`. **Nothing moves until a live venture trips one.** Closed with the thread as parked rather than done, which is what the contract says and why it does not claim 8/8\n\n### Closed\n\n- [x] **This thread's acceptance contract, written from the evidence.** Written at close on hv's authority, from evidence measured before the criteria were phrased -- the same way WP-01, ST0001 and ST0002 closed. It stayed deliberately unwritten until the scope was real, because an empty contract reads as BLOCKED and that is the gate working\n",
+      "bytes": 2696,
+      "sha256": "9d03a5c35ce3aba00f5c72955f853d9ee8e1ab340012403e5b1397fa3ab0031c"
+    }
   ]
 }
