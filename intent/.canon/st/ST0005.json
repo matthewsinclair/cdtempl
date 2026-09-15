@@ -23,7 +23,8 @@
       "text": "`bin/devbin test all` runs the whole bats suite as a sealed gate, so its verdict is a file: red while any test fails, green only on a completed run in which none did.",
       "kind": "non-test",
       "state": {
-        "is": "unsatisfied"
+        "is": "satisfied",
+        "evidence": "bin/devbin test all sealed tmp/test/20260915-1700.SHELL.errors non-empty when 360 tests ran with one failing, and tmp/test/20260915-1733.SHELL.errors empty when 366 of 366 passed"
       }
     },
     {
@@ -47,7 +48,8 @@
       "text": "No code points at a thread path that no longer exists: `not_implemented()` in `lib/common.sh`, unreachable because every command it once stood in for is built, is removed.",
       "kind": "non-test",
       "state": {
-        "is": "unsatisfied"
+        "is": "satisfied",
+        "evidence": "commit 4085030 removed it: at that commit git grep finds no not_implemented in bin/, lib/, help/ or test/, and the same probe finds render_venture_template in lib/common.sh"
       }
     },
     {
@@ -68,7 +70,7 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": "\"every acceptance test named in a contract exists in this suite\""
+      "note": ""
     },
     {
       "id": "AT-00.2",
@@ -78,7 +80,7 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": "\"the contract guard reports a cited test the suite does not have\""
+      "note": ""
     },
     {
       "id": "AT-00.3",
@@ -88,7 +90,7 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": "\"the contract guard refuses a test-backed row that cites nothing\""
+      "note": ""
     },
     {
       "id": "AT-00.4",
@@ -98,7 +100,7 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": "\"the contract guard reports a cited file the repository does not have\""
+      "note": ""
     },
     {
       "id": "AT-00.5",
@@ -108,7 +110,7 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": "\"the contract guard refuses an extract it reads no citation from\""
+      "note": ""
     },
     {
       "id": "AT-00.6",
@@ -118,7 +120,7 @@
         "AC-00.3"
       ],
       "status": "green",
-      "note": "\"no tracked file carries an absolute home directory path\" -- predates this thread; red here is the route the state machine requires, not a failure observed in ST0005"
+      "note": "predates this thread; red here is the route the state machine requires, not a failure observed in ST0005"
     },
     {
       "id": "AT-00.7",
@@ -128,7 +130,7 @@
         "AC-00.3"
       ],
       "status": "green",
-      "note": "\"the devbin manifest is never tracked, because it records a home directory\""
+      "note": ""
     },
     {
       "id": "AT-00.8",
@@ -138,7 +140,7 @@
         "AC-00.4"
       ],
       "status": "green",
-      "note": "\"a release archive carries the tool and not how it is made\" -- reads `git archive HEAD`, so it proves the devbin exclusion only once devbin and .gitattributes are committed"
+      "note": "reads `git archive HEAD`, so it proves the devbin exclusion only once devbin and .gitattributes are committed"
     },
     {
       "id": "AT-00.9",
@@ -148,7 +150,7 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": "\"the contract guard reads the test a v3 row names at the head of its note\""
+      "note": ""
     }
   ]
 }

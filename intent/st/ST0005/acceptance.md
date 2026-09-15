@@ -16,25 +16,25 @@ title: Bring the suite and dev tooling current after the Intent v3 port
 ### ST-level
 
 - AC-00.1 The acceptance-contract guard reads every contract from the store's committed extract (`intent/.canon/st/<id>.json`), open threads and closed alike, and fails on a cited test or file the repository does not have, on a test-backed row that cites nothing, and on an extract it reads nothing from. -- satisfied: yes (computed)
-- AC-00.2 (non-test) `bin/devbin test all` runs the whole bats suite as a sealed gate, so its verdict is a file: red while any test fails, green only on a completed run in which none did. -- satisfied: no
+- AC-00.2 (non-test) `bin/devbin test all` runs the whole bats suite as a sealed gate, so its verdict is a file: red while any test fails, green only on a completed run in which none did. -- evidence: bin/devbin test all sealed tmp/test/20260915-1700.SHELL.errors non-empty when 360 tests ran with one failing, and tmp/test/20260915-1733.SHELL.errors empty when 366 of 366 passed -- satisfied: yes
 - AC-00.3 devbin is committed without publishing an absolute home directory path: no tracked file carries one, and the manifest devbin writes one into is never tracked. -- satisfied: yes (computed)
 - AC-00.4 A release archive carries neither `bin/devbin` nor `bin/.devbin/` -- devbin is how the tool is made, not the tool. -- satisfied: yes (computed)
-- AC-00.5 (non-test) No code points at a thread path that no longer exists: `not_implemented()` in `lib/common.sh`, unreachable because every command it once stood in for is built, is removed. -- satisfied: no
+- AC-00.5 (non-test) No code points at a thread path that no longer exists: `not_implemented()` in `lib/common.sh`, unreachable because every command it once stood in for is built, is removed. -- evidence: commit 4085030 removed it: at that commit git grep finds no not_implemented in bin/, lib/, help/ or test/, and the same probe finds render_venture_template in lib/common.sh -- satisfied: yes
 - AC-00.6 (non-test) The hand-kept ledger in `intent/wip.md` agrees with the store's thread titles, and `intent doctor` reports no stale render. -- satisfied: no
 
 ## Acceptance Tests
 
 ### ST-level
 
-- AT-00.1 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- "every acceptance test named in a contract exists in this suite"
-- AT-00.2 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- "the contract guard reports a cited test the suite does not have"
-- AT-00.3 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- "the contract guard refuses a test-backed row that cites nothing"
-- AT-00.4 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- "the contract guard reports a cited file the repository does not have"
-- AT-00.5 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- "the contract guard refuses an extract it reads no citation from"
-- AT-00.6 `test/cdsync.bats` -- covers AC-00.3 -- status: green -- "no tracked file carries an absolute home directory path" -- predates this thread; red here is the route the state machine requires, not a failure observed in ST0005
-- AT-00.7 `test/cdsync.bats` -- covers AC-00.3 -- status: green -- "the devbin manifest is never tracked, because it records a home directory"
-- AT-00.8 `test/cdsync.bats` -- covers AC-00.4 -- status: green -- "a release archive carries the tool and not how it is made" -- reads `git archive HEAD`, so it proves the devbin exclusion only once devbin and .gitattributes are committed
-- AT-00.9 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- "the contract guard reads the test a v3 row names at the head of its note"
+- AT-00.1 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
+- AT-00.2 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
+- AT-00.3 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
+- AT-00.4 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
+- AT-00.5 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
+- AT-00.6 `test/cdsync.bats` -- covers AC-00.3 -- status: green -- predates this thread; red here is the route the state machine requires, not a failure observed in ST0005
+- AT-00.7 `test/cdsync.bats` -- covers AC-00.3 -- status: green -- 
+- AT-00.8 `test/cdsync.bats` -- covers AC-00.4 -- status: green -- reads `git archive HEAD`, so it proves the devbin exclusion only once devbin and .gitattributes are committed
+- AT-00.9 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
 
 ---
 

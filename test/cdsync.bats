@@ -1145,6 +1145,7 @@ EOF
   grep -q '"\$CDSYNC_BIN" install' "$BATS_TEST_FILENAME"
 }
 
+# ST0005 AT-00.6
 @test "no tracked file carries an absolute home directory path" {
   local hits
   hits="$(git -C "$CDSYNC_HOME" grep -lIE '/Users/[a-zA-Z0-9._-]+|/home/[a-zA-Z0-9._-]+' \
@@ -1208,29 +1209,34 @@ EOF
 # before this was written. The extract is the one home; a view renders it.
 #
 # WHERE A ROW NAMES ITS TEST. A v2 row wrote `path::"test name"`, which the port
-# kept as `legacy.raw`. A v3 row cites a FILE and nothing finer -- `intent at
-# green` refuses a `file` that is not a path on disk -- so in this project a v3
-# row names its test at the head of its note, in double quotes:
+# kept as `legacy.raw`. A v3 row cites a FILE, and `intent at lint` and the close
+# gate accept it once that file carries the row's id -- so a test this project
+# cites is marked by a comment directly above it, naming the thread as well as
+# the id, because an id is unique only within its own thread:
 #
-#   intent at edit <ST> <AT> --file test/cdsync.bats --note '"<test name>" ...'
+#   # <thread> <id>
+#   @test "<name>" {
 #
-# Every cited file must exist, and every test name found, in `legacy.raw` or at
-# the head of the note, must be a test in that file. A row naming no test cites
-# the whole file -- ST0004's whole-suite row does -- and the closing line's two
-# counts show how many. A test-backed row citing no file at all is REPORTED, not
-# skipped, because a reader that drops what it cannot parse is a reader that
-# reports clean -- and `intent at lint` examines none of the legacy rows and
-# still says `ok`, so it cannot stand in for this.
+# Lint asks whether the id is in the file. Whether it sits on a TEST is the half
+# lint cannot see -- a mark left behind when a test is renamed, moved or deleted
+# still passes it -- so that half is asked here: each mark for a row must be
+# followed, past any further comment lines, by an `@test`.
+#
+# Every cited file must exist, every name in `legacy.raw` must be a test in it,
+# and every mark must sit on a test. A v3 row its file does not mark cites the
+# whole file -- ST0004's whole-suite row does -- and the closing line's two counts
+# show how many; refusing that in an OPEN thread is the close gate's job, and it
+# does. A test-backed row citing no file at all is REPORTED, not skipped, because
+# a reader that drops what it cannot parse is a reader that reports clean -- and
+# `intent at lint` examines none of the legacy rows and still says `ok`.
 #
 # Prints one line per problem and a closing `checked:` line. Returns 1 on any
 # problem, and on an extract it reads no citation from at all.
 check_contract_citations() {
   local canon="$1" root="$2"
-  local sep thread tid id cite noted path name tname hit
+  local tab thread tid id cite path name kind marked
   local threads=0 cites=0 named=0 problems=0
-  # A unit separator, not a tab: tab is IFS whitespace, so `read` would fold an
-  # empty field into its neighbour and shift a note into the citation.
-  sep="$(printf '\037')"
+  tab="$(printf '\t')"
 
   while IFS= read -r thread; do
     tid="${thread##*/}"
@@ -1243,7 +1249,7 @@ check_contract_citations() {
       continue
     fi
 
-    while IFS="$sep" read -r id cite noted; do
+    while IFS="$tab" read -r id cite; do
       if [[ -z "$cite" ]]; then
         echo "$tid $id: a test-backed row that cites nothing"
         problems=$((problems + 1))
@@ -1265,22 +1271,42 @@ check_contract_citations() {
         continue
       fi
 
-      hit=0
-      for tname in "$name" "$noted"; do
-        [[ -n "$tname" ]] || continue
-        hit=1
-        if ! grep -qF "@test \"$tname\"" "$root/$path"; then
-          echo "$tid $id: cites \"$tname\", which $path does not have"
+      if [[ -n "$name" ]]; then
+        named=$((named + 1))
+        if ! grep -qF "@test \"$name\"" "$root/$path"; then
+          echo "$tid $id: cites \"$name\", which $path does not have"
           problems=$((problems + 1))
         fi
-      done
-      named=$((named + hit))
+        continue
+      fi
+
+      # A mark is the thread and id on a comment line, not followed by a further
+      # digit -- so a row's id does not match the longer id it is a prefix of.
+      marked=0
+      while IFS= read -r kind; do
+        if [[ "$kind" == test ]]; then
+          marked=1
+        else
+          echo "$tid $id: $path marks $tid $id on a line no test follows"
+          problems=$((problems + 1))
+        fi
+      done < <(awk -v mark="$tid $id" '
+        /^[[:space:]]*#/ {
+          p = index($0, mark)
+          if (p && substr($0, p + length(mark), 1) !~ /[0-9]/) pending = 1
+          next
+        }
+        pending {
+          if ($0 ~ /^@test "/) print "test"; else print "stray"
+          pending = 0
+        }
+        END { if (pending) print "stray" }
+      ' "$root/$path")
+      named=$((named + marked))
     done < <(jq -r '
       .tests[]? | select(.kind == "test") | . as $t
-      | (($t.note // "") | [match("^\"([^\"]+)\"").captures[0].string] | first // "") as $noted
       | [$t.file, $t.legacy.raw] | map(select(type == "string" and length > 0))
-      | if length == 0 then "\($t.id)\($noted)"
-        else .[] | "\($t.id)\(.)\($noted)" end
+      | if length == 0 then "\($t.id)\t" else .[] | "\($t.id)\t\(.)" end
     ' "$thread")
   done < <(find "$canon" -maxdepth 1 -type f -name 'ST*.json' 2>/dev/null | LC_ALL=C sort)
 
@@ -1306,6 +1332,7 @@ write_contract() {
     >"$TESTDIR/repo/intent/.canon/st/$1.json"
 }
 
+# ST0005 AT-00.1
 @test "every acceptance test named in a contract exists in this suite" {
   # Written because the first draft of ST0001's contract cited ELEVEN acceptance
   # tests and EIGHT of them did not exist -- plausible names for tests nobody had
@@ -1328,27 +1355,37 @@ write_contract() {
   fi
 }
 
-@test "the contract guard reads the test a v3 row names at the head of its note" {
-  # `intent at green` refuses a `file` that is not a path on disk, so a v3 row
-  # cannot write `path::"name"`. It names its test in its note instead, and a
-  # name there is held to the same standard as one in `legacy.raw`.
+# ST0005 AT-00.9
+@test "the contract guard holds a v3 row to a mark that sits on a test" {
+  # `intent at lint` accepts a v3 row once its file carries the row's id
+  # anywhere. A mark that a renamed or deleted test left behind still passes
+  # that, so the guard asks whether each mark is followed by a test.
   make_contract_fixture
+  printf '\n# ST9001 AT-1\n# a further comment line is allowed\n@test "%s" {\n  true\n}\n' \
+    "a marked test" >>"$TESTDIR/repo/test/cdsync.bats"
+  printf '\n# ST9001 AT-2\nnot_a_test=1\n# ST9001 AT-10\n# ST9001 AT-4\n' \
+    >>"$TESTDIR/repo/test/cdsync.bats"
   write_contract ST9001 '[
-    {"id": "AT-1", "kind": "test", "file": "test/cdsync.bats", "note": "\"a test that exists\" -- and why it is cited"},
-    {"id": "AT-2", "kind": "test", "file": "test/cdsync.bats", "note": "\"a test nobody wrote\""},
-    {"id": "AT-3", "kind": "test", "file": "test/cdsync.bats", "note": "the whole suite, named by no test"}
+    {"id": "AT-1", "kind": "test", "file": "test/cdsync.bats"},
+    {"id": "AT-2", "kind": "test", "file": "test/cdsync.bats"},
+    {"id": "AT-3", "kind": "test", "file": "test/cdsync.bats"},
+    {"id": "AT-4", "kind": "test", "file": "test/cdsync.bats"}
   ]'
 
   run check_contract_citations "$TESTDIR/repo/intent/.canon/st" "$TESTDIR/repo"
   [ "$status" -eq 1 ]
-  assert_contains 'ST9001 AT-2: cites "a test nobody wrote", which test/cdsync.bats does not have'
-  refute_contains 'AT-1'
-  # A note that does not open with a quoted name cites the whole file, and is
-  # counted apart rather than failed.
+  assert_contains 'ST9001 AT-2: test/cdsync.bats marks ST9001 AT-2 on a line no test follows'
+  # A mark on the last line of a file has no test after it either.
+  assert_contains 'ST9001 AT-4: test/cdsync.bats marks ST9001 AT-4 on a line no test follows'
+  # AT-10's mark begins with AT-1's characters, so reading it as AT-1's would
+  # report AT-1 as well.
+  refute_contains 'AT-1:'
+  # A row its file does not mark at all cites the whole file, counted apart.
   refute_contains 'AT-3'
-  assert_contains 'checked: 3 citation(s), 2 naming a test'
+  assert_contains 'checked: 4 citation(s), 1 naming a test'
 }
 
+# ST0005 AT-00.2
 @test "the contract guard reports a cited test the suite does not have" {
   make_contract_fixture
   write_contract ST9001 '[
@@ -1365,6 +1402,7 @@ write_contract() {
   assert_contains 'checked: 2 citation(s), 2 naming a test'
 }
 
+# ST0005 AT-00.3
 @test "the contract guard refuses a test-backed row that cites nothing" {
   make_contract_fixture
   write_contract ST9001 '[
@@ -1381,6 +1419,7 @@ write_contract() {
   refute_contains 'AT-3'
 }
 
+# ST0005 AT-00.4
 @test "the contract guard reports a cited file the repository does not have" {
   make_contract_fixture
   write_contract ST9001 '[
@@ -1394,6 +1433,7 @@ write_contract() {
   refute_contains 'AT-1'
 }
 
+# ST0005 AT-00.5
 @test "the contract guard refuses an extract it reads no citation from" {
   make_contract_fixture
   local canon="$TESTDIR/repo/intent/.canon/st"
@@ -1951,6 +1991,7 @@ HTML
 # devbin they came from. The home-path guard sees a file only once it is tracked,
 # and this repository publishes on push -- so .gitignore keeps the manifest out
 # of the tree, and this pins that it stays out.
+# ST0005 AT-00.7
 @test "the devbin manifest is never tracked, because it records a home directory" {
   # Two halves, each asked on its own. The rule: --no-index asks the patterns
   # alone, because without it check-ignore answers "not ignored" for any TRACKED
@@ -1963,6 +2004,7 @@ HTML
 # The tarball contract, checked against the mechanism that actually builds it.
 # `git archive` reads .gitattributes, so this pins the export-ignore rules
 # rather than a list restated in the module or the help page.
+# ST0005 AT-00.8
 @test "a release archive carries the tool and not how it is made" {
   local listing
   listing="$(git -C "$CDSYNC_HOME" archive --format=tar HEAD | tar -t 2>/dev/null)"
