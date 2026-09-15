@@ -37,3 +37,10 @@ intent/.cache/
 # D53: the event log lives in the store; its file form is produced by `intent export`.
 intent/events.jsonl
 intent/.backup/
+
+# devbin's manifest records the absolute path of the devbin it was installed
+# from -- a home directory, in a repository that publishes on push. Every
+# `devbin install` and `devbin upgrade` writes that line afresh, so ignoring the
+# file is the only form that survives the next upgrade. The cost is on a fresh
+# clone, which has no manifest, so `bin/devbin doctor` reports it missing there.
+bin/.devbin/manifest.sha256

@@ -22,3 +22,10 @@ CLAUDE.md          export-ignore
 usage-rules.md     export-ignore
 .intent_critic.yml export-ignore
 design/            export-ignore
+
+# The dev launcher and its vendored runtime. devbin drives the development of
+# Cdsync -- `bin/cdsync` is the tool -- so it is workshop, not product, and it
+# shares `bin/` with the one thing a release must carry. The archive test pins
+# `bin/` one level down for exactly that reason.
+bin/devbin         export-ignore
+bin/.devbin/       export-ignore

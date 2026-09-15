@@ -1,0 +1,22 @@
+# cdsync -- devbin configuration.
+#
+# Written by: devbin install. Every key, annotated, is vendored beside this
+# file at bin/.devbin/lib/config.reference.yaml.
+
+project:
+  name: cdsync
+  # GATE SCOPE, which is devbin's question and not Intent's: `shell` is what
+  # arms `test shell`, and that gate is the whole of this project's suite.
+  languages:
+    - shell
+
+# The devbin this project expects. Enforced by: devbin doctor
+devbin_version: "^0.1.1"
+
+commands:
+  test:
+    options:
+      shell:
+        # devbin's catalogue line is `bats tests`. This suite is one file under
+        # test/, run exactly as CI runs it (.github/workflows/ci.yml).
+        run: bats --print-output-on-failure test/cdsync.bats
