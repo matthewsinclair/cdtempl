@@ -4,7 +4,7 @@
     "moniker": "vc",
     "name": "cdsync-vc",
     "role": "vc",
-    "heartbeat_at": "2026-09-15T20:37:48.501Z",
+    "heartbeat_at": "2026-09-15T20:50:04.114Z",
     "status": "active",
     "focus": "",
     "claims": [],
@@ -26,7 +26,8 @@
       "kind": "hold",
       "seq": 1,
       "text": "Until hv pushes: then read CI per job (gh run view), because no CI run has seen the Intent v3 port or ST0005, and a local pass has never predicted CI here",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-15T20:54:53.968Z",
       "recorded_at": "2026-09-15T20:37:48.320Z"
     },
     {
@@ -42,7 +43,8 @@
       "kind": "hold",
       "seq": 3,
       "text": "Until hv rules who holds the project's Decisions and Watch-outs now that vc is the only node: cc's board still claims the whole roster and cites a path the port removed",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-15T20:55:43.025Z",
       "recorded_at": "2026-09-15T20:37:48.394Z"
     },
     {
@@ -50,7 +52,8 @@
       "kind": "hold",
       "seq": 4,
       "text": "Until hv says whether vc files it in devbin's tracker or routes it to devbin-cc: devbin writes an absolute home path into every estate's manifest",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-15T20:55:43.042Z",
       "recorded_at": "2026-09-15T20:37:48.442Z"
     },
     {
@@ -58,7 +61,8 @@
       "kind": "hold",
       "seq": 5,
       "text": "Until hv rules on the tracked, gitignored intent/.treeindex/ files from the public root commit: intent organize --apply would prune them, so ST0005 removed its own views by hand",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-15T20:54:53.986Z",
       "recorded_at": "2026-09-15T20:37:48.471Z"
     }
   ],

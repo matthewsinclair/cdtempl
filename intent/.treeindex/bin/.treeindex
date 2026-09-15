@@ -1,9 +1,0 @@
-<!-- treeindex v1 fingerprint:f162dba2 generated:2026-08-06T08:33:05Z -->
-
-# bin/
-
-Primary entry point for the cdsync tool. Contains the thin shell coordinator that resolves the CDSYNC_HOME installation root, sources shared library modules, parses command-line arguments, and dispatches to subcommands under lib/. No business logic lives here.
-
-## Files
-
-- `cdsync` -- main entry point; resolves symlink chain to find installation root, sources lib/*.sh dependencies, dispatches subcommand

@@ -34,7 +34,7 @@ claims: []
 **Standing:**
 
 - **Of the six spent `_inbox/` directories, the two newest hold the Laksa theme packs, which exist nowhere else.** Do not clear those two until Laksa has taken them.
-- **No `hv` node here, by hv's ruling -- `cc` is the whole roster**, so rulings arrive in conversation and land in `## Decisions`. The whiteboard `README.md` roster stays deferred.
+- **Overridden by hv on 2026-09-15: `vc` is the only node running and holds this board's `## Decisions` and `## Watch-outs` for now.** They stay here, their one home, and `vc` amends them; `cc` is paused and no longer the whole roster. Rulings still arrive in conversation. The whiteboard `README.md` roster stays deferred.
 
 ## Watch-outs
 
@@ -138,7 +138,7 @@ claims: []
 
 ## Decisions
 
-Settled and not to be re-opened. Full reasoning in `intent/st/ST0001/design.md`.
+Settled and not to be re-opened. Full reasoning in ST0001's `design.md`, an attachment in the store since the Intent v3 port rather than a file on disk (it is carried in `intent/.canon/st/ST0001.json`).
 
 **CANON, above every Decision below: `intent/docs/design-system-lifecycle.md`.**
 

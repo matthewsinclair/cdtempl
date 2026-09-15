@@ -1149,7 +1149,7 @@ EOF
 @test "no tracked file carries an absolute home directory path" {
   local hits
   hits="$(git -C "$CDSYNC_HOME" grep -lIE '/Users/[a-zA-Z0-9._-]+|/home/[a-zA-Z0-9._-]+' \
-    -- . ':(exclude)intent/.treeindex' 2>/dev/null || true)"
+    2>/dev/null || true)"
 
   if [[ -n "$hits" ]]; then
     echo "tracked files carrying an absolute home path:" >&2

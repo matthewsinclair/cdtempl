@@ -1,8 +1,0 @@
-<!-- treeindex v1 fingerprint:bd454fee generated:2026-08-06T08:33:08Z -->
-
-# test/
-
-Test suite using BATS (Bash Automated Testing System). Tests core dispatcher logic, target resolution, primitives, and the five cdsync commands. Includes fixtures and helper functions for integration testing.
-
-## Files
-- `cdsync.bats` -- BATS test suite for dispatcher, target resolution, primitives, and five main commands; includes setup/teardown fixtures and assertion helpers
