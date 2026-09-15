@@ -19,6 +19,7 @@ verblock: "15 Sep 2026:v2.2: Matthew Sinclair - CI green on the pushed port; tre
 | What each work package found                      | ST0003's WP info (`intent wp list ST0003`)    |
 | What a Claude Design session needs                | `intent/docs/claude-design-contract.md`       |
 | What a receiving project needs                    | `intent/docs/receiving-a-design-system.md`    |
+| The refocus proposal and hv's six open decisions  | `intent/docs/refocus-proposal.md`             |
 
 ## Where the project is
 
@@ -26,7 +27,7 @@ verblock: "15 Sep 2026:v2.2: Matthew Sinclair - CI green on the pushed port; tre
 
 It has completed a **full cold round trip** -- initialise an empty tree, hand it to Claude Design, take the return back, check it -- for matthewsinclair and geodica. **Both came back Cdsync-shaped, so the cold-start document works.** **Six projects hold a design system tree**: those two, whose rollout hv is doing in Laksa, plus the original four, of which three were already integrated before anyone checked and **Lamplight is unchecked by design**.
 
-**Nothing is open. One question awaits hv**: whether Cdsync should stop being a way to sync a design system with Claude Design and become a way to bootstrap a venture's design system from a family of tried assets, now that design work happens inside Claude Code. hv raised it on 15 September and a proposal was made in conversation; **no thread is open for it, and nothing in the transport is retired until hv rules.** The next piece of work opens a thread (`intent st new`) rather than resuming one -- and the carried-forward list below is what to read first.
+**Nothing is open. One question awaits hv**: whether Cdsync should stop being a way to sync a design system with Claude Design and become a way to bootstrap a venture's design system from a family of tried assets, now that design work happens inside Claude Code. hv raised it on 15 September; **the proposal and the six decisions it waits on are in `intent/docs/refocus-proposal.md`**, and hv takes them up next. **No thread is open for it, and nothing in the transport is retired until hv rules.** The next piece of work opens a thread (`intent st new`) rather than resuming one -- and the carried-forward list below is what to read first.
 
 **The tool was renamed to Cdsync on 6 August, and the window that made it free has closed**: no tag existed then, and `v0.1.0` is out now, so the next rename of anything carries a published artefact with it. ST0004's contract has the verification and the post-close note; the lesson is on the board.
 

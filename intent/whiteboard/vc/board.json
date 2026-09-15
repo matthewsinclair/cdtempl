@@ -4,8 +4,8 @@
     "moniker": "vc",
     "name": "cdsync-vc",
     "role": "vc",
-    "heartbeat_at": "2026-09-15T20:50:04.114Z",
-    "status": "active",
+    "heartbeat_at": "2026-09-15T21:12:38.253Z",
+    "status": "paused",
     "focus": "",
     "claims": [],
     "recorded_at": "2026-09-15T16:14:33.731Z",
@@ -35,7 +35,8 @@
       "kind": "hold",
       "seq": 2,
       "text": "Until hv rules on the refocus proposal's six decisions (token format, PDF engine, web target, mobile depth, rename, the delivered projects): then open thread A, canon and scope, as the next thread",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-15T21:10:09.371Z",
       "recorded_at": "2026-09-15T20:37:48.364Z"
     },
     {
@@ -64,6 +65,14 @@
       "state": "archived",
       "archived_at": "2026-09-15T20:54:53.986Z",
       "recorded_at": "2026-09-15T20:37:48.471Z"
+    },
+    {
+      "node": "vc",
+      "kind": "hold",
+      "seq": 6,
+      "text": "Until hv rules on the six decisions in intent/docs/refocus-proposal.md (token format, PDF engine, web target, mobile depth, rename, the delivered projects) -- hv takes them up in the morning session: then open thread A, canon and scope, as ST0006",
+      "state": "live",
+      "recorded_at": "2026-09-15T21:10:09.352Z"
     }
   ],
   "messages": []

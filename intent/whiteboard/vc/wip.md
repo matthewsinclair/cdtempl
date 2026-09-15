@@ -3,8 +3,8 @@ node: vc
 name: cdsync-vc
 role: vc
 session_id: none
-heartbeat_at: 2026-09-15 20:50Z
-status: active
+heartbeat_at: 2026-09-15 21:12Z
+status: paused
 focus: ""
 claims: []
 ---
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- Until hv rules on the refocus proposal's six decisions (token format, PDF engine, web target, mobile depth, rename, the delivered projects): then open thread A, canon and scope, as the next thread
+- Until hv rules on the six decisions in intent/docs/refocus-proposal.md (token format, PDF engine, web target, mobile depth, rename, the delivered projects) -- hv takes them up in the morning session: then open thread A, canon and scope, as ST0006
 
 ## Watch-outs
 
