@@ -1,0 +1,26 @@
+{
+  "schema": "intent/board@3.0",
+  "node": {
+    "moniker": "vc",
+    "name": "cdsync-vc",
+    "role": "vc",
+    "heartbeat_at": "2026-09-15T18:12:37.665Z",
+    "status": "active",
+    "focus": "",
+    "claims": [],
+    "recorded_at": "2026-09-15T16:14:33.731Z",
+    "migrated_at": "2026-09-15T16:14:33.731Z"
+  },
+  "items": [
+    {
+      "node": "vc",
+      "kind": "doing",
+      "seq": 1,
+      "text": "ST0005: repair the contract guard the v3 port blinded, commit devbin without a home path, keep it out of releases, tidy the record",
+      "state": "archived",
+      "archived_at": "2026-09-15T18:12:37.632Z",
+      "recorded_at": "2026-09-15T16:57:53.860Z"
+    }
+  ],
+  "messages": []
+}

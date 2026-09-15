@@ -4,7 +4,7 @@ An index of every steel thread in the project. A steel thread is a self-containe
 
 | ID     | Title                                                            | Status    | Created    | Completed            |
 | ------ | ---------------------------------------------------------------- | --------- | ---------- | -------------------- |
-| ST0005 | Bring the suite and dev tooling current after the Intent v3 port | WIP       | 2026-09-15 |                      |
+| ST0005 | Bring the suite and dev tooling current after the Intent v3 port | Completed | 2026-09-15 | 2026-09-15           |
 | ST0004 | Rename the tool to Cdsync                                        | Completed | 2026-08-06 | 2026-08-06T09:03:27Z |
 | ST0003 | Post-release 0.1.0 clean-up                                      | Completed | 2026-08-02 | 2026-08-09T12:20:51Z |
 | ST0002 | Port four established projects to the Cdsync protocol            | Completed | 2026-07-30 | 2026-08-02T09:54:45Z |

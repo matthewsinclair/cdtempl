@@ -4,7 +4,7 @@ A DOING / TODO / DONE view, projected from steel-thread and work-package status:
 
 ## DOING
 
-- [-] ST0005: Bring the suite and dev tooling current after the Intent v3 port
+_(none)_
 
 ## TODO
 
@@ -24,6 +24,7 @@ _(none)_
   - [x] 07: Integrate the original four
   - [x] 08: Housekeeping and small gaps
 - [x] ST0004: Rename the tool to Cdsync
+- [x] ST0005: Bring the suite and dev tooling current after the Intent v3 port
 
 ---
 

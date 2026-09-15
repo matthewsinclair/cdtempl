@@ -3,8 +3,9 @@
   "id": "ST0005",
   "title": "Bring the suite and dev tooling current after the Intent v3 port",
   "slug": "bring-the-suite-and-dev-tooling-current-after-th",
-  "status": "wip",
+  "status": "completed",
   "created": "2026-09-15",
+  "completed": "2026-09-15",
   "objective": "Bring Cdsync's own test suite and development tooling back into line with the repository as it stands after two changes nothing had measured: the Intent v3 port of 26 August 2026, which moved every steel thread's record into the store's committed extract, and devbin being vendored into `bin/` on 15 September 2026.\n\n1. **The acceptance-contract guard reads the contracts where they now live.** It fails as soon as the suite runs, because the port removed every `acceptance.md` it globbed. It must read `intent/.canon/st/<id>.json`, cover every thread whether open or closed, and still fail when it can read nothing.\n2. **devbin is committed without publishing anything a public repository must not carry**, and `bin/devbin test all` runs the bats suite as a sealed gate.\n3. **A release still carries the tool and nothing about how the tool is made.** devbin is how it is made.\n4. **The record agrees with itself.** Dead code citing a thread path that no longer exists is removed, and the hand-kept ledger matches the store.\n",
   "context": "Found at vc's pickup on 15 September 2026, the first session since the 9 August globalfold. Nothing had run the suite against the repository since the port: CI last ran on 9 August, every commit since is unpushed, and neither commit hook invokes bats. hv's run of `bats test/cdsync.bats` the same afternoon reported exactly one failure, the guard's own `[ \"$total\" -gt 0 ]` -- which is that assertion doing its job, turning a guard that could see nothing into a failure rather than a clean report. devbin's sealed gate, run over the same tree, sealed the same single failure.\n\n**The trap, measured rather than predicted.** Open threads are still realised on disk (`intent/.intentfiles`), so a guard reading the realised `acceptance.md` views goes green as soon as an open thread cites one real test. With one citation added to this thread, the old guard run alone passed -- having read that citation and none of the 38 in the four closed threads. The views render the extract for open threads only; the extract is the one home.\n\n**devbin's manifest records an absolute home path.** `devbin install` writes `# source: <absolute path>` into `bin/.devbin/manifest.sha256`, and every sibling estate checked that tracks the manifest carries the same line. That is devbin's defect to fix; this thread only has to keep it out of this repository.\n",
   "body": "",
@@ -57,7 +58,8 @@
       "text": "The hand-kept ledger in `intent/wip.md` agrees with the store's thread titles, and `intent doctor` reports no stale render.",
       "kind": "non-test",
       "state": {
-        "is": "unsatisfied"
+        "is": "satisfied",
+        "evidence": "intent/wip.md lists all five threads under the titles intent st show gives them, and ST0001 to ST0004 at the figures intent ac status gives; intent doctor --scope all reports 0 findings and no stale-render advisory"
       }
     },
     {
