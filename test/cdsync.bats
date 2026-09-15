@@ -1471,6 +1471,50 @@ write_contract() {
   [ "$from_help" = "$from_readme" ]
 }
 
+# CI hands shellcheck and `bash -n` a list of paths, and a path that stops
+# existing does not let either step pass quietly -- it fails both, but only on a
+# push. 3fbb8d0, the v3 re-convert, deleted .claude/scripts/*.sh and left both
+# steps naming them, with no CI run to see it. Asking here puts that failure in
+# `bin/devbin test all`, before anything is published.
+# ST0005 AT-00.10
+@test "every path CI hands to shellcheck and bash -n names a file that exists" {
+  local ci="$CDSYNC_HOME/.github/workflows/ci.yml"
+  local listed word missing=0
+  local -a words
+
+  listed="$(sed -n -e 's/^ *run: shellcheck //p' -e 's/^ *for f in \(.*\); do$/\1/p' "$ci" | tr '\n' ' ')"
+
+  # Each step found exactly once, and the dispatcher named by both, before an
+  # absence in the list means anything -- a sed that stopped matching reads as
+  # nothing to check.
+  [ "$(grep -c '^ *run: shellcheck ' "$ci")" -eq 1 ]
+  [ "$(grep -c '^ *for f in .*; do$' "$ci")" -eq 1 ]
+  [ "$(tr ' ' '\n' <<<"$listed" | grep -cx 'bin/cdsync')" -eq 2 ]
+
+  read -r -a words <<<"$listed"
+  for word in "${words[@]}"; do
+    if ! compgen -G "$CDSYNC_HOME/$word" >/dev/null; then
+      echo "ci.yml names $word, which matches no file" >&2
+      missing=$((missing + 1))
+    fi
+  done
+  [ "$missing" -eq 0 ]
+}
+
+# The README's development block shows the shellcheck line for a person to copy.
+# It is the line CI runs, or it is a second description of it that drifts --
+# which is how the README went on naming .claude/scripts after the port.
+# ST0005 AT-00.11
+@test "the shellcheck line in the README is the one CI runs" {
+  local from_ci from_readme
+  from_ci="$(sed -n 's/^ *run: \(shellcheck .*\)$/\1/p' "$CDSYNC_HOME/.github/workflows/ci.yml")"
+  from_readme="$(grep -E '^shellcheck ' "$CDSYNC_HOME/README.md")"
+
+  [ -n "$from_ci" ]
+  [ -n "$from_readme" ]
+  [ "$from_ci" = "$from_readme" ]
+}
+
 # `--target` is implemented by every command and was documented by seven of the
 # eight; `cdsync new` had it in its synopsis and no Options table at all. That is
 # the same ratio as the `doctor` help-file gap -- most of them right, which is

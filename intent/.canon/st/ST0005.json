@@ -59,6 +59,14 @@
       "state": {
         "is": "unsatisfied"
       }
+    },
+    {
+      "id": "AC-00.7",
+      "text": "CI names no file that does not exist: every path its shellcheck and `bash -n` steps are handed matches a file, and the README shows the shellcheck line CI runs.",
+      "kind": "test",
+      "state": {
+        "is": "computed"
+      }
     }
   ],
   "tests": [
@@ -70,7 +78,27 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": ""
+      "note": "red on the baseline sealed run of 15 September 2026, the port having taken the files it globbed, and green once it read the extract"
+    },
+    {
+      "id": "AT-00.10",
+      "kind": "test",
+      "file": "test/cdsync.bats",
+      "covers": [
+        "AC-00.7"
+      ],
+      "status": "green",
+      "note": "red in a clone of the committed tree, where ci.yml still named .claude/scripts"
+    },
+    {
+      "id": "AT-00.11",
+      "kind": "test",
+      "file": "test/cdsync.bats",
+      "covers": [
+        "AC-00.7"
+      ],
+      "status": "green",
+      "note": "red in a clone with ci.yml repaired and the README line not"
     },
     {
       "id": "AT-00.2",
@@ -80,7 +108,7 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": ""
+      "note": "red under mutation: a guard that stops judging passes it"
     },
     {
       "id": "AT-00.3",
@@ -90,7 +118,7 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": ""
+      "note": "red under mutation: a guard that skips a row citing nothing passes it"
     },
     {
       "id": "AT-00.4",
@@ -100,7 +128,7 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": ""
+      "note": "red under mutation: a guard that stops judging passes it"
     },
     {
       "id": "AT-00.5",
@@ -110,7 +138,7 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": ""
+      "note": "red under mutation: a guard that stops judging passes it"
     },
     {
       "id": "AT-00.6",
@@ -130,7 +158,7 @@
         "AC-00.3"
       ],
       "status": "green",
-      "note": ""
+      "note": "red in a clone with the ignore rule removed, and again with the manifest force-tracked"
     },
     {
       "id": "AT-00.8",
@@ -150,7 +178,7 @@
         "AC-00.1"
       ],
       "status": "green",
-      "note": ""
+      "note": "red under three mutations: stray marks unreported, no end-of-file case, no digit boundary"
     }
   ]
 }

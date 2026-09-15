@@ -21,20 +21,23 @@ title: Bring the suite and dev tooling current after the Intent v3 port
 - AC-00.4 A release archive carries neither `bin/devbin` nor `bin/.devbin/` -- devbin is how the tool is made, not the tool. -- satisfied: yes (computed)
 - AC-00.5 (non-test) No code points at a thread path that no longer exists: `not_implemented()` in `lib/common.sh`, unreachable because every command it once stood in for is built, is removed. -- evidence: commit 4085030 removed it: at that commit git grep finds no not_implemented in bin/, lib/, help/ or test/, and the same probe finds render_venture_template in lib/common.sh -- satisfied: yes
 - AC-00.6 (non-test) The hand-kept ledger in `intent/wip.md` agrees with the store's thread titles, and `intent doctor` reports no stale render. -- satisfied: no
+- AC-00.7 CI names no file that does not exist: every path its shellcheck and `bash -n` steps are handed matches a file, and the README shows the shellcheck line CI runs. -- satisfied: yes (computed)
 
 ## Acceptance Tests
 
 ### ST-level
 
-- AT-00.1 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
-- AT-00.2 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
-- AT-00.3 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
-- AT-00.4 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
-- AT-00.5 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
+- AT-00.1 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- red on the baseline sealed run of 15 September 2026, the port having taken the files it globbed, and green once it read the extract
+- AT-00.10 `test/cdsync.bats` -- covers AC-00.7 -- status: green -- red in a clone of the committed tree, where ci.yml still named .claude/scripts
+- AT-00.11 `test/cdsync.bats` -- covers AC-00.7 -- status: green -- red in a clone with ci.yml repaired and the README line not
+- AT-00.2 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- red under mutation: a guard that stops judging passes it
+- AT-00.3 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- red under mutation: a guard that skips a row citing nothing passes it
+- AT-00.4 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- red under mutation: a guard that stops judging passes it
+- AT-00.5 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- red under mutation: a guard that stops judging passes it
 - AT-00.6 `test/cdsync.bats` -- covers AC-00.3 -- status: green -- predates this thread; red here is the route the state machine requires, not a failure observed in ST0005
-- AT-00.7 `test/cdsync.bats` -- covers AC-00.3 -- status: green -- 
+- AT-00.7 `test/cdsync.bats` -- covers AC-00.3 -- status: green -- red in a clone with the ignore rule removed, and again with the manifest force-tracked
 - AT-00.8 `test/cdsync.bats` -- covers AC-00.4 -- status: green -- reads `git archive HEAD`, so it proves the devbin exclusion only once devbin and .gitattributes are committed
-- AT-00.9 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- 
+- AT-00.9 `test/cdsync.bats` -- covers AC-00.1 -- status: green -- red under three mutations: stray marks unreported, no end-of-file case, no digit boundary
 
 ---
 

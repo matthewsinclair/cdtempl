@@ -196,7 +196,7 @@ The split is deliberate. Rule 4 is the leak guard that makes neutrality a proper
 ```
 bats test/cdsync.bats          # the suite
 bin/devbin test all            # the suite as a sealed gate: tmp/test/LATEST_SHELL.errors is empty only after a completed green run
-shellcheck bin/cdsync lib/*.sh .claude/scripts/*.sh
+shellcheck bin/cdsync lib/*.sh
 cdsync doctor                  # installation, dependencies, spec library
 ```
 

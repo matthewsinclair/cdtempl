@@ -72,7 +72,7 @@ jobs:
       # therefore 0 whatever shellcheck found, which is exactly how this repo
       # believed it was clean for several days while it was not.
       - name: Shellcheck
-        run: shellcheck bin/cdsync lib/*.sh .claude/scripts/*.sh
+        run: shellcheck bin/cdsync lib/*.sh
 
   hygiene:
     name: hygiene
@@ -137,7 +137,7 @@ jobs:
         run: |
           fail=0
           [ -x bin/cdsync ] || { echo "::error::bin/cdsync is not executable"; fail=1; }
-          for f in bin/cdsync lib/*.sh .claude/scripts/*.sh; do
+          for f in bin/cdsync lib/*.sh; do
             bash -n "$f" || { echo "::error::syntax error in $f"; fail=1; }
           done
           exit "$fail"
