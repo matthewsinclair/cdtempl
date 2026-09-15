@@ -223,24 +223,3 @@ render_venture_template() {
     return 1
   }
 }
-
-# ============================================================================
-# NOT IMPLEMENTED
-# ============================================================================
-
-# Every unbuilt command routes through here. It fails loudly with a pointer to
-# where the design lives, rather than succeeding quietly and leaving the caller
-# to wonder why nothing happened.
-not_implemented() {
-  local cmd="$1"
-  local what="$2"
-
-  error "cdsync $cmd is not implemented yet"
-  echo "" >&2
-  echo "  $what" >&2
-  echo "" >&2
-  echo "  Blocked on ST0001, which settles the brief format, the output" >&2
-  echo "  structure, the asset taxonomy, and the per-asset specifications." >&2
-  echo "  See intent/st/ST0001/." >&2
-  return 2
-}
