@@ -195,6 +195,7 @@ The split is deliberate. Rule 4 is the leak guard that makes neutrality a proper
 
 ```
 bats test/cdsync.bats          # the suite
+bin/devbin test all            # the suite as a sealed gate: tmp/test/LATEST_SHELL.errors is empty only after a completed green run
 shellcheck bin/cdsync lib/*.sh .claude/scripts/*.sh
 cdsync doctor                  # installation, dependencies, spec library
 ```
@@ -203,7 +204,7 @@ The suite is the contract. Several tests are structural rather than behavioural 
 
 **Mutation-test a new assertion in both directions before trusting it**: break the code, watch it go red, restore it. In this project, tests have been wrong rather than the code more often than the reverse.
 
-Layout: `bin/cdsync` is the dispatcher, `lib/*.sh` is one module per job, `specs/` is the library, `help/` is one page per command, `templates/` is what `new` scaffolds from. `intent/llm/MODULES.md` is the registry of which module owns what -- check it before creating a new one.
+Layout: `bin/cdsync` is the dispatcher, `bin/devbin` is the development launcher and not part of a release, `lib/*.sh` is one module per job, `specs/` is the library, `help/` is one page per command, `templates/` is what `new` scaffolds from. `intent/llm/MODULES.md` is the registry of which module owns what -- check it before creating a new one.
 
 ## Licence
 

@@ -1192,6 +1192,120 @@ EOF
   done
 }
 
+# check_contract_citations <canon-dir> <repo-root> -- every citation a test-backed
+# acceptance row carries, checked against the repository it cites into.
+#
+# SINCE THE INTENT V3 PORT OF 26 AUGUST 2026, A CONTRACT LIVES IN THE STORE, and
+# its committed form is one `intent/.canon/st/<id>.json` per thread, open or
+# closed. The port removed every `acceptance.md` the guard below used to glob,
+# and the guard failed at once on its own nonzero-total assertion -- which is
+# what that assertion is for, and the second time it has caught a moved frame.
+#
+# NOT THE REALISED VIEWS. `intent/st/<id>/acceptance.md` still exists for an OPEN
+# thread (`intent/.intentfiles` declares which), so a glob over the views goes
+# green again as soon as any open thread cites one real test -- checking that
+# thread's contract and silently no closed one. ST0005 measured exactly that
+# before this was written. The extract is the one home; a view renders it.
+#
+# WHERE A ROW NAMES ITS TEST. A v2 row wrote `path::"test name"`, which the port
+# kept as `legacy.raw`. A v3 row cites a FILE and nothing finer -- `intent at
+# green` refuses a `file` that is not a path on disk -- so in this project a v3
+# row names its test at the head of its note, in double quotes:
+#
+#   intent at edit <ST> <AT> --file test/cdsync.bats --note '"<test name>" ...'
+#
+# Every cited file must exist, and every test name found, in `legacy.raw` or at
+# the head of the note, must be a test in that file. A row naming no test cites
+# the whole file -- ST0004's whole-suite row does -- and the closing line's two
+# counts show how many. A test-backed row citing no file at all is REPORTED, not
+# skipped, because a reader that drops what it cannot parse is a reader that
+# reports clean -- and `intent at lint` examines none of the legacy rows and
+# still says `ok`, so it cannot stand in for this.
+#
+# Prints one line per problem and a closing `checked:` line. Returns 1 on any
+# problem, and on an extract it reads no citation from at all.
+check_contract_citations() {
+  local canon="$1" root="$2"
+  local sep thread tid id cite noted path name tname hit
+  local threads=0 cites=0 named=0 problems=0
+  # A unit separator, not a tab: tab is IFS whitespace, so `read` would fold an
+  # empty field into its neighbour and shift a note into the citation.
+  sep="$(printf '\037')"
+
+  while IFS= read -r thread; do
+    tid="${thread##*/}"
+    tid="${tid%.json}"
+    threads=$((threads + 1))
+
+    if ! jq -e '.' "$thread" >/dev/null 2>&1; then
+      echo "$tid: not readable as JSON"
+      problems=$((problems + 1))
+      continue
+    fi
+
+    while IFS="$sep" read -r id cite noted; do
+      if [[ -z "$cite" ]]; then
+        echo "$tid $id: a test-backed row that cites nothing"
+        problems=$((problems + 1))
+        continue
+      fi
+      cites=$((cites + 1))
+
+      path="$cite"
+      name=""
+      if [[ "$cite" == *'::"'*'"' ]]; then
+        path="${cite%%::\"*}"
+        name="${cite#*::\"}"
+        name="${name%\"}"
+      fi
+
+      if [[ ! -f "$root/$path" ]]; then
+        echo "$tid $id: cites $path, which is not in the repository"
+        problems=$((problems + 1))
+        continue
+      fi
+
+      hit=0
+      for tname in "$name" "$noted"; do
+        [[ -n "$tname" ]] || continue
+        hit=1
+        if ! grep -qF "@test \"$tname\"" "$root/$path"; then
+          echo "$tid $id: cites \"$tname\", which $path does not have"
+          problems=$((problems + 1))
+        fi
+      done
+      named=$((named + hit))
+    done < <(jq -r '
+      .tests[]? | select(.kind == "test") | . as $t
+      | (($t.note // "") | [match("^\"([^\"]+)\"").captures[0].string] | first // "") as $noted
+      | [$t.file, $t.legacy.raw] | map(select(type == "string" and length > 0))
+      | if length == 0 then "\($t.id)\($noted)"
+        else .[] | "\($t.id)\(.)\($noted)" end
+    ' "$thread")
+  done < <(find "$canon" -maxdepth 1 -type f -name 'ST*.json' 2>/dev/null | LC_ALL=C sort)
+
+  echo "checked: $cites citation(s), $named naming a test, across $threads thread(s) -- $problems problem(s)"
+
+  if [[ "$cites" -eq 0 ]]; then
+    echo "read no citation under $canon -- the extract moved, or this reader broke"
+    return 1
+  fi
+  [[ "$problems" -eq 0 ]]
+}
+
+# A repository the contract guard can be pointed at: a suite holding one test,
+# and an empty extract for each fixture to write its own threads into.
+make_contract_fixture() {
+  mkdir -p "$TESTDIR/repo/test" "$TESTDIR/repo/intent/.canon/st"
+  printf '@test "%s" {\n  true\n}\n' "a test that exists" >"$TESTDIR/repo/test/cdsync.bats"
+}
+
+# write_contract <thread-id> <tests-json> -- one thread in the fixture's extract.
+write_contract() {
+  printf '{"schema": "intent/thread@3.0", "id": "%s", "tests": %s}\n' "$1" "$2" \
+    >"$TESTDIR/repo/intent/.canon/st/$1.json"
+}
+
 @test "every acceptance test named in a contract exists in this suite" {
   # Written because the first draft of ST0001's contract cited ELEVEN acceptance
   # tests and EIGHT of them did not exist -- plausible names for tests nobody had
@@ -1201,35 +1315,110 @@ EOF
   #
   # The gate counts AC-to-AT coverage; it has no way to know whether the AT is
   # real. This is the half it cannot check.
-  # All THREE locations a thread can sit in, because `intent st` moves the
-  # directory as status changes -- NOT-STARTED/ on creation, the live location
-  # while WIP, COMPLETED/ once closed. A glob written for one of them silently
-  # stops matching the moment a thread moves, which happened twice while this
-  # test was being written: first when ST0001 and ST0002 closed, then when
-  # ST0003 was created under NOT-STARTED/. Only the total-is-nonzero assertion
-  # below caught the first; the second was found by looking.
-  local file cited name missing=0 total=0
+  #
+  # Its frame has moved three times: twice in v2, when `intent st` moved a
+  # thread's directory as its status changed, and the nonzero assertion caught
+  # the first of those; then in the v3 port, which it caught the same way. Where
+  # the contracts live now, and why the realised views are the wrong place to
+  # read them, is above check_contract_citations.
+  run check_contract_citations "$CDSYNC_HOME/intent/.canon/st" "$CDSYNC_HOME"
+  if [ "$status" -ne 0 ]; then
+    printf '%s\n' "$output" >&2
+    return 1
+  fi
+}
 
-  for file in "$CDSYNC_HOME"/intent/st/ST*/acceptance.md \
-              "$CDSYNC_HOME"/intent/st/NOT-STARTED/ST*/acceptance.md \
-              "$CDSYNC_HOME"/intent/st/COMPLETED/ST*/acceptance.md; do
-    [[ -f "$file" ]] || continue
-    while IFS= read -r cited; do
-      [[ -n "$cited" ]] || continue
-      name="${cited#\"}"
-      name="${name%\"}"
-      total=$((total + 1))
-      if ! grep -qF "@test \"$name\"" "$CDSYNC_HOME/test/cdsync.bats"; then
-        echo "cited in ${file##*/} but not in the suite: $name" >&2
-        missing=$((missing + 1))
-      fi
-    done < <(grep -oE '::"[^"]+"' "$file" | sed 's/^:://')
-  done
+@test "the contract guard reads the test a v3 row names at the head of its note" {
+  # `intent at green` refuses a `file` that is not a path on disk, so a v3 row
+  # cannot write `path::"name"`. It names its test in its note instead, and a
+  # name there is held to the same standard as one in `legacy.raw`.
+  make_contract_fixture
+  write_contract ST9001 '[
+    {"id": "AT-1", "kind": "test", "file": "test/cdsync.bats", "note": "\"a test that exists\" -- and why it is cited"},
+    {"id": "AT-2", "kind": "test", "file": "test/cdsync.bats", "note": "\"a test nobody wrote\""},
+    {"id": "AT-3", "kind": "test", "file": "test/cdsync.bats", "note": "the whole suite, named by no test"}
+  ]'
 
-  # A probe that can only report zero is not a probe. Both contracts carry ATs,
-  # so a total of zero means the extraction broke rather than that all is well.
-  [ "$total" -gt 0 ]
-  [ "$missing" -eq 0 ]
+  run check_contract_citations "$TESTDIR/repo/intent/.canon/st" "$TESTDIR/repo"
+  [ "$status" -eq 1 ]
+  assert_contains 'ST9001 AT-2: cites "a test nobody wrote", which test/cdsync.bats does not have'
+  refute_contains 'AT-1'
+  # A note that does not open with a quoted name cites the whole file, and is
+  # counted apart rather than failed.
+  refute_contains 'AT-3'
+  assert_contains 'checked: 3 citation(s), 2 naming a test'
+}
+
+@test "the contract guard reports a cited test the suite does not have" {
+  make_contract_fixture
+  write_contract ST9001 '[
+    {"id": "AT-1", "kind": "test", "legacy": {"raw": "test/cdsync.bats::\"a test that exists\""}},
+    {"id": "AT-2", "kind": "test", "file": "test/cdsync.bats::\"a test nobody wrote\""}
+  ]'
+
+  run check_contract_citations "$TESTDIR/repo/intent/.canon/st" "$TESTDIR/repo"
+  [ "$status" -eq 1 ]
+  assert_contains 'ST9001 AT-2: cites "a test nobody wrote", which test/cdsync.bats does not have'
+  # The real citation beside it was read and passed, so what failed is the
+  # missing name -- not an extract the guard could not read.
+  refute_contains 'AT-1'
+  assert_contains 'checked: 2 citation(s), 2 naming a test'
+}
+
+@test "the contract guard refuses a test-backed row that cites nothing" {
+  make_contract_fixture
+  write_contract ST9001 '[
+    {"id": "AT-1", "kind": "test", "file": "test/cdsync.bats"},
+    {"id": "AT-2", "kind": "test", "status": "green"},
+    {"id": "AT-3", "kind": "non-test", "prose": "read by eye"}
+  ]'
+
+  run check_contract_citations "$TESTDIR/repo/intent/.canon/st" "$TESTDIR/repo"
+  [ "$status" -eq 1 ]
+  assert_contains 'ST9001 AT-2: a test-backed row that cites nothing'
+  refute_contains 'AT-1'
+  # A non-test row cites prose by design, and is not this guard's to judge.
+  refute_contains 'AT-3'
+}
+
+@test "the contract guard reports a cited file the repository does not have" {
+  make_contract_fixture
+  write_contract ST9001 '[
+    {"id": "AT-1", "kind": "test", "file": "test/cdsync.bats"},
+    {"id": "AT-2", "kind": "test", "file": "test/elsewhere.bats"}
+  ]'
+
+  run check_contract_citations "$TESTDIR/repo/intent/.canon/st" "$TESTDIR/repo"
+  [ "$status" -eq 1 ]
+  assert_contains 'ST9001 AT-2: cites test/elsewhere.bats, which is not in the repository'
+  refute_contains 'AT-1'
+}
+
+@test "the contract guard refuses an extract it reads no citation from" {
+  make_contract_fixture
+  local canon="$TESTDIR/repo/intent/.canon/st"
+
+  # Empty -- the shape of what the old guard read after the port.
+  run check_contract_citations "$canon" "$TESTDIR/repo"
+  [ "$status" -eq 1 ]
+  assert_contains 'read no citation'
+
+  # Missing, which is what an extract that has moved looks like from here.
+  run check_contract_citations "$TESTDIR/repo/intent/.canon/elsewhere" "$TESTDIR/repo"
+  [ "$status" -eq 1 ]
+  assert_contains 'read no citation'
+
+  # Present, but holding no test-backed row.
+  write_contract ST9001 '[{"id": "AT-1", "kind": "non-test", "prose": "read by eye"}]'
+  run check_contract_citations "$canon" "$TESTDIR/repo"
+  [ "$status" -eq 1 ]
+  assert_contains 'read no citation'
+
+  # And a thread that is not JSON at all is reported by name, not read as empty.
+  printf 'not json\n' >"$canon/ST9002.json"
+  run check_contract_citations "$canon" "$TESTDIR/repo"
+  [ "$status" -eq 1 ]
+  assert_contains 'ST9002: not readable as JSON'
 }
 
 @test "the README rule table matches help/check.md" {
@@ -1757,6 +1946,20 @@ HTML
   assert_contains "unknown subcommand"
 }
 
+# devbin's manifest is the one file devbin writes a home directory into:
+# `devbin install` and `devbin upgrade` both record the absolute path of the
+# devbin they came from. The home-path guard sees a file only once it is tracked,
+# and this repository publishes on push -- so .gitignore keeps the manifest out
+# of the tree, and this pins that it stays out.
+@test "the devbin manifest is never tracked, because it records a home directory" {
+  # Two halves, each asked on its own. The rule: --no-index asks the patterns
+  # alone, because without it check-ignore answers "not ignored" for any TRACKED
+  # file, and the second half would never be reached. The index: an ignore rule
+  # does not untrack a file that is already tracked.
+  git -C "$CDSYNC_HOME" check-ignore -q --no-index bin/.devbin/manifest.sha256
+  [ -z "$(git -C "$CDSYNC_HOME" ls-files bin/.devbin/manifest.sha256)" ]
+}
+
 # The tarball contract, checked against the mechanism that actually builds it.
 # `git archive` reads .gitattributes, so this pins the export-ignore rules
 # rather than a list restated in the module or the help page.
@@ -1774,7 +1977,8 @@ HTML
 
   local excluded
   for excluded in 'intent/' 'test/' '.github/' '.claude/' '.gitattributes' \
-    'AGENTS.md' 'CLAUDE.md' 'usage-rules.md' '.intent_critic.yml' 'design/'; do
+    'AGENTS.md' 'CLAUDE.md' 'usage-rules.md' '.intent_critic.yml' 'design/' \
+    'bin/devbin' 'bin/.devbin/'; do
     if printf '%s\n' "$listing" | grep -q "^$excluded"; then
       echo "release archive carries $excluded, which .gitattributes export-ignores" >&2
       return 1
@@ -1794,6 +1998,23 @@ HTML
     echo "release archive top level changed" >&2
     echo "  expected: $expected" >&2
     echo "  actual:   $actual" >&2
+    return 1
+  fi
+
+  # And one level down, where the pin above cannot see. devbin lives in `bin/`
+  # beside the dispatcher, so a release that carried it would leave the top level
+  # exactly as it was -- measured on 15 September 2026 against a tree holding
+  # devbin without its export-ignore rules: the top-level pin passed, and `bin/`
+  # held 49 entries. The exclusions above name devbin; this pin is for whatever
+  # arrives in `bin/` next without a name. A release's `bin/` holds the
+  # dispatcher and nothing else.
+  local bin_actual bin_expected
+  bin_actual="$(printf '%s\n' "$listing" | grep '^bin/' | LC_ALL=C sort | tr '\n' ' ')"
+  bin_expected="bin/ bin/cdsync "
+  if [[ "$bin_actual" != "$bin_expected" ]]; then
+    echo "release archive bin/ changed" >&2
+    echo "  expected: $bin_expected" >&2
+    echo "  actual:   $bin_actual" >&2
     return 1
   fi
 }
