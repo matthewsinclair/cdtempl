@@ -3,7 +3,7 @@ node: vc
 name: cdsync-vc
 role: vc
 session_id: none
-heartbeat_at: 2026-09-15 18:12Z
+heartbeat_at: 2026-09-15 20:37Z
 status: active
 focus: ""
 claims: []
@@ -21,7 +21,11 @@ _(none)_
 
 ## Holds
 
-_(none)_
+- Until hv pushes: then read CI per job (gh run view), because no CI run has seen the Intent v3 port or ST0005, and a local pass has never predicted CI here
+- Until hv rules on the refocus proposal's six decisions (token format, PDF engine, web target, mobile depth, rename, the delivered projects): then open thread A, canon and scope, as the next thread
+- Until hv rules who holds the project's Decisions and Watch-outs now that vc is the only node: cc's board still claims the whole roster and cites a path the port removed
+- Until hv says whether vc files it in devbin's tracker or routes it to devbin-cc: devbin writes an absolute home path into every estate's manifest
+- Until hv rules on the tracked, gitignored intent/.treeindex/ files from the public root commit: intent organize --apply would prune them, so ST0005 removed its own views by hand
 
 ## Watch-outs
 
