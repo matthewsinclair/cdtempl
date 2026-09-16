@@ -21,6 +21,7 @@ AGENTS.md          export-ignore
 CLAUDE.md          export-ignore
 usage-rules.md     export-ignore
 .intent_critic.yml export-ignore
+.prettierignore    export-ignore
 design/            export-ignore
 
 # The dev launcher and its vendored runtime. devbin drives the development of
