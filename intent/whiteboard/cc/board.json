@@ -1037,6 +1037,70 @@
       "text": "(2026-08-09) **A library edition bump restamps nothing and invalidates nothing.** `spec_library_version` is the library's edition, stamped into every round, and a drop keeps the edition it was ordered against -- raising the number afterwards would falsify the one fact the stamp records. **Staleness is per asset and is `spec_version`'s job**: only a spec whose text actually moved raises its own, and `check` then reports only the assets built from it. If an edition bump restamped every drop, one editorial fix would make the whole world stale at once and the signal would mean nothing, which is the two-counters lesson applied to the other number. Stated in `specs/library.md`; edition 4 moved exactly three specs, verified against `templprj` rather than asserted.",
       "state": "live",
       "recorded_at": "2026-09-16T13:10:01.392Z"
+    },
+    {
+      "node": "cc",
+      "kind": "decision",
+      "seq": 62,
+      "text": "(2026-09-16) **The project and its tool are renamed Cdtempl: the local repository is Cdtempl, its remote is matthewsinclair/cdtempl, the command is `cdtempl`, and nothing live keeps the former name.** The per-venture file, the version stamp and the environment variables all take the new name too. Records of past work keep the name they were made under: git history, the `v0.1.0` tag and its published archive, closed threads' records, board history and the delivered drop in `templates/claude_design/templprj/`. It is a clean break -- the tool does not read the former names, so a delivered project is migrated only when it next needs work. The logo is a boot, for bootstrap, and stays; only its files are renamed. This supersedes the 6 August ruling that named the tool.",
+      "state": "live",
+      "recorded_at": "2026-09-16T13:11:46.729Z"
+    },
+    {
+      "node": "cc",
+      "kind": "decision",
+      "seq": 63,
+      "text": "(2026-09-16) **Design tokens use the W3C design-tokens format.** A standards-based shape for new work; existing projects are not back-fixed.",
+      "state": "live",
+      "recorded_at": "2026-09-16T13:11:46.751Z"
+    },
+    {
+      "node": "cc",
+      "kind": "decision",
+      "seq": 64,
+      "text": "(2026-09-16) **Both PDF engines: typst for documents and headless Chrome for designed pieces.** They do slightly different things.",
+      "state": "live",
+      "recorded_at": "2026-09-16T13:11:46.772Z"
+    },
+    {
+      "node": "cc",
+      "kind": "decision",
+      "seq": 65,
+      "text": "(2026-09-16) **Both web targets: standard HTML and CSS by default, with a Laksa theme as an option.**",
+      "state": "live",
+      "recorded_at": "2026-09-16T13:11:46.793Z"
+    },
+    {
+      "node": "cc",
+      "kind": "decision",
+      "seq": 66,
+      "text": "(2026-09-16) **Mobile gets a SwiftUI token export now and a Swift app template later.**",
+      "state": "live",
+      "recorded_at": "2026-09-16T13:11:46.815Z"
+    },
+    {
+      "node": "cc",
+      "kind": "decision",
+      "seq": 67,
+      "text": "(2026-09-16) **The delivered projects stay as they are.** There is no mileage in going backwards; each is changed or updated later, only when a need presents.",
+      "state": "live",
+      "recorded_at": "2026-09-16T13:11:46.836Z"
+    },
+    {
+      "node": "cc",
+      "kind": "decision",
+      "seq": 68,
+      "text": "(2026-09-16) **The Decisions and the Watch-outs stay on this board, rewritten to the whiteboard model rather than moved out of it.** cc is exempt from the whiteboard's bounds (`whiteboard.unbounded` in `intent/.config/config.json`). Rulings read oldest first because each new one is added at the bottom, and no command edits an item, so amending one means archiving it and deciding it again.",
+      "state": "live",
+      "recorded_at": "2026-09-16T13:11:46.857Z"
+    },
+    {
+      "node": "cc",
+      "kind": "decision",
+      "seq": 69,
+      "text": "(2026-09-16) **vc holds the Decisions and the Watch-outs, via hv, and coordinates cc to do the work.** A ruling or a watch-out changes only when hv says so: vc prepares the change and cc, this board's only writer, makes it. This replaces the 15 September override under which vc amended this board while cc was paused.",
+      "state": "live",
+      "recorded_at": "2026-09-16T13:11:46.878Z"
     }
   ],
   "messages": []

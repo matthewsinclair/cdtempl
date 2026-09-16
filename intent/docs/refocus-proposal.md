@@ -1,10 +1,10 @@
 ---
-verblock: "15 Sep 2026:v0.1: Matthew Sinclair - The refocus proposal and hv's six open decisions, written down so they outlive the conversation"
+verblock: "16 Sep 2026:v0.2: Matthew Sinclair - hv answered the six decisions, and the answers are Decisions on cc's board"
 ---
 
 # Refocus proposal: Cdsync as a venture design-system kit
 
-**Status: a proposal, not canon. Nothing here is ruled, and nothing in the transport is retired until hv rules.** `intent/docs/design-system-lifecycle.md` remains canon. When hv answers the six decisions below, thread A opens (`intent st new`) and carries the answers into canon; this document is then superseded and says so.
+**Status: hv answered all six decisions below on 16 September, and the answers are Decisions on cc's board.** `intent/docs/design-system-lifecycle.md` remains canon until thread A (`intent st new`) carries them into it, and nothing in the transport is retired before then; this document is then superseded and says so.
 
 ## The question hv asked
 
