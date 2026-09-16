@@ -1123,7 +1123,8 @@
       "kind": "watchout",
       "seq": 70,
       "text": "**`sqlite3 -readonly` on a cleanly closed WAL store does not fail loudly: it dumps `BEGIN TRANSACTION; ... ROLLBACK; -- due to errors`**, and piped into a hash its exit code is lost, so the hash of that stub reads as a real answer. **Read the store with `sqlite3 'file:<path>?immutable=1'`**, which also leaves no `-shm` or `-wal` beside it.",
-      "state": "live",
+      "state": "archived",
+      "archived_at": "2026-09-16T13:34:10.187Z",
       "recorded_at": "2026-09-16T13:22:57.143Z"
     },
     {
@@ -1141,6 +1142,14 @@
       "text": "**`git grep -E` does not honour `\\b`.** A pattern using it matches nothing and reads as a clean zero: on 16 Sep it found no invocations of the tool even in this repository's own CI, which has several. **Check a pattern against a known hit before trusting its zero.**",
       "state": "live",
       "recorded_at": "2026-09-16T13:22:57.193Z"
+    },
+    {
+      "node": "cc",
+      "kind": "watchout",
+      "seq": 73,
+      "text": "**`sqlite3 -readonly` cannot open a cleanly closed WAL store, and `.dump` still writes a stub to stdout** (`BEGIN TRANSACTION; ... ROLLBACK; -- due to errors`) while the error goes to stderr and the exit code is 1. Piped into a hash, the pipeline exits 0, and the hash of that stub reads as a real answer. **Read the store with `sqlite3 'file:<path>?immutable=1'`**, which also leaves no `-shm` or `-wal` beside it.",
+      "state": "live",
+      "recorded_at": "2026-09-16T13:34:10.212Z"
     }
   ],
   "messages": []
