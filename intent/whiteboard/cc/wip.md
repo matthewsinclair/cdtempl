@@ -92,6 +92,11 @@ _(none)_
 - **zsh aborts a whole loop on an unmatched glob** -- use `find`. **Shell cwd persists between tool calls** -- use absolute paths.
 - **`templates/claude_design/_Archive/` and `_archive/` are hv's own rolling backups.** Do not touch. **No project should have `docs/design/`.**
 - **Of the six spent `_inbox/` directories, the two newest hold the Laksa theme packs, which exist nowhere else.** Do not clear those two until Laksa has taken them.
+- **`git archive` obeys `.gitattributes` export-ignore, and here that leaves out most of the tree that is not the tool itself** -- `intent/`, `test/`, `.github/`, `.claude/`, `design/` and the agent files among it; `.gitattributes` is the list, not this line. 16 Sep, twice in one day and in both directions: a whole-tree comparison built on it reported clean on files it never extracted, and a check built on it reported a correct script wrong against files that were never there. **Compare trees with `git ls-tree -r` or `git show <rev>:<path>`.**
+- **A tool's remedy line is a claim, not a measurement.** 16 Sep: `intent doctor` said `intent sync --to-disk` would regenerate cc's registered but unmigrated board and discard it. Measured in a copy, sync never renders an unmigrated board, so it can neither destroy that board nor clear the finding. Two sessions repeated the claim to each other before either ran it. **Run a stated remedy in a copy before acting on it or warning about it.**
+- **`sqlite3 -readonly` on a cleanly closed WAL store does not fail loudly: it dumps `BEGIN TRANSACTION; ... ROLLBACK; -- due to errors`**, and piped into a hash its exit code is lost, so the hash of that stub reads as a real answer. **Read the store with `sqlite3 'file:<path>?immutable=1'`**, which also leaves no `-shm` or `-wal` beside it.
+- **The Bash tool's shell here is zsh, and zsh does not word-split an unquoted `$var`.** A list of paths held in one variable becomes a single literal path that matches nothing, and the probe reports a uniform zero. **Run a multi-path probe under `bash` explicitly.**
+- **`git grep -E` does not honour `\b`.** A pattern using it matches nothing and reads as a clean zero: on 16 Sep it found no invocations of the tool even in this repository's own CI, which has several. **Check a pattern against a known hit before trusting its zero.**
 
 ## Decisions
 
