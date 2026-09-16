@@ -76,7 +76,7 @@ Three deliberate choices in that shape:
 - `Whos Who In The Zoo.dc.html` — the source. Flowing document; the print engine
   paginates onto whatever paper the reader has.
 - `exports/whos-who-in-the-zoo.pdf` — generated. PDF is a print action taken on
-  the Cdsync side.
+  the Cdtempl side.
 
 Flowing rather than explicitly paginated, because team size varies and a fixed
 page count would be a lie the first time someone joins.

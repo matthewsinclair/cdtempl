@@ -120,7 +120,7 @@
     {
       "id": "AT-00.1",
       "kind": "test",
-      "file": "test/cdsync.bats",
+      "file": "test/cdtempl.bats",
       "covers": [
         "AC-00.3"
       ],
@@ -136,7 +136,7 @@
       "status": "green",
       "note": "called out separately because it builds its listing with `git archive HEAD` and so failed until the rename was committed; it reads committed state by design, which is what makes it the honest check of the packaging contract",
       "legacy": {
-        "raw": "test/cdsync.bats::\"a release archive carries the tool and not how it is made\""
+        "raw": "test/cdtempl.bats::\"a release archive carries the tool and not how it is made\""
       }
     }
   ],

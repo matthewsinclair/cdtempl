@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# cdsync bootstrap - generate BOOTSTRAP-CD.md, the document that hands a design
+# cdtempl bootstrap - generate BOOTSTRAP-CD.md, the document that hands a design
 # system to a Claude Design project
 #
 # ONE GENERATOR, TWO OUTPUTS, AND THAT IS THE WHOLE DESIGN. Run over an empty
@@ -10,7 +10,7 @@
 # Same command, same document, content following the tree's state.
 #
 # Built as two documents they would drift, and hand-authored drift is already the
-# recorded defect against `cdsync brief` three times over -- it cannot express a
+# recorded defect against `cdtempl brief` three times over -- it cannot express a
 # repackaging round, cannot order a slug the library does not hold, and carried
 # no numbering high-water marks until 30 July 2026. Four hand-written briefs on
 # 29 July are the evidence for what that costs.
@@ -30,7 +30,7 @@
 # fixtures agreed with every one of them, and found them only by running against
 # the real thing.
 #
-# IT CARRIES EVERYTHING IT NEEDS, for the same reason `cdsync brief` does: Claude
+# IT CARRIES EVERYTHING IT NEEDS, for the same reason `cdtempl brief` does: Claude
 # Design is scoped to one directory and cannot read this repository. A pointer to
 # a file the reader cannot open is a hole in the document, not a reference.
 #
@@ -43,7 +43,7 @@
 # the fix for itself. A second copy would not inherit the lesson.
 if ! declare -F brief_numbering >/dev/null 2>&1; then
   # shellcheck source=/dev/null
-  source "$CDSYNC_HOME/lib/cmd_brief.sh"
+  source "$CDTEMPL_HOME/lib/cmd_brief.sh"
 fi
 
 cmd_bootstrap() {
@@ -75,7 +75,7 @@ cmd_bootstrap() {
         ;;
       -*)
         error "unknown option: $1"
-        echo "usage: cdsync bootstrap [--delta] [--stdout] [--target PATH]" >&2
+        echo "usage: cdtempl bootstrap [--delta] [--stdout] [--target PATH]" >&2
         return 2
         ;;
       *)
@@ -91,7 +91,7 @@ cmd_bootstrap() {
 
   if [[ ! -d "$target" ]]; then
     error "target does not exist: $target"
-    echo "  run 'cdsync new <name>' to scaffold one, or pass --target" >&2
+    echo "  run 'cdtempl new <name>' to scaffold one, or pass --target" >&2
     return 1
   fi
 
@@ -139,12 +139,12 @@ bootstrap_refresh() {
   local body
 
   if ! body="$(compose_bootstrap "$target" "$source")"; then
-    warn "could not regenerate BOOTSTRAP-CD.md -- run 'cdsync bootstrap' by hand"
+    warn "could not regenerate BOOTSTRAP-CD.md -- run 'cdtempl bootstrap' by hand"
     return 0
   fi
 
   if ! printf '%s\n' "$body" | atomic_write "$target/BOOTSTRAP-CD.md"; then
-    warn "could not write BOOTSTRAP-CD.md -- run 'cdsync bootstrap' by hand"
+    warn "could not write BOOTSTRAP-CD.md -- run 'cdtempl bootstrap' by hand"
     return 0
   fi
 
@@ -224,7 +224,7 @@ bootstrap_is_reported() {
   # A refused file is not returnable material, so listing it under "all of it
   # comes back" asks Claude Design for something the install then discards. The
   # contract section names it as not theirs instead, the way `addenda/` is.
-  # Read from CDSYNC_DROP_REFUSED_FILES rather than restated, so the inbound
+  # Read from CDTEMPL_DROP_REFUSED_FILES rather than restated, so the inbound
   # refusal and the outbound instruction cannot drift apart.
   if drop_file_is_refused "$name"; then
     return 0
@@ -256,7 +256,7 @@ bootstrap_count_files() {
 # called a tree cold when it found none -- which over Lamplight, 708 tracked
 # files and 1.1GB of delivered design system, would have reported a COLD START
 # and told Claude Design to build from nothing. As-is exports are not in the
-# Cdsync asset shape; `check` refuses three of the four for exactly that reason.
+# Cdtempl asset shape; `check` refuses three of the four for exactly that reason.
 # A probe that sees one corner must not return a verdict on the whole tree, and
 # the dangerous direction is always the one that reports absence.
 bootstrap_state() {
@@ -267,26 +267,26 @@ bootstrap_state() {
     [[ -e "$entry" ]] || continue
     name="$(basename "$entry")"
     bootstrap_is_noise "$name" && continue
-    # cdsync.json is Cdsync-side material like this document itself: `new` and
+    # cdtempl.json is Cdtempl-side material like this document itself: `new` and
     # `init` both write it at the tree root, so counting it as content would
     # make every freshly scaffolded tree measure warm and the cold document
     # unreachable again -- the exact defect the skeleton clause below fixed.
     case "$name" in
-      _inbox|BOOTSTRAP-CD.md|RETURN-DELTA.md|cdsync.json) continue ;;
+      _inbox|BOOTSTRAP-CD.md|RETURN-DELTA.md|cdtempl.json) continue ;;
     esac
 
     # AN EMPTY SKELETON DIRECTORY IS NOT CONTENT, and missing that made the
     # cold document unreachable through the tool's own commands. `new` and
     # `init` both create assets/, kit/ and notes/ with a .gitkeep apiece, so
-    # every freshly scaffolded tree measured warm -- and `cdsync new acme &&
-    # cdsync bootstrap` told Claude Design "the design system already exists,
+    # every freshly scaffolded tree measured warm -- and `cdtempl new acme &&
+    # cdtempl bootstrap` told Claude Design "the design system already exists,
     # do not start it again" over three empty directories. The only way to get
     # the cold document was to point bootstrap at a tree with no skeleton,
     # which it refuses as non-existent. An unexercised guarantee is a claim,
     # and this one had quietly stopped being reachable at all.
     #
     # This does NOT walk back to the each_drop_asset bug the comment above
-    # describes. That one asked whether the tree held Cdsync-SHAPED assets and
+    # describes. That one asked whether the tree held Cdtempl-SHAPED assets and
     # called Lamplight cold because its 708 files are not in that shape. This
     # asks only whether a directory holds anything at all, so any file of any
     # shape still reads as warm.
@@ -319,7 +319,7 @@ bootstrap_header() {
   echo "# Bootstrap: adopting this design system"
   echo ""
   echo "**For a Claude Design project taking on the design system held at \`design/system/\`.**"
-  echo "Generated by \`cdsync bootstrap\` from the tree itself, so it describes what is"
+  echo "Generated by \`cdtempl bootstrap\` from the tree itself, so it describes what is"
   echo "actually there rather than what anyone remembers being there."
   echo ""
   echo "**This document is self-contained.** You cannot read the repository it came from,"
@@ -396,7 +396,7 @@ bootstrap_inventory() {
   fi
 
   if [[ "$count" -gt 0 ]]; then
-    echo "**$count assets** in the Cdsync asset shape, at \`assets/\`. Each is authoritative --"
+    echo "**$count assets** in the Cdtempl asset shape, at \`assets/\`. Each is authoritative --"
     echo "it is the current state of that piece of the design system, not a draft of it."
     echo ""
     echo "| Asset | Spec |"
@@ -417,7 +417,7 @@ bootstrap_inventory() {
   # Everything else at the top level, named rather than summarised.
   #
   # THE ASSET COUNT IS NOT A DESCRIPTION OF THE TREE. An as-is export is not in
-  # the Cdsync shape -- Lamplight carries 708 files across design-system/, docs/,
+  # the Cdtempl shape -- Lamplight carries 708 files across design-system/, docs/,
   # handoff/, prototypes/ and venture/, of which four are assets. Printing "4
   # assets" and stopping tells Claude Design the tree holds four things, and it
   # would then export four things. Whatever this cannot classify, it lists.
@@ -471,7 +471,7 @@ bootstrap_unclassified() {
         echo "**The asset list above is not the whole tree.** These top-level paths are here too,"
         echo "and they come back with it:"
       else
-        echo "**There are no assets in the Cdsync shape, and the tree is not empty.** This is an"
+        echo "**There are no assets in the Cdtempl shape, and the tree is not empty.** This is an"
         echo "as-is export rather than a converted drop. These top-level paths are what it holds:"
       fi
       echo ""
@@ -490,7 +490,7 @@ bootstrap_unclassified() {
 
   if [[ "$found" -eq 1 ]]; then
     echo ""
-    echo "**All of it is yours and all of it comes back.** Cdsync stores the whole deliverable,"
+    echo "**All of it is yours and all of it comes back.** Cdtempl stores the whole deliverable,"
     echo "so export every path listed here along with the assets. Anything you leave out of the"
     echo "archive reads as a deletion on the receiving side."
     echo ""
@@ -501,8 +501,8 @@ bootstrap_unclassified() {
 
 # WHICH SHAPE TO DESCRIBE, and getting this wrong nearly cost a tree.
 #
-# This used to print the Cdsync contract shape unconditionally, opening with
-# "Cdsync owns exactly these paths under the target. What you export is unpacked
+# This used to print the Cdtempl contract shape unconditionally, opening with
+# "Cdtempl owns exactly these paths under the target. What you export is unpacked
 # into them". Over an as-is tree -- Baize's 442 files across docs/, handoff/,
 # tiles/, uploads/ -- that reads as an instruction to restructure. Baize's
 # Claude Design project read it exactly that way on 31 July, worked out that
@@ -511,20 +511,20 @@ bootstrap_unclassified() {
 #
 # A document describing a shape the tree does not have, in a section headed
 # "the shape to export", is not a reference -- it is an order.
-# A DIRECTORY CALLED assets/ IS NOT THE CDSYNC SHAPE, and this predicate exists
+# A DIRECTORY CALLED assets/ IS NOT THE CDTEMPL SHAPE, and this predicate exists
 # because the first version of the branch below asked exactly that.
 #
 # Lamplight has `assets/` holding four subdirectories -- brand, portraits, ref,
 # shots -- and not one of them carries a `spec.md`. It is an as-is tree using a
 # name the drop contract happens to own, which is a standing hazard here: three
-# of the four projects use `assets/` for something that is not a Cdsync asset.
+# of the four projects use `assets/` for something that is not a Cdtempl asset.
 # Asking "are there asset directories" put Lamplight on the shaped branch and
 # handed it the restructure order this whole change exists to stop.
 #
 # So the question is whether the tree holds an asset in the CONTRACT's shape,
 # and the contract's own marker for that is the spec. Gyre & Gymble: 16 of 16.
 # Everyone else: none.
-bootstrap_is_cdsync_shaped() {
+bootstrap_is_cdtempl_shaped() {
   local target="$1"
   local slug
 
@@ -601,10 +601,10 @@ bootstrap_contract() {
   local target="$1"
   local state="${2:-warm}"
 
-  # A COLD TREE HAS NO SHAPE, so asking whether it holds Cdsync-shaped assets
+  # A COLD TREE HAS NO SHAPE, so asking whether it holds Cdtempl-shaped assets
   # returns the absence answer and selects the as-is contract -- which told a
   # project building from nothing "this document is not asking you to adopt"
-  # the very shape `cdsync check` then requires of it. The two documents
+  # the very shape `cdtempl check` then requires of it. The two documents
   # disagreed, and the one Claude Design reads first would have won.
   #
   # The as-is contract exists for a tree that ARRIVED in some other shape and
@@ -615,7 +615,7 @@ bootstrap_contract() {
   # of bootstrap_state: each_drop_asset answers about one corner, and over a
   # tree with no assets every answer it can give is the absence one. Fixing
   # that caller did not reach this one.
-  if [[ "$state" == "cold" ]] || bootstrap_is_cdsync_shaped "$target"; then
+  if [[ "$state" == "cold" ]] || bootstrap_is_cdtempl_shaped "$target"; then
     bootstrap_contract_shaped "$state"
   else
     bootstrap_contract_asis
@@ -631,11 +631,11 @@ bootstrap_contract_shaped() {
   echo "## The shape to export"
   echo ""
   if [[ "$state" == "cold" ]]; then
-    echo "Cdsync owns exactly these paths under the target, and the tree is empty, so"
+    echo "Cdtempl owns exactly these paths under the target, and the tree is empty, so"
     echo "**this is the shape to build into** rather than one to preserve. What you"
     echo "export is unpacked into them:"
   else
-    echo "Cdsync owns exactly these paths under the target, and this tree is already in"
+    echo "Cdtempl owns exactly these paths under the target, and this tree is already in"
     echo "that shape. What you export is unpacked into them:"
   fi
 
@@ -662,7 +662,7 @@ bootstrap_contract_asis() {
 **Export the tree in the shape it already has.** The same paths, reorganised
 into nothing. This round's changes go in the files where they already live.
 
-Cdsync does have a target shape -- `assets/<slug>/`, `kit/`, `notes/`, a manifest
+Cdtempl does have a target shape -- `assets/<slug>/`, `kit/`, `notes/`, a manifest
 at `index.md` -- and **this document is not asking you to adopt it.** Converting
 an as-is tree into it moves every file and breaks every relative pointer between
 them. That is a round of its own, and if it is wanted you will be sent a brief
@@ -701,7 +701,7 @@ only a copy that drifts. If this round changed or authored any, say so in
 `RETURN.md` file by file: installing the drop updates your copy and never
 theirs, so anything you do not name is lost.
 
-**Nor is this document, at any path.** `BOOTSTRAP-CD.md` is written by Cdsync for
+**Nor is this document, at any path.** `BOOTSTRAP-CD.md` is written by Cdtempl for
 you and flows outward, and it is regenerated from the tree on every sync -- so a
 copy you export back was already out of date when you sent it. It will have been
 handed to you as an upload, which means it is probably sitting wherever your
@@ -709,11 +709,11 @@ uploads collect. **Delete it before you export**, along with any covering note
 that came with it: those are transport, and transport that gets exported becomes
 a permanent stale answer next to a live one.
 
-**Nor is Cdsync's own protocol material.** Whiteboard skeletons, `OUTBOX.md`,
+**Nor is Cdtempl's own protocol material.** Whiteboard skeletons, `OUTBOX.md`,
 node directories, anything describing how a drop is exchanged rather than what
-the design is. A project using Cdsync has exactly one concern, this tree, and
+the design is. A project using Cdtempl has exactly one concern, this tree, and
 what it builds from it is its own business -- so samples and templates of the
-protocol live in Cdsync and never in a project's design system. If you are
+protocol live in Cdtempl and never in a project's design system. If you are
 holding any, delete it and say so in `RETURN.md`.
 
 **Nor is `.gitignore`, at any depth.** It decides what the receiving repository
@@ -724,7 +724,7 @@ it -- the tree would simply get smaller. So tracking policy flows from the
 repository outward and never from a drop inward: any `.gitignore` in an export
 is discarded on arrival, and named as it goes.
 
-**Nor is `cdsync.json`, at any depth.** It is the venture's own facts and order,
+**Nor is `cdtempl.json`, at any depth.** It is the venture's own facts and order,
 living at the tree root on the receiving side, and the order flows from the
 venture to you -- never back. A copy arriving in an export would sit where the
 next round reads its order from, so it is discarded on arrival the same way,
@@ -807,7 +807,7 @@ EOF
 # IT MUST ALSO ANSWER FOR AN ASSET THE LIBRARY DOES NOT HOLD, and that is the
 # commoner case rather than the edge: of the four trees in round one, only Gyre &
 # Gymble is built from taxonomy slugs at all. Lamplight's four assets are its own
-# names, and two trees carry no `assets/` in the Cdsync shape whatsoever. For those
+# names, and two trees carry no `assets/` in the Cdtempl shape whatsoever. For those
 # the honest number is no number, and saying so is what stops the next round
 # inventing one -- which is exactly the misuse that made this section necessary.
 bootstrap_version_numbers() {
@@ -893,7 +893,7 @@ bootstrap_version_numbers() {
 
   if [[ "$known" -eq 0 && "$missing" -eq 0 ]]; then
     echo "**Nothing in this tree carries a copyable number.** There are no assets in the"
-    echo "Cdsync shape here, so there is no specification for anything to have been"
+    echo "Cdtempl shape here, so there is no specification for anything to have been"
     echo "built from. Anything you deliver in that shape stamps **\`spec_version:"
     echo "unassigned\`** -- the literal word. Do not issue a number, and do not carry"
     echo "one forward from another project -- a number nobody issued cannot measure"
@@ -1065,7 +1065,7 @@ EOF
 
 # What changed on the repository side since the last export, for a WARM round.
 #
-# The inbound leg was tooled from the start -- archive into `_inbox/`, cdsync
+# The inbound leg was tooled from the start -- archive into `_inbox/`, cdtempl
 # unpacks it. The outbound leg was a human carrying notes. This is that leg: the
 # same tree scan, narrowed to what a long-running Claude Design project does not
 # already know, so a warm round does not have to re-read the whole bootstrap.
@@ -1075,7 +1075,7 @@ compose_delta() {
   echo "# Since your last export"
   echo ""
   echo "**For the Claude Design project that already holds this design system.** Generated by"
-  echo "\`cdsync bootstrap --delta\` from the tree. If you are a fresh project rather than a"
+  echo "\`cdtempl bootstrap --delta\` from the tree. If you are a fresh project rather than a"
   echo "resuming one, read \`BOOTSTRAP-CD.md\` instead -- it carries everything, this carries"
   echo "only what changed."
   echo ""

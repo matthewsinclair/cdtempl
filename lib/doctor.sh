@@ -1,33 +1,33 @@
 #!/usr/bin/env bash
 #
-# cdsync - diagnostics
+# cdtempl - diagnostics
 #
 
-# Dependencies cdsync needs, as `name|install hint|why` records.
+# Dependencies cdtempl needs, as `name|install hint|why` records.
 #
 # A plain newline-delimited string rather than an array: bash 3.2 is the
 # floor here (macOS ships it), and expanding an empty array under `set -u`
 # is an error there.
-CDSYNC_DEPS="jq|brew install jq|read cdsync.json and kit/tokens.json
+CDTEMPL_DEPS="jq|brew install jq|read cdtempl.json and kit/tokens.json
 unzip|pre-installed on macOS|unpack a Claude Design drop
 python3|pre-installed on macOS|serve the microsite"
 
 run_doctor() {
-  echo -e "${BOLD}cdsync doctor${RESET}"
+  echo -e "${BOLD}cdtempl doctor${RESET}"
   echo "============"
   echo ""
 
   local issues=0
 
-  echo -e "${BOLD}[1/6]${RESET} CDSYNC_HOME"
-  if [[ -z "${CDSYNC_HOME:-}" ]]; then
-    error "CDSYNC_HOME is not set"
+  echo -e "${BOLD}[1/6]${RESET} CDTEMPL_HOME"
+  if [[ -z "${CDTEMPL_HOME:-}" ]]; then
+    error "CDTEMPL_HOME is not set"
     issues=$((issues + 1))
-  elif [[ ! -d "$CDSYNC_HOME" ]]; then
-    error "CDSYNC_HOME points at a directory that does not exist: $CDSYNC_HOME"
+  elif [[ ! -d "$CDTEMPL_HOME" ]]; then
+    error "CDTEMPL_HOME points at a directory that does not exist: $CDTEMPL_HOME"
     issues=$((issues + 1))
   else
-    success "CDSYNC_HOME=$CDSYNC_HOME"
+    success "CDTEMPL_HOME=$CDTEMPL_HOME"
   fi
   echo ""
 
@@ -35,33 +35,33 @@ run_doctor() {
   local missing=""
   local d
   for d in bin lib help; do
-    if [[ ! -d "$CDSYNC_HOME/$d" ]]; then
+    if [[ ! -d "$CDTEMPL_HOME/$d" ]]; then
       missing="$missing $d"
     fi
   done
   if [[ -n "$missing" ]]; then
     error "missing directories:$missing"
     issues=$((issues + 1))
-  elif [[ ! -x "$CDSYNC_HOME/bin/cdsync" ]]; then
-    error "bin/cdsync is not executable -- fix with: chmod +x $CDSYNC_HOME/bin/cdsync"
+  elif [[ ! -x "$CDTEMPL_HOME/bin/cdtempl" ]]; then
+    error "bin/cdtempl is not executable -- fix with: chmod +x $CDTEMPL_HOME/bin/cdtempl"
     issues=$((issues + 1))
   else
-    success "bin, lib and help present; bin/cdsync executable"
+    success "bin, lib and help present; bin/cdtempl executable"
   fi
   echo ""
 
   echo -e "${BOLD}[3/6]${RESET} PATH"
   case ":$PATH:" in
-    *":$CDSYNC_HOME/bin:"*)
-      success "\$CDSYNC_HOME/bin is on \$PATH"
+    *":$CDTEMPL_HOME/bin:"*)
+      success "\$CDTEMPL_HOME/bin is on \$PATH"
       ;;
     *)
-      if check_command cdsync; then
-        success "cdsync is on \$PATH: $(command -v cdsync)"
+      if check_command cdtempl; then
+        success "cdtempl is on \$PATH: $(command -v cdtempl)"
       else
-        warn "cdsync is not on \$PATH"
+        warn "cdtempl is not on \$PATH"
         echo "  Add to your shell config:" >&2
-        echo "    export PATH=\"$CDSYNC_HOME/bin:\$PATH\"" >&2
+        echo "    export PATH=\"$CDTEMPL_HOME/bin:\$PATH\"" >&2
         issues=$((issues + 1))
       fi
       ;;
@@ -82,7 +82,7 @@ run_doctor() {
       missing_deps=$((missing_deps + 1))
     fi
   done <<EOF
-$CDSYNC_DEPS
+$CDTEMPL_DEPS
 EOF
   if [[ $missing_deps -gt 0 ]]; then
     issues=$((issues + 1))
@@ -117,7 +117,7 @@ EOF
   if target="$(resolve_target "" "$PWD")" && source="$(target_source "" "$PWD")"; then
     describe_target "$target" "$source" "$PWD"
     if [[ ! -d "$target" ]]; then
-      info "does not exist yet -- cdsync import will create it"
+      info "does not exist yet -- cdtempl import will create it"
     fi
     # Advisory, not an issue: a stale generated document is worth a warning at
     # every touchpoint and a failure at none.

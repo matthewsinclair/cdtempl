@@ -1,9 +1,9 @@
-# cdsync install
+# cdtempl install
 
 Replace the target with an as-is Claude Design drop, preserving what a drop cannot supply.
 
 ```
-cdsync install <zip|dir> [--target PATH] [--dry-run] [--yes] [--force]
+cdtempl install <zip|dir> [--target PATH] [--dry-run] [--yes] [--force]
 ```
 
 ## install or import?
@@ -56,7 +56,7 @@ nothing to tell the two apart -- which is the failure mode, rather than the size
 
 | Kept | Why |
 |---|---|
-| `addenda/` | Declared in `CDSYNC_DROP_PROTECTED_PATHS`. Repo-authored, flows **back** to Claude Design, never arrives from an export |
+| `addenda/` | Declared in `CDTEMPL_DROP_PROTECTED_PATHS`. Repo-authored, flows **back** to Claude Design, never arrives from an export |
 | Anything gitignored | Git cannot restore what it never tracked, so the recoverability argument above does not cover it |
 
 `_inbox/` is the live second case: it is the drop-off point for delivery archives,
@@ -87,7 +87,7 @@ redundant.
 So the rule is about direction rather than content. **Tracking policy flows from the
 repository outward and never from a drop inward.** This is the mirror of the protected
 paths above: those declare what a drop may not overwrite, this declares what it may not
-deliver. Declared in `CDSYNC_DROP_REFUSED_FILES`.
+deliver. Declared in `CDTEMPL_DROP_REFUSED_FILES`.
 
 The repo-owned `design/.gitignore` sits *outside* the target and is untouched by any of
 this -- which is exactly why it survives a replace and the drop's copy does not.
@@ -96,7 +96,7 @@ this -- which is exactly why it survives a replace and the drop's copy does not.
 
 An as-is export has no contract. The four exports of 30 July 2026 carry
 `design-system/`, `venture/`, `handoff/`, `prototypes/` and a microsite, and **not one
-of them satisfies the drop contract** — which is why `cdsync check` correctly refuses
+of them satisfies the drop contract** — which is why `cdtempl check` correctly refuses
 three of the four.
 
 So nothing here validates a shape; inventing one would refuse real drops. Safety comes
@@ -106,6 +106,6 @@ this refuses is an empty one.
 
 ## After installing
 
-`cdsync check` holds a drop against its specifications, but an as-is export is not
-Cdsync-shaped and will be refused — correctly. Check runs after a **conversion** round,
+`cdtempl check` holds a drop against its specifications, but an as-is export is not
+Cdtempl-shaped and will be refused — correctly. Check runs after a **conversion** round,
 on the drop `import` delivers.

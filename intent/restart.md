@@ -23,43 +23,43 @@ verblock: "16 Sep 2026:v2.3: Matthew Sinclair - hv's refocus answers are Decisio
 
 ## Where the project is
 
-**Cdsync v1 is released, public, and every steel thread is Completed.** Ten commands. The bats suite is green end to end and prints its own count -- run it as `bin/devbin test all`, whose verdict is a sealed file under `tmp/test/` -- and shellcheck is silent at default severity. **CI ran green on 15 September** on the push that carried the Intent v3 port and ST0005's repairs of what it broke -- both OS test jobs and the hygiene job, read per job rather than from the run's summary. ST0005 found one break of each kind: a guard the suite failed on as soon as anyone ran it, and two CI steps naming files the port removed, which only CI's own steps could see. **Read the spec-library numbers from `cdsync doctor`**, never from prose.
+**The tool is released at v0.1.0, public, and every steel thread is Completed.** Ten commands. The bats suite is green end to end and prints its own count -- run it as `bin/devbin test all`, whose verdict is a sealed file under `tmp/test/` -- and shellcheck is silent at default severity. **CI ran green on 15 September** on the push that carried the Intent v3 port and ST0005's repairs of what it broke -- both OS test jobs and the hygiene job, read per job rather than from the run's summary. ST0005 found one break of each kind: a guard the suite failed on as soon as anyone ran it, and two CI steps naming files the port removed, which only CI's own steps could see. **Read the spec-library numbers from `cdtempl doctor`**, never from prose.
 
-It has completed a **full cold round trip** -- initialise an empty tree, hand it to Claude Design, take the return back, check it -- for matthewsinclair and geodica. **Both came back Cdsync-shaped, so the cold-start document works.** **Six projects hold a design system tree**: those two, whose rollout hv is doing in Laksa, plus the original four, of which three were already integrated before anyone checked and **Lamplight is unchecked by design**.
+It has completed a **full cold round trip** -- initialise an empty tree, hand it to Claude Design, take the return back, check it -- for matthewsinclair and geodica. **Both came back Cdtempl-shaped, so the cold-start document works.** **Six projects hold a design system tree**: those two, whose rollout hv is doing in Laksa, plus the original four, of which three were already integrated before anyone checked and **Lamplight is unchecked by design**.
 
 **Nothing is open. hv answered the refocus proposal's six decisions on 16 September**, and **the answers are Decisions on cc's board**. The proposal asked whether the tool should stop being a way to sync a design system with Claude Design and become a way to bootstrap a venture's design system from a family of tried assets; it is `intent/docs/refocus-proposal.md`. **No thread is open for the refocus, and nothing in the transport is retired until thread A carries the rulings into canon.** The next piece of work opens a thread (`intent st new`) rather than resuming one -- and the carried-forward list below is what to read first.
 
-**The tool was renamed to Cdsync on 6 August, and the window that made it free has closed**: no tag existed then, and `v0.1.0` is out now, so the next rename of anything carries a published artefact with it. ST0004's contract has the verification and the post-close note; the lesson is on the board.
+**The tool was renamed to Cdtempl on 16 September, after `v0.1.0` was published under its former name**, which that release and its tag keep: a rename after a release carries a published artefact with it. The 6 August rename's contract (ST0004) has the verification method this one reuses, and the lesson is on the board.
 
 **The repository went public the same day. Everything committed here is published on push** -- no key, token, absolute path or real contact address belongs in a tracked file. The pre-public history is not recoverable from here; where it is kept is in `intent/wip.md`.
 
 ## Canon, and it outranks this file
 
-`design/system/` is the **single source of truth** for a project's design system, and Claude Design is a **clamp-on tool** used to work on it. The tree is **specification, not running code**; it is stored and tracked in full, and **the app never reads from it**. It is an **end-state view**, so a gap between the tree and the app is expected and is **never a defect** -- which is why Cdsync has no application-side check, and why checking that an application still agrees with its design system belongs to the application. It changes only through an iteration with Claude Design mediated by Cdsync -- never by hand-editing -- with `addenda/` the one sanctioned way to write into it.
+`design/system/` is the **single source of truth** for a project's design system, and Claude Design is a **clamp-on tool** used to work on it. The tree is **specification, not running code**; it is stored and tracked in full, and **the app never reads from it**. It is an **end-state view**, so a gap between the tree and the app is expected and is **never a defect** -- which is why Cdtempl has no application-side check, and why checking that an application still agrees with its design system belongs to the application. It changes only through an iteration with Claude Design mediated by Cdtempl -- never by hand-editing -- with `addenda/` the one sanctioned way to write into it.
 
 **Since the 9 August wind-back, the delivered projects are delivered.** The loop earns its keep for a few rounds while a design system beds down; after that the tree is **a record of what was asked for**, not a living document. Rare, project-specific rounds only; rollout is the project's own work.
 
 ## Two install paths, and picking wrong is the worst mistake in the tool
 
-| The artefact                                           | The command      | What it does                                                                        |
-| ------------------------------------------------------ | ---------------- | ----------------------------------------------------------------------------------- |
-| An **as-is export** -- the whole tree                  | `cdsync install` | **Replaces.** What the drop does not carry is removed, and every removal is printed |
-| A **converted drop** -- a subset, the five owned paths | `cdsync import`  | **Merges.** What the drop does not carry survives                                   |
+| The artefact                                           | The command       | What it does                                                                        |
+| ------------------------------------------------------ | ----------------- | ----------------------------------------------------------------------------------- |
+| An **as-is export** -- the whole tree                  | `cdtempl install` | **Replaces.** What the drop does not carry is removed, and every removal is printed |
+| A **converted drop** -- a subset, the five owned paths | `cdtempl import`  | **Merges.** What the drop does not carry survives                                   |
 
 **Hand-unzipping a drop is never correct.** `install` refuses over a target holding uncommitted or untracked content, because the tree being tracked in full is what makes a replace reversible. There is **no backup directory** by design -- the refusal is the backup.
 
 **The top-level plan is not the removal audit.** It lists top-level paths only, so a file deleted *inside* a replaced directory never appears in it. **`git status` after the install is where the removals actually are** -- that is how round three's 54 deletions were read.
 
-**`cdsync check` is not read-only either.** It rewrites computed `blanks` into every `spec.md` in the drop it walks. Pointing it at a tracked tree changes that tree; check `git status` afterwards.
+**`cdtempl check` is not read-only either.** It rewrites computed `blanks` into every `spec.md` in the drop it walks. Pointing it at a tracked tree changes that tree; check `git status` afterwards.
 
 ## Where the work is
 
 | Path                         | What                                                                                             |
 | ---------------------------- | ------------------------------------------------------------------------------------------------ |
-| `bin/cdsync`, `lib/*.sh`     | The tool. The dispatcher plus one module per job                                                 |
+| `bin/cdtempl`, `lib/*.sh`    | The tool. The dispatcher plus one module per job                                                 |
 | `bin/devbin`, `bin/.devbin/` | The dev launcher, vendored from devbin: not the tool, not in a release, its manifest gitignored  |
-| `test/cdsync.bats`           | The contract. Several tests are structural rather than behavioural -- `intent/wip.md` lists them |
-| `specs/`                     | The spec library, at edition 4. **`cdsync doctor` prints the counts**                            |
+| `test/cdtempl.bats`          | The contract. Several tests are structural rather than behavioural -- `intent/wip.md` lists them |
+| `specs/`                     | The spec library, at edition 4. **`cdtempl doctor` prints the counts**                           |
 | `intent/llm/MODULES.md`      | Per-module ownership, written from the code's own headers                                        |
 | `intent/llm/ARCHITECTURE.md` | As-built architecture and the dated decision log                                                 |
 | `.github/workflows/ci.yml`   | bats and shellcheck on ubuntu-latest and macos-latest, plus a hygiene job                        |
@@ -75,7 +75,7 @@ It has completed a **full cold round trip** -- initialise an empty tree, hand it
 - **devbin records a home directory in its manifest.** `devbin install` and `devbin upgrade` write `# source: <absolute path>` into `bin/.devbin/manifest.sha256`, and every sibling estate checked that tracks the manifest carries the line. Here the manifest is gitignored, and a test pins that, rather than edited. Filed in devbin's own tracker as issue `0069`. **Re-open when devbin records its source without a home directory** -- then track the manifest again and retire that test.
 - **Intent v3 cannot read a citation the port carried over from v2.** `intent at lint` examines none of ST0001 to ST0004's legacy rows and still says `ok`; the suite's contract guard is what checks them. **Re-open if Intent learns to read `legacy.raw`**, and drop the guard's legacy half then, rather than keep two checks of one thing.
 - **Intent renders an empty note as a trailing separator.** A test row whose note is the empty string ends its line in the realised `acceptance.md` with ` -- `, and CI's hygiene job fails on the trailing space; an absent note renders cleanly, and `intent at edit` has no way back to absent. ST0005 hit it by clearing notes and fixed forward by giving each row the evidence of its red. **Re-open when Intent renders an empty note the way it renders an absent one.**
-- **Two files describe a test layout this project does not have.** `AGENTS.md`, which is generated, says `bats -r tests/`, and `intent/llm/ARCHITECTURE-shell.md`, Intent's shell seed, says tests live under `tests/unit/`; the suite is `test/cdsync.bats`. **Re-open when either is next touched** -- `AGENTS.md` through `intent agents sync`, never by hand.
+- **Two files describe a test layout this project does not have.** `AGENTS.md`, which is generated, says `bats -r tests/`, and `intent/llm/ARCHITECTURE-shell.md`, Intent's shell seed, says tests live under `tests/unit/`; the suite is `test/cdtempl.bats`. **Re-open when either is next touched** -- `AGENTS.md` through `intent agents sync`, never by hand.
 
 ## Loose ends
 

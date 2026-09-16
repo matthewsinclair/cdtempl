@@ -59,7 +59,7 @@ to prevent.
 
 Where a round produces a pricing page before the prices exist, every figure must carry
 an explicit **illustrative** marker in the artefact itself, not merely in the covering
-note. `cdsync check` rule 3 enforces this, and it enforces it here more than anywhere:
+note. `cdtempl check` rule 3 enforces this, and it enforces it here more than anywhere:
 an unmarked example price has been quoted to a customer before now.
 
 ## Definition of done

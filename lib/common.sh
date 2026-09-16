@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
-# cdsync - shared primitives
+# cdtempl - shared primitives
 #
-# Sourced by bin/cdsync. Holds exactly the things every command needs and
+# Sourced by bin/cdtempl. Holds exactly the things every command needs and
 # nothing a single command needs -- those live in that command's own module.
 #
 
@@ -37,10 +37,10 @@ fi
 # elsewhere -- the document is an instruction the other side obeys, so a drift
 # would not merely mis-report, it would produce the wrong drop.
 #
-# It lives here rather than in cmd_check.sh because bin/cdsync sources command
+# It lives here rather than in cmd_check.sh because bin/cdtempl sources command
 # modules ON DEMAND. Only one cmd_*.sh is ever loaded, so bootstrap could not
 # read a constant of check's, and a module re-sourcing another module's file is
-# the thing bin/cdsync's own comment warns against.
+# the thing bin/cdtempl's own comment warns against.
 #
 # ONLY THIS SUBSET MOVED, not the full three-value vocabulary. `check` is the
 # sole reader of that one, so hoisting it would have bought nothing and left a
@@ -53,7 +53,7 @@ fi
 # finding it in `audience` proves nothing. `internal` and `confidential` say
 # nothing about who a thing is for, so they can only have arrived in that field
 # by conflation. Full reasoning at rule_classification_conflation.
-CDSYNC_CLASSIFICATION_ONLY="internal confidential"
+CDTEMPL_CLASSIFICATION_ONLY="internal confidential"
 
 # The above, rendered for prose: "`internal` and `confidential`".
 #
@@ -63,7 +63,7 @@ CDSYNC_CLASSIFICATION_ONLY="internal confidential"
 classification_only_prose() {
   local value out=""
 
-  for value in $CDSYNC_CLASSIFICATION_ONLY; do
+  for value in $CDTEMPL_CLASSIFICATION_ONLY; do
     out="$out\`$value\` and "
   done
 
@@ -74,7 +74,7 @@ classification_only_prose() {
 # LOGGING
 # ============================================================================
 #
-# All diagnostics go to stderr so a command's stdout stays pipeable. `cdsync
+# All diagnostics go to stderr so a command's stdout stays pipeable. `cdtempl
 # brief --stdout` pipes a brief into a clipboard; a stray info line on stdout
 # would corrupt it.
 
@@ -95,7 +95,7 @@ error() {
 }
 
 debug() {
-  if [[ "${CDSYNC_DEBUG:-}" == "1" ]]; then
+  if [[ "${CDTEMPL_DEBUG:-}" == "1" ]]; then
     echo -e "${BOLD}[debug]${RESET} $*" >&2
   fi
 }
@@ -104,8 +104,8 @@ debug() {
 # VERSION
 # ============================================================================
 
-get_cdsync_version() {
-  local version_file="$CDSYNC_HOME/VERSION"
+get_cdtempl_version() {
+  local version_file="$CDTEMPL_HOME/VERSION"
 
   if [[ -f "$version_file" ]]; then
     cat "$version_file"
@@ -139,7 +139,7 @@ require_command() {
   return 1
 }
 
-# THE gate for jq, which parses cdsync.json and is the only JSON reader here.
+# THE gate for jq, which parses cdtempl.json and is the only JSON reader here.
 #
 # Call this ONCE, before any loop that reads config -- never per-iteration,
 # and never try to memoise the result in a variable. A memo set inside a
@@ -176,7 +176,7 @@ atomic_write() {
   # Same directory as the destination, so the move is a rename within one
   # filesystem and therefore atomic. A temp file in /tmp would not be.
   local tmp
-  tmp="$(mktemp "$dest_dir/.cdsync.XXXXXX")" || {
+  tmp="$(mktemp "$dest_dir/.cdtempl.XXXXXX")" || {
     error "could not create a temporary file in $dest_dir"
     return 1
   }
@@ -204,7 +204,7 @@ atomic_write() {
 # tmpl/ directory, so a template here reads the way one there does.
 #
 # Lives in the always-sourced primitives because TWO command modules render
-# venture templates -- `new` for the whole scaffold, `init` for the cdsync.json
+# venture templates -- `new` for the whole scaffold, `init` for the cdtempl.json
 # stub at the tree root -- and command modules are sourced on demand, so a
 # helper one command borrows from another is a command-not-found at runtime.
 # That is exactly how `init` failed the first time it tried.

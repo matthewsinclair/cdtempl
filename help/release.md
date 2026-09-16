@@ -1,11 +1,11 @@
-# cdsync release
+# cdtempl release
 
 Read the version, move it, cut a release.
 
 ```
-cdsync release show
-cdsync release bump <major|minor|patch|X.Y.Z>
-cdsync release cut  <major|minor|patch|X.Y.Z> [--push] [--dry-run]
+cdtempl release show
+cdtempl release bump <major|minor|patch|X.Y.Z>
+cdtempl release cut  <major|minor|patch|X.Y.Z> [--push] [--dry-run]
 ```
 
 `VERSION` at the repository root is the single source of truth, bare semver and
@@ -75,7 +75,7 @@ no `v`, no suffix.
    to commit, so the tag goes on the commit that is already the release rather
    than on an empty one manufactured to sit beside it.
 4. **Tag** `vX.Y.Z`, annotated.
-5. **Package** `dist/cdsync-X.Y.Z.tar.gz`, built by `git archive` **from the
+5. **Package** `dist/cdtempl-X.Y.Z.tar.gz`, built by `git archive` **from the
    tag**.
 6. **Push** -- only with `--push`.
 
@@ -91,7 +91,7 @@ so the same idea lands on the ceremony instead.
 | Working tree clean | A release must be reproducible from the tag |
 | On `main` | A tag cut from a branch is a tag nobody can find |
 | Not behind upstream | Otherwise the tag names a commit the remote does not have |
-| `cdsync doctor` | The tool's own statement of what it needs |
+| `cdtempl doctor` | The tool's own statement of what it needs |
 | `shellcheck` | Run bare |
 | `bats` | The suite is the contract |
 

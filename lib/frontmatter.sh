@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# cdsync - YAML front matter, read and written
+# cdtempl - YAML front matter, read and written
 #
 # THE front-matter accessor. Every module that reads a spec.md, an index.md or
 # the spec library goes through here; nothing re-implements the parse.
 #
-# Deliberately not yq. Every field cdsync decides on is a scalar -- status,
+# Deliberately not yq. Every field cdtempl decides on is a scalar -- status,
 # spec_version, blanks, coverage -- and the only nested structure, depends_on,
 # is read for reporting rather than for control flow. Adding a hard dependency
 # on yq to parse fields awk handles in twenty lines would buy nothing and cost
@@ -191,7 +191,7 @@ fm_list() {
 
 # Replace a scalar in place, inserting it before the closing `---` if absent.
 #
-# This exists for exactly one caller: `cdsync check` computing `blanks` and
+# This exists for exactly one caller: `cdtempl check` computing `blanks` and
 # `blanks_unique` and writing them back. Those two fields were declared by hand
 # twice and were wrong both times, in three different ways -- so the tool owns
 # them now, and owning them means being able to write them.

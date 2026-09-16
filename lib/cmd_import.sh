@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
-# cdsync import - unpack a Claude Design drop into the target
+# cdtempl import - unpack a Claude Design drop into the target
 #
 # Deliberately dumb, and that is what makes it safe. It unpacks into
-# $CDSYNC_TARGET and stops. It does not write into the application -- not
+# $CDTEMPL_TARGET and stops. It does not write into the application -- not
 # assets/, not priv/static/, not lib/<app>_web/components/. The venture project
 # takes what it needs out of the target on its own terms, by hand, with
 # judgement.
@@ -27,7 +27,7 @@
 
 if ! declare -F bootstrap_refresh >/dev/null 2>&1; then
   # shellcheck source=/dev/null
-  source "$CDSYNC_HOME/lib/cmd_bootstrap.sh"
+  source "$CDTEMPL_HOME/lib/cmd_bootstrap.sh"
 fi
 
 cmd_import() {
@@ -69,7 +69,7 @@ cmd_import() {
   done
 
   if [[ -z "$zip" ]]; then
-    error "usage: cdsync import <zip|dir> [--target PATH] [--dry-run]"
+    error "usage: cdtempl import <zip|dir> [--target PATH] [--dry-run]"
     return 2
   fi
 
@@ -228,7 +228,7 @@ import_drop() {
   fi
 
   # The two owned files at the drop root.
-  for file in $CDSYNC_DROP_OWNED_FILES; do
+  for file in $CDTEMPL_DROP_OWNED_FILES; do
     if [[ ! -f "$staged/$file" ]]; then continue; fi
     if [[ "$dry_run" -eq 0 ]]; then
       if ! cp "$staged/$file" "$target/$file"; then
@@ -276,7 +276,7 @@ import_drop() {
 
   success "$written path(s) written to $target"
   echo ""
-  info "nothing else in the target was touched. Run 'cdsync check' to hold the drop against its specs."
+  info "nothing else in the target was touched. Run 'cdtempl check' to hold the drop against its specs."
   return 0
 }
 
@@ -293,7 +293,7 @@ each_unowned_path() {
     esac
 
     owned=0
-    for known in $CDSYNC_DROP_OWNED_DIRS $CDSYNC_DROP_OWNED_FILES; do
+    for known in $CDTEMPL_DROP_OWNED_DIRS $CDTEMPL_DROP_OWNED_FILES; do
       if [[ "$name" == "$known" ]]; then
         owned=1
         break

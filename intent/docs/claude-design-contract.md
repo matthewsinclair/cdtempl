@@ -5,7 +5,7 @@ status: Protocol
 
 # The Claude Design contract
 
-**For a Claude Design session producing drops that land in a Cdsync-managed project.** Self-contained: you do not need the Cdsync repository to follow it.
+**For a Claude Design session producing drops that land in a Cdtempl-managed project.** Self-contained: you do not need the Cdtempl repository to follow it.
 
 This is not a brief. A brief orders a specific round; this is the standing contract every round is written against.
 
@@ -23,8 +23,8 @@ Three consequences that change how you should work:
 
 | Shape | Top level | Installed by |
 | ----- | --------- | ------------ |
-| **As-is** | Everything you have -- venture docs, the markdown, the microsite, prototypes, handoff | `cdsync install`, which replaces the tree |
-| **Converted** | Exactly `assets/ kit/ notes/ index.md RETURN.md` | `cdsync import`, which merges into the tree |
+| **As-is** | Everything you have -- venture docs, the markdown, the microsite, prototypes, handoff | `cdtempl install`, which replaces the tree |
+| **Converted** | Exactly `assets/ kit/ notes/ index.md RETURN.md` | `cdtempl import`, which merges into the tree |
 
 **Do not guess which one is wanted.** A conversion brief asks for the second and says so; an export brief asks for the first. Emitting an as-is tree when a conversion was ordered, or the reverse, is not a formatting difference -- the two are installed by different commands with opposite semantics.
 

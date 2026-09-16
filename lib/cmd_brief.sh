@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
-# cdsync brief - assemble the brief for Claude Design
+# cdtempl brief - assemble the brief for Claude Design
 #
-# One generator, two outlets: written to $CDSYNC_TARGET/brief.md, and with
+# One generator, two outlets: written to $CDTEMPL_TARGET/brief.md, and with
 # --stdout also emitted for pasting. Whether the brief reaches Claude Design by
 # upload or by being read out of the target it is scoped to is transport, not
 # content -- letting the paste path grow its own format would produce two
@@ -14,7 +14,7 @@
 # Claude Design is scoped to one directory and cannot read this repository. If it
 # could, briefs would drift toward being thin and reference-rich -- pointers to
 # specs, to design docs, to steel threads. That works now and breaks completely
-# the day Claude Design is scoped to a real venture, where Cdsync's internals
+# the day Claude Design is scoped to a real venture, where Cdtempl's internals
 # genuinely are not visible. So the constraint is held deliberately, and it is
 # what makes this command an assembler rather than a list of links: a pointer to
 # a file the reader cannot open is a hole in the brief, not a reference.
@@ -60,32 +60,32 @@ cmd_brief() {
   target="$(resolve_target "$flag_target" "$PWD")" || return 2
   source="$(target_source "$flag_target" "$PWD")" || return 2
 
-  # cdsync.json lives at the tree root (hv, 9 Aug 2026), so the resolved target
+  # cdtempl.json lives at the tree root (hv, 9 Aug 2026), so the resolved target
   # is where the venture's facts are read from. Bound once; every config reader
   # below defaults to it. Consumed across the sourced-file boundary by
   # config.sh's config_path, which shellcheck cannot see from here -- the same
-  # shape as CDSYNC_TARGET_DIRS in target.sh. Deliberately not exported: it is
-  # Cdsync's own state, not something a child process should inherit.
+  # shape as CDTEMPL_TARGET_DIRS in target.sh. Deliberately not exported: it is
+  # Cdtempl's own state, not something a child process should inherit.
   # shellcheck disable=SC2034
-  CDSYNC_CONFIG_DIR="$target"
+  CDTEMPL_CONFIG_DIR="$target"
 
   if ! config_exists "$target"; then
-    error "no cdsync.json in the target: $target"
+    error "no cdtempl.json in the target: $target"
     echo "" >&2
-    if [[ -f "$PWD/$CDSYNC_CONFIG_NAME" ]]; then
+    if [[ -f "$PWD/$CDTEMPL_CONFIG_NAME" ]]; then
       echo "  There is one at the project root, which was its old home. It lives at" >&2
       echo "  the design tree root now -- move it:" >&2
-      echo "    mv $CDSYNC_CONFIG_NAME ${target#"$PWD"/}/$CDSYNC_CONFIG_NAME" >&2
+      echo "    mv $CDTEMPL_CONFIG_NAME ${target#"$PWD"/}/$CDTEMPL_CONFIG_NAME" >&2
     else
-      echo "  A brief is assembled from the venture's own facts. Run 'cdsync new'," >&2
-      echo "  or write ${target#"$PWD"/}/$CDSYNC_CONFIG_NAME -- see 'cdsync help brief' for the fields." >&2
+      echo "  A brief is assembled from the venture's own facts. Run 'cdtempl new'," >&2
+      echo "  or write ${target#"$PWD"/}/$CDTEMPL_CONFIG_NAME -- see 'cdtempl help brief' for the fields." >&2
     fi
     return 2
   fi
 
   local venture
   venture="$(config_get '.venture')" || {
-    error "cdsync.json has no .venture"
+    error "cdtempl.json has no .venture"
     return 2
   }
 
@@ -99,7 +99,7 @@ cmd_brief() {
   expanded="$(expand_order $order)"
 
   if [[ -z "$expanded" ]]; then
-    error "cdsync.json orders nothing -- set .order.bundles or .order.assets"
+    error "cdtempl.json orders nothing -- set .order.bundles or .order.assets"
     return 2
   fi
 
@@ -349,7 +349,7 @@ brief_venture_facts() {
   echo "plausible invented number is worse than an obvious blank, because it"
   echo "survives into a document someone acts on. Illustrative numbers must be"
   echo "**visibly marked in the artefact**, not merely understood in conversation --"
-  echo "\`cdsync check\` enforces that, so an unmarked number fails the drop rather"
+  echo "\`cdtempl check\` enforces that, so an unmarked number fails the drop rather"
   echo "than reaching a reader."
   echo ""
 }
@@ -695,7 +695,7 @@ brief_structure() {
 # matter is stripped to render it that way, so a reader shown only this document had
 # no way to know the fields were ever machine-readable, reproduced the table it was
 # shown, and put the state in `index.md` instead. Entirely reasonable, and it left
-# `cdsync check` unable to read `status`, `spec_version` or `coverage` on any asset in
+# `cdtempl check` unable to read `status`, `spec_version` or `coverage` on any asset in
 # the drop.
 #
 # The brief's rendering of a spec was not the format the tool demanded back, and the
@@ -705,7 +705,7 @@ brief_spec_contract() {
   echo ""
   echo "Each asset's \`spec.md\` is its definition of done travelling with it, and it is"
   echo "read by machine as well as by people. **It must open with a YAML front-matter"
-  echo "block**, because \`cdsync check\` reads \`status\`, \`spec_version\` and \`coverage\`"
+  echo "block**, because \`cdtempl check\` reads \`status\`, \`spec_version\` and \`coverage\`"
   echo "from it and can hold the asset against nothing without them."
   echo ""
   echo "The specifications further down this document render those same fields as a"
@@ -753,7 +753,7 @@ brief_spec_contract() {
   # which one is right rather than leaving the supplier to infer it.
   echo "**\`formats_required\` in the header above is advisory.** It says which"
   echo "renderings this venture would like to end up with. It is **not part of the"
-  echo "definition of done**, and no rule in \`cdsync check\` reads it. An asset is"
+  echo "definition of done**, and no rule in \`cdtempl check\` reads it. An asset is"
   echo "complete when its specification is satisfied and its blanks are closed -- a"
   echo "missing PDF does not hold it open. Say what you did not render and why, and"
   echo "mark the asset on its own merits."
@@ -829,7 +829,7 @@ brief_kit() {
   if [[ -f "$tokens" ]]; then
     echo "### The token values"
     echo ""
-    echo "The file \`cdsync check\` reads. Every colour literal in the drop must appear"
+    echo "The file \`cdtempl check\` reads. Every colour literal in the drop must appear"
     echo "here, or the check blocks the drop."
     echo ""
     echo '```json'

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# cdsync - the file-level computations `check` runs on a drop
+# cdtempl - the file-level computations `check` runs on a drop
 #
 # Two scans live here: counting blanks, and finding colour literals. Both are
 # computations over files rather than judgements about a drop, which is why
@@ -265,7 +265,7 @@ each_blank_in_asset() {
 # written in `oklch()` as in hex, and a guard that cannot see the colour space
 # the kit is written in is not a guard. `oklch` and `oklab` precede `lch` and
 # `lab` so the longer name wins the alternation.
-CDSYNC_COLOUR_RE='#[0-9a-f]{3,8}\b|rgba?\([^)]*\)|hsla?\([^)]*\)|oklch\([^)]*\)|oklab\([^)]*\)|lch\([^)]*\)|lab\([^)]*\)|color\([^)]*\)'
+CDTEMPL_COLOUR_RE='#[0-9a-f]{3,8}\b|rgba?\([^)]*\)|hsla?\([^)]*\)|oklch\([^)]*\)|oklab\([^)]*\)|lch\([^)]*\)|lab\([^)]*\)|color\([^)]*\)'
 
 # THE colour normaliser, reading raw literals on stdin and emitting comparable
 # ones. Both sides of the check pipe through this, so the artefact and the kit
@@ -406,7 +406,7 @@ normalise_colours() {
 each_colour_in_file() {
   local file="$1"
 
-  grep -oiE "$CDSYNC_COLOUR_RE" "$file" 2>/dev/null \
+  grep -oiE "$CDTEMPL_COLOUR_RE" "$file" 2>/dev/null \
     | normalise_colours
 }
 
@@ -419,7 +419,7 @@ each_kit_colour() {
   local tokens="$1"
 
   jq -r '.. | strings' "$tokens" 2>/dev/null \
-    | grep -oiE "$CDSYNC_COLOUR_RE" \
+    | grep -oiE "$CDTEMPL_COLOUR_RE" \
     | normalise_colours \
     | sort -u
 }
@@ -515,7 +515,7 @@ each_metric_in_file() {
 # Advisory line when BOOTSTRAP-CD.md is older than the repository it describes.
 # Ordered by hv on 9 Aug 2026, shape (a): a warning, never blocking, and never
 # a numbered check rule -- the six rules judge what Claude Design delivered,
-# and this judges Cdsync's own output.
+# and this judges Cdtempl's own output.
 #
 # REPOSITORY-scoped, matching the generator's own reach. Scoped to the design
 # tree it reports clean on the provable case: what stales the document -- a new
@@ -564,6 +564,6 @@ report_bootstrap_staleness() {
   warn "BOOTSTRAP-CD.md is older than $count file(s) in the repository -- eg $example"
   echo "  A stale snapshot hands Claude Design numbers the tree has moved past," >&2
   echo "  and the last collision cost a full export cycle. Regenerate before" >&2
-  echo "  sending:  cdsync bootstrap --target $target" >&2
+  echo "  sending:  cdtempl bootstrap --target $target" >&2
   return 0
 }

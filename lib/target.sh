@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# cdsync - $CDSYNC_TARGET resolution
+# cdtempl - $CDTEMPL_TARGET resolution
 #
 # THE resolver. Every command that touches the target calls resolve_target and
 # nothing else -- no command re-derives the path itself, and no command
@@ -8,7 +8,7 @@
 #
 
 # The layout underneath the target is standardised. The location is not.
-CDSYNC_TARGET_DEFAULT="design"
+CDTEMPL_TARGET_DEFAULT="design"
 
 # Subdirectories mandated underneath whatever the target resolves to.
 # Deliberately not an implied production order: design and venture assets
@@ -22,15 +22,15 @@ CDSYNC_TARGET_DEFAULT="design"
 # has to be right about.
 # Consumed across the sourced-file boundary, by `cmd_new.sh`, which shellcheck
 # cannot see from here -- so the "appears unused" reading is wrong rather than
-# stale. Deliberately not exported: this is Cdsync's own constant, not something
+# stale. Deliberately not exported: this is Cdtempl's own constant, not something
 # a child process has any business inheriting.
 # shellcheck disable=SC2034
-CDSYNC_TARGET_DIRS="assets kit notes"
+CDTEMPL_TARGET_DIRS="assets kit notes"
 
 # Collapse `.` and `..` segments in a path, textually.
 #
 # `cd && pwd` is not usable here: the target frequently does not exist yet --
-# `cdsync import` creates it. `realpath` is not on every macOS. Textual
+# `cdtempl import` creates it. `realpath` is not on every macOS. Textual
 # normalisation is correct for what this feeds (is the target underneath the
 # repository root), and symlinks are out of scope because resolving them on a
 # path that does not exist is undefined anyway.
@@ -64,8 +64,8 @@ normalise_path() {
 # Resolve the target directory, in precedence order:
 #
 #   1. --target FLAG        explicit, wins over everything
-#   2. $CDSYNC_TARGET        environment
-#   3. cdsync.json's own directory -- the file lives at the tree root
+#   2. $CDTEMPL_TARGET      environment
+#   3. cdtempl.json's own directory -- the file lives at the tree root
 #      (hv, 9 Aug 2026), so finding it IS finding the target. Probed at
 #      design/system/ then design/ under the base.
 #   4. design/              built-in default
@@ -85,28 +85,28 @@ resolve_target() {
   if [[ -n "$flag_target" ]]; then
     target="$flag_target"
     source="--target flag"
-  elif [[ -n "${CDSYNC_TARGET:-}" ]]; then
-    target="$CDSYNC_TARGET"
-    source="\$CDSYNC_TARGET"
+  elif [[ -n "${CDTEMPL_TARGET:-}" ]]; then
+    target="$CDTEMPL_TARGET"
+    source="\$CDTEMPL_TARGET"
   elif probe="$(config_probe "$base")"; then
     target="$(dirname "$probe")"
-    source="cdsync.json"
+    source="cdtempl.json"
 
     # The `.target` field is retired: a file inside the tree cannot also be the
     # pointer to the tree. Ignoring it silently would leave a stale field that
     # reads as if it steers, so it is said out loud until the field is deleted.
     if config_get '.target' "$target" >/dev/null 2>&1; then
-      warn "cdsync.json carries a retired .target field -- ignored; the file's own directory is the target"
+      warn "cdtempl.json carries a retired .target field -- ignored; the file's own directory is the target"
     fi
   fi
 
   if [[ -z "$target" ]]; then
-    target="$CDSYNC_TARGET_DEFAULT"
+    target="$CDTEMPL_TARGET_DEFAULT"
     source="built-in default"
   fi
 
   # Relative targets resolve against the project base, never against $PWD --
-  # `cdsync import` run from a subdirectory must land in the same place it
+  # `cdtempl import` run from a subdirectory must land in the same place it
   # would from the root.
   case "$target" in
     /*) ;;
@@ -131,13 +131,13 @@ target_source() {
     return 0
   fi
 
-  if [[ -n "${CDSYNC_TARGET:-}" ]]; then
-    echo "\$CDSYNC_TARGET"
+  if [[ -n "${CDTEMPL_TARGET:-}" ]]; then
+    echo "\$CDTEMPL_TARGET"
     return 0
   fi
 
   if config_probe "$base" >/dev/null 2>&1; then
-    echo "cdsync.json"
+    echo "cdtempl.json"
     return 0
   fi
 
@@ -188,7 +188,7 @@ describe_target() {
   #
   # `target_is_in_repo` answers one precise question -- is the target inside the
   # repo containing the working directory -- and the old wording read its `no` as
-  # "not versioned at all". Run `cdsync check --target ...` from one repository
+  # "not versioned at all". Run `cdtempl check --target ...` from one repository
   # against a drop in another and it announced "it does not version with the
   # project" about a tree with 708 files tracked in it. Measured on Lamplight,
   # 30 July 2026.
@@ -249,7 +249,7 @@ write_target_inbox_gitignore() {
     {
       echo ""
       echo "# _inbox/ is the drop-off point for delivery archives: ephemeral"
-      echo "# transport, unpacked by cdsync and recreated whenever one is wanted"
+      echo "# transport, unpacked by cdtempl and recreated whenever one is wanted"
       echo "# again. Nothing is in them that is not already unpacked and tracked"
       echo "# beside them."
       echo "$rule"
@@ -264,7 +264,7 @@ write_target_inbox_gitignore() {
   cat >"$ignore" <<EOF
 # The Claude Design drop lands at $name/ and is tracked in full.
 #
-# It is the output of the Claude Design process, put here and replaced by cdsync,
+# It is the output of the Claude Design process, put here and replaced by cdtempl,
 # and it is never hand-edited -- addenda/ is the one sanctioned way to write into
 # it. Nothing in this project runs on any of it. It is the requirements baseline
 # the realised design system is checked against, and being able to diff the
@@ -275,7 +275,7 @@ write_target_inbox_gitignore() {
 # regardless of it.
 #
 # _inbox/ is the drop-off point for delivery archives: ephemeral transport,
-# unpacked by cdsync and recreated whenever one is wanted again. Nothing to track.
+# unpacked by cdtempl and recreated whenever one is wanted again. Nothing to track.
 $rule
 EOF
 

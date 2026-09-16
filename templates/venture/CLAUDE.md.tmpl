@@ -5,7 +5,7 @@ specific to Claude Code.
 
 ## Before touching anything in design/
 
-`design/` is the as-designed record. `cdsync import` owns `assets/`, `kit/`,
+`design/` is the as-designed record. `cdtempl import` owns `assets/`, `kit/`,
 `notes/`, `index.md` and `RETURN.md` inside it. Do not hand-edit those.
 
 If you need something from a design artefact in the application, read the artefact,
@@ -22,7 +22,7 @@ two records are separate on purpose and a mechanical copy collapses them.
 
 ## Before claiming a drop is finished
 
-Run `cdsync check`. It blocks on two things: a `status: complete` that still has
+Run `cdtempl check`. It blocks on two things: a `status: complete` that still has
 blanks, and a colour literal that is not in `kit/tokens.json`. The second is the
 leak guard -- it is what keeps the neutral kit neutral, and it catches drift in
 both directions.
@@ -36,4 +36,4 @@ Advisories are worth reading and not worth stopping for.
 - Fill a blank in a design artefact to make it look finished. A visible blank is
   a working signal; a plausible invented value is a lie that survives into
   something someone acts on.
-- Hand-maintain `blanks` or `coverage`. `cdsync check` computes both.
+- Hand-maintain `blanks` or `coverage`. `cdtempl check` computes both.

@@ -43,7 +43,7 @@ where `fixed` says nothing about colour.
 This was learned the expensive way. A round arrived with a brand colour in `fixed`,
 a strictly neutral kit built to the letter of the paragraph above, and that colour
 used throughout the artefacts. Both halves were defensible alone and together they
-were a contradiction: `cdsync check` rule 4 requires every colour literal in the drop
+were a contradiction: `cdtempl check` rule 4 requires every colour literal in the drop
 to appear in `kit/tokens.json`, so the drop blocked in six places over a colour the
 venture had already decided.
 
@@ -84,7 +84,7 @@ remembered on every artefact is a rule that will be forgotten on one.
 |---|---|
 | `kit/kit.md` | The kit written down: ramp, type, the two kinds of blank, blank-counting scope, the illustrative marker, the prohibitions |
 | `kit/tokens.css` | Custom properties, every value marked `REPLACE` or `KEEP` |
-| `kit/tokens.json` | The same values, parseable — the file `cdsync check` reads |
+| `kit/tokens.json` | The same values, parseable — the file `cdtempl check` reads |
 
 Form B: a structure with placeholder values, where the structure is the deliverable
 and the values are meant to be replaced.

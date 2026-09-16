@@ -49,30 +49,30 @@ jobs:
           fi
           shellcheck --version
 
-      # doctor checks that cdsync is reachable on PATH, and it is right to: that
-      # is how the tool is actually used, and `./bin/cdsync` is not. Putting the
+      # doctor checks that cdtempl is reachable on PATH, and it is right to: that
+      # is how the tool is actually used, and `./bin/cdtempl` is not. Putting the
       # checkout on PATH makes CI exercise the real arrangement rather than
       # weakening the check to suit the runner.
-      - name: Put cdsync on PATH
+      - name: Put cdtempl on PATH
         run: echo "$GITHUB_WORKSPACE/bin" >> "$GITHUB_PATH"
 
       # jq, zip, unzip, python3 and git are preinstalled on both runners. doctor
       # is the tool's own statement of what it needs, so it gates rather than a
       # list maintained separately here -- two lists of the same thing drift.
-      - name: cdsync doctor
-        run: cdsync doctor
+      - name: cdtempl doctor
+        run: cdtempl doctor
 
       # --print-output-on-failure, because without it a failing `run` assertion
       # reports only which line failed. The first real macOS-only failure this
       # matrix caught could not be diagnosed from the log at all.
       - name: Tests
-        run: bats --print-output-on-failure test/cdsync.bats
+        run: bats --print-output-on-failure test/cdtempl.bats
 
       # Run bare. `shellcheck ... | tail` reports tail's exit code and is
       # therefore 0 whatever shellcheck found, which is exactly how this repo
       # believed it was clean for several days while it was not.
       - name: Shellcheck
-        run: shellcheck bin/cdsync lib/*.sh
+        run: shellcheck bin/cdtempl lib/*.sh
 
   hygiene:
     name: hygiene
@@ -113,10 +113,10 @@ jobs:
 
           TAB="$(printf '\t')"
           check "tab indentation found (the standard is two spaces)" \
-            git grep -lI -- "$TAB" -- '*.sh' 'bin/cdsync'
+            git grep -lI -- "$TAB" -- '*.sh' 'bin/cdtempl'
 
           check "trailing whitespace found" \
-            git grep -lIE ' +$' -- '*.sh' 'bin/cdsync' '*.md'
+            git grep -lIE ' +$' -- '*.sh' 'bin/cdtempl' '*.md'
 
           # A file not ending in a newline makes the next diff touch a line
           # nobody edited.
@@ -126,7 +126,7 @@ jobs:
               echo "::error::no final newline: $f"
               fail=1
             fi
-          done < <(git ls-files -- '*.sh' 'bin/cdsync' '*.md')
+          done < <(git ls-files -- '*.sh' 'bin/cdtempl' '*.md')
 
           exit "$fail"
 
@@ -136,8 +136,8 @@ jobs:
       - name: Syntax and permissions
         run: |
           fail=0
-          [ -x bin/cdsync ] || { echo "::error::bin/cdsync is not executable"; fail=1; }
-          for f in bin/cdsync lib/*.sh; do
+          [ -x bin/cdtempl ] || { echo "::error::bin/cdtempl is not executable"; fail=1; }
+          for f in bin/cdtempl lib/*.sh; do
             bash -n "$f" || { echo "::error::syntax error in $f"; fail=1; }
           done
           exit "$fail"

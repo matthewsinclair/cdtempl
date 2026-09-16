@@ -123,7 +123,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"a target file absent from the drop survives the import\""
+        "raw": "test/cdtempl.bats::\"a target file absent from the drop survives the import\""
       }
     },
     {
@@ -134,7 +134,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"import leaves an unmentioned path standing where install removes it\""
+        "raw": "test/cdtempl.bats::\"import leaves an unmentioned path standing where install removes it\""
       }
     },
     {
@@ -145,7 +145,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"a repo-authored addendum survives the import\""
+        "raw": "test/cdtempl.bats::\"a repo-authored addendum survives the import\""
       }
     },
     {
@@ -156,7 +156,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"addenda is declared protected in the drop contract\""
+        "raw": "test/cdtempl.bats::\"addenda is declared protected in the drop contract\""
       }
     },
     {
@@ -167,7 +167,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"a generated site survives the import\""
+        "raw": "test/cdtempl.bats::\"a generated site survives the import\""
       }
     },
     {
@@ -178,7 +178,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"site --build generates a page without serving\""
+        "raw": "test/cdtempl.bats::\"site --build generates a page without serving\""
       }
     },
     {
@@ -189,7 +189,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"site refuses a target that is not a drop\""
+        "raw": "test/cdtempl.bats::\"site refuses a target that is not a drop\""
       }
     },
     {
@@ -200,7 +200,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"new, brief, import, check and site compose end to end\""
+        "raw": "test/cdtempl.bats::\"new, brief, import, check and site compose end to end\""
       }
     },
     {
@@ -211,7 +211,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"check refuses a target that is not a drop\""
+        "raw": "test/cdtempl.bats::\"check refuses a target that is not a drop\""
       }
     },
     {
@@ -222,7 +222,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"check refuses when assets/ holds files rather than slug directories\""
+        "raw": "test/cdtempl.bats::\"check refuses when assets/ holds files rather than slug directories\""
       }
     },
     {
@@ -233,7 +233,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"check refuses an assets/ that exists but is empty\""
+        "raw": "test/cdtempl.bats::\"check refuses an assets/ that exists but is empty\""
       }
     }
   ],

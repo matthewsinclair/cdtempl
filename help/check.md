@@ -1,9 +1,9 @@
-# cdsync check
+# cdtempl check
 
 Hold a drop against its own specifications.
 
 ```
-cdsync check [--target PATH] [--no-write]
+cdtempl check [--target PATH] [--no-write]
 ```
 
 Walks every asset in the target, computes what can be computed, and applies six
@@ -68,7 +68,7 @@ describes. **Repository-scoped**, because what stales the document (a new steel
 thread, an ADR) usually lives outside the design tree; over **tracked and
 untracked-unignored files only**, so build churn cannot make it cry wolf. It is
 a warning and never blocks, and it is deliberately not a numbered rule: the six
-rules judge what Claude Design delivered, this judges Cdsync's own output.
+rules judge what Claude Design delivered, this judges Cdtempl's own output.
 `doctor` prints the same line. The remedy is always to regenerate — a stale
 snapshot hands Claude Design numbers the tree has moved past, and the last such
 collision cost a full export cycle.

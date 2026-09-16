@@ -13,7 +13,7 @@ design/          the as-designed record -- Claude Design's output
   assets/<slug>/ one directory per asset, flat
   notes/         durable thinking that is not an asset
   site/          generated microsite over the above
-cdsync.json       this venture's facts, in one place
+cdtempl.json     this venture's facts, in one place
 ```
 
 Everything outside `design/` is the as-built record. The two are kept apart
@@ -22,20 +22,20 @@ deliberately -- see `AGENTS.md`.
 ## Getting a design drop
 
 ```sh
-# 1. fill in cdsync.json -- especially `fixed`, `open`, and `order`
+# 1. fill in cdtempl.json -- especially `fixed`, `open`, and `order`
 # 2. assemble the brief
-cdsync brief
+cdtempl brief
 
 # 3. give design/brief.md to Claude Design, let it work, export a zip
 # 4. unpack it
-cdsync import ~/Downloads/drop.zip
+cdtempl import ~/Downloads/drop.zip
 
 # 5. hold it against its own specs
-cdsync check
+cdtempl check
 
 # 6. read it
-cdsync site
+cdtempl site
 ```
 
-`cdsync brief` inlines every ordered asset's full specification, so the brief is
+`cdtempl brief` inlines every ordered asset's full specification, so the brief is
 complete on its own. Nothing in it points at a file the reader cannot open.

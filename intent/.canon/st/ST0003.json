@@ -280,7 +280,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"release accepts an explicit target version, not only a bump part\""
+        "raw": "test/cdtempl.bats::\"release accepts an explicit target version, not only a bump part\""
       }
     },
     {
@@ -291,7 +291,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"release accepts the current version as an explicit target, so a first release can be cut\""
+        "raw": "test/cdtempl.bats::\"release accepts the current version as an explicit target, so a first release can be cut\""
       }
     },
     {
@@ -302,7 +302,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"release refuses an explicit target older than the current version\""
+        "raw": "test/cdtempl.bats::\"release refuses an explicit target older than the current version\""
       }
     },
     {
@@ -313,7 +313,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"release compares version components numerically, not as strings\""
+        "raw": "test/cdtempl.bats::\"release compares version components numerically, not as strings\""
       }
     },
     {
@@ -324,7 +324,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"release refuses an explicit target that is not bare semver\""
+        "raw": "test/cdtempl.bats::\"release refuses an explicit target that is not bare semver\""
       }
     },
     {
@@ -335,7 +335,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"release cut plans the explicit version it was given\""
+        "raw": "test/cdtempl.bats::\"release cut plans the explicit version it was given\""
       }
     },
     {
@@ -346,7 +346,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"release commits a version change, and tags in place when VERSION is already correct\""
+        "raw": "test/cdtempl.bats::\"release commits a version change, and tags in place when VERSION is already correct\""
       }
     },
     {
@@ -357,7 +357,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"the shipped library states no taxonomy-wide count either\""
+        "raw": "test/cdtempl.bats::\"the shipped library states no taxonomy-wide count either\""
       }
     },
     {
@@ -368,7 +368,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"every dependency the spec library names is a slug the taxonomy holds\""
+        "raw": "test/cdtempl.bats::\"every dependency the spec library names is a slug the taxonomy holds\""
       }
     },
     {
@@ -379,7 +379,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"brief tells the supplier that formats are advisory\""
+        "raw": "test/cdtempl.bats::\"brief tells the supplier that formats are advisory\""
       }
     },
     {
@@ -390,7 +390,7 @@
       ],
       "status": "green",
       "legacy": {
-        "raw": "test/cdsync.bats::\"a bad dependency slug is declared as outside the taxonomy\""
+        "raw": "test/cdtempl.bats::\"a bad dependency slug is declared as outside the taxonomy\""
       }
     }
   ],

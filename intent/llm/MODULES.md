@@ -1,10 +1,10 @@
-# Module Registry - Cdsync
+# Module Registry - Cdtempl
 
 > **The Highlander Rule**: There can be only one module per concern.
 > ALWAYS check this file before creating a new module. If a module already owns that concern, use it.
 > When you must create a new module, register it here FIRST, then create the file.
 
-Cdsync is bash. A "module" is a file under `lib/` sourced by `bin/cdsync`, and the concern it owns is declared in its own header -- most of them literally open with `THE reader of...` or `THE walker of...`. This table is that declaration collected in one place; **the file's header is the source of truth and this table follows it**, never the other way round.
+Cdtempl is bash. A "module" is a file under `lib/` sourced by `bin/cdtempl`, and the concern it owns is declared in its own header -- most of them literally open with `THE reader of...` or `THE walker of...`. This table is that declaration collected in one place; **the file's header is the source of truth and this table follows it**, never the other way round.
 
 ## Registry
 
@@ -12,28 +12,28 @@ Cdsync is bash. A "module" is a file under `lib/` sourced by `bin/cdsync`, and t
 
 | Concern | THE Module | Notes |
 | ------- | ---------- | ----- |
-| Dispatch | `bin/cdsync` | Thin coordinator: resolve home, source the shared primitives, parse the command, delegate. Sources `cmd_*.sh` **on demand** -- only one is ever loaded, so no command module may read another's constants |
+| Dispatch | `bin/cdtempl` | Thin coordinator: resolve home, source the shared primitives, parse the command, delegate. Sources `cmd_*.sh` **on demand** -- only one is ever loaded, so no command module may read another's constants |
 
 ### Shared primitives -- sourced for every command
 
 | Concern | THE Module | Notes |
 | ------- | ---------- | ----- |
-| Logging, colours, the classification vocabulary | `lib/common.sh` | Holds what every command needs and nothing one command needs. `CDSYNC_CLASSIFICATION_ONLY` lives here because `check` validates the words `bootstrap` instructs on |
-| `cdsync.json` | `lib/config.sh` | THE reader. Nothing else runs jq against that file |
-| `$CDSYNC_TARGET` resolution | `lib/target.sh` | THE resolver. Every command that touches the target calls `resolve_target` |
+| Logging, colours, the classification vocabulary | `lib/common.sh` | Holds what every command needs and nothing one command needs. `CDTEMPL_CLASSIFICATION_ONLY` lives here because `check` validates the words `bootstrap` instructs on |
+| `cdtempl.json` | `lib/config.sh` | THE reader. Nothing else runs jq against that file |
+| `$CDTEMPL_TARGET` resolution | `lib/target.sh` | THE resolver. Every command that touches the target calls `resolve_target` |
 | YAML front matter, read and written | `lib/frontmatter.sh` | THE accessor. Every module reading a `spec.md`, an `index.md` or the library manifest goes through it |
 | The shape of a drop | `lib/drop.sh` | Owns the drop contract: owned paths, protected paths, refused files, and the walker over `assets/` |
 | Getting an archive safely onto disk | `lib/archive.sh` | Shared by both install paths |
 | The spec library | `lib/specs.sh` | THE reader of `specs/`. `brief` assembles from here, `check` compares against here, nothing else touches it |
 | File-level computations | `lib/scan.sh` | THE colour normaliser and the counters `check` runs over a drop |
-| Diagnostics | `lib/doctor.sh` | Sourced only by `cdsync doctor` |
+| Diagnostics | `lib/doctor.sh` | Sourced only by `cdtempl doctor` |
 
 ### Commands -- one module each, sourced on demand
 
 | Concern | THE Module | Notes |
 | ------- | ---------- | ----- |
-| Scaffold a venture | `lib/cmd_new.sh` | **All** application knowledge lives here. New *venture*: its own repository, `cdsync.json`, agent contract, skeleton |
-| Start a design system in an existing repository | `lib/cmd_init.sh` | New *design system*, project already there. The skeleton, the `cdsync.json` stub at the tree root (hv, 9 Aug 2026), and the one file written outside the target -- no agent contract, no nested repository |
+| Scaffold a venture | `lib/cmd_new.sh` | **All** application knowledge lives here. New *venture*: its own repository, `cdtempl.json`, agent contract, skeleton |
+| Start a design system in an existing repository | `lib/cmd_init.sh` | New *design system*, project already there. The skeleton, the `cdtempl.json` stub at the tree root (hv, 9 Aug 2026), and the one file written outside the target -- no agent contract, no nested repository |
 | The repo-owned `_inbox` ignore rule | `lib/target.sh` | `write_target_inbox_gitignore`. Lives in the target's PARENT, because `install` replaces the target. Appends, never truncates |
 | Hand the design system to Claude Design | `lib/cmd_bootstrap.sh` | Generates `BOOTSTRAP-CD.md`. One generator, two shapes; cold or warm is measured, never declared |
 | Assemble the brief | `lib/cmd_brief.sh` | The brief carries everything its round needs |

@@ -1,20 +1,20 @@
 # ARCHITECTURE.md
 
-System architecture and design decisions for Cdsync.
+System architecture and design decisions for Cdtempl.
 
 ## System Overview
 
-Cdsync regularises the Claude Design process for the problems that recur across ventures. It is a bash CLI that assembles briefs from a spec library, receives what Claude Design sends back, and holds the result against its own specifications. **The goal is regular and predictable first, automated second** -- if the whole process were run by hand and never scripted, the regularity would still be most of the value.
+Cdtempl regularises the Claude Design process for the problems that recur across ventures. It is a bash CLI that assembles briefs from a spec library, receives what Claude Design sends back, and holds the result against its own specifications. **The goal is regular and predictable first, automated second** -- if the whole process were run by hand and never scripted, the regularity would still be most of the value.
 
 ## The inversion everything else follows from
 
-**`design/system/` is the single source of truth for a project's design system, and Claude Design is a clamp-on tool used to work on it.** Not the other way round. A project using cdsync has exactly one concern -- that tree -- and no cdsync protocol material belongs inside it.
+**`design/system/` is the single source of truth for a project's design system, and Claude Design is a clamp-on tool used to work on it.** Not the other way round. A project using cdtempl has exactly one concern -- that tree -- and no cdtempl protocol material belongs inside it.
 
 That single claim decides most of the design below: why the target is the whole output boundary, why the drop is tracked in full, why there are two install paths rather than one, and why a generated document is treated as an instruction rather than a report.
 
 ## Key Patterns
 
-**Thin coordinator.** `bin/cdsync` resolves home, sources the shared primitives, parses the command and delegates. It holds no business logic. Command modules are sourced **on demand** -- exactly one `cmd_*.sh` is ever loaded -- which is why no command module may read another's constants; anything two commands need moves to `lib/common.sh`.
+**Thin coordinator.** `bin/cdtempl` resolves home, sources the shared primitives, parses the command and delegates. It holds no business logic. Command modules are sourced **on demand** -- exactly one `cmd_*.sh` is ever loaded -- which is why no command module may read another's constants; anything two commands need moves to `lib/common.sh`.
 
 **One owner per concern, declared in the file.** Most modules open with `THE reader of...` or `THE walker of...`. `intent/llm/MODULES.md` collects those declarations; the header is the source of truth.
 
@@ -28,11 +28,11 @@ That single claim decides most of the design below: why the target is the whole 
 
 ```
 .
-├── bin/cdsync      # thin dispatcher
+├── bin/cdtempl    # thin dispatcher
 ├── lib/           # sourced modules: shared primitives + one cmd_*.sh per command
 ├── help/          # one markdown file per command, rendered by --help
 ├── specs/         # THE spec library: definition of done per asset, plus library.md
-├── templates/     # scaffolding copied by `cdsync new`
+├── templates/     # scaffolding copied by `cdtempl new`
 ├── test/          # bats suite
 └── intent/        # steel threads, docs, whiteboard, project artefacts
 ```
@@ -42,17 +42,17 @@ Full per-module ownership: `intent/llm/MODULES.md`.
 ## Data Flow
 
 ```
-cdsync new        scaffold a venture
-cdsync bootstrap  target state           -> BOOTSTRAP-CD.md into the target
-cdsync brief      specs/ + cdsync.json    -> a brief, for a human to carry across
-                 (Claude Design works, exports a zip; every lane passes through a human)
-cdsync install    as-is export (whole)   -> REPLACES the target
-cdsync import     converted drop (subset)-> MERGES into the five owned paths
-cdsync check      target vs specs/       -> findings, blocking or advisory
-cdsync site       target                 -> a microsite to look at it
+cdtempl new        scaffold a venture
+cdtempl bootstrap  target state           -> BOOTSTRAP-CD.md into the target
+cdtempl brief      specs/ + cdtempl.json  -> a brief, for a human to carry across
+                   (Claude Design works, exports a zip; every lane passes through a human)
+cdtempl install    as-is export (whole)   -> REPLACES the target
+cdtempl import     converted drop (subset)-> MERGES into the five owned paths
+cdtempl check      target vs specs/       -> findings, blocking or advisory
+cdtempl site       target                 -> a microsite to look at it
 ```
 
-**The whole output boundary is `$CDSYNC_TARGET`.** No command writes outside it. The target is the as-designed record; the application is the as-built, and a gap between them is expected and is not a defect.
+**The whole output boundary is `$CDTEMPL_TARGET`.** No command writes outside it. The target is the as-designed record; the application is the as-built, and a gap between them is expected and is not a defect.
 
 ## Decision Log
 

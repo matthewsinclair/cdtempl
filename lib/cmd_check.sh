@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# cdsync check - hold a drop against its own specifications
+# cdtempl check - hold a drop against its own specifications
 #
 # Six rules, none of them invented. Every one was earned by a real failure in
 # the rounds that produced the templates, which is why there are six rather
@@ -37,8 +37,8 @@
 # restraint: remove the failure mode instead of detecting it.
 #
 
-CDSYNC_CHECK_STATUSES="spec-only draft partial complete"
-CDSYNC_CHECK_CLASSIFICATIONS="public internal confidential"
+CDTEMPL_CHECK_STATUSES="spec-only draft partial complete"
+CDTEMPL_CHECK_CLASSIFICATIONS="public internal confidential"
 
 # ============================================================================
 # FINDINGS
@@ -68,9 +68,9 @@ rule_status_versus_blanks() {
     return 0
   }
 
-  case " $CDSYNC_CHECK_STATUSES " in
+  case " $CDTEMPL_CHECK_STATUSES " in
     *" $status "*) ;;
-    *) finding advisory "$slug" "rule-1" "unknown status '$status' -- expected one of: $CDSYNC_CHECK_STATUSES" ;;
+    *) finding advisory "$slug" "rule-1" "unknown status '$status' -- expected one of: $CDTEMPL_CHECK_STATUSES" ;;
   esac
 
   if [[ "$status" == "complete" && "$blanks" -gt 0 ]]; then
@@ -195,9 +195,9 @@ rule_classification() {
     return 0
   fi
 
-  case " $CDSYNC_CHECK_CLASSIFICATIONS " in
+  case " $CDTEMPL_CHECK_CLASSIFICATIONS " in
     *" $class "*) ;;
-    *) finding advisory "$slug" "rule-6" "unknown classification '$class' -- expected one of: $CDSYNC_CHECK_CLASSIFICATIONS" ;;
+    *) finding advisory "$slug" "rule-6" "unknown classification '$class' -- expected one of: $CDTEMPL_CHECK_CLASSIFICATIONS" ;;
   esac
 
   return 0
@@ -231,7 +231,7 @@ rule_classification() {
 # Defined in common.sh, because the generated document now tells Claude Design to
 # strip exactly these values from `audience` -- and a document naming a different
 # set from the rule that judges it would instruct the other side into the finding.
-CDSYNC_CHECK_CLASSIFICATION_ONLY="$CDSYNC_CLASSIFICATION_ONLY"
+CDTEMPL_CHECK_CLASSIFICATION_ONLY="$CDTEMPL_CLASSIFICATION_ONLY"
 
 rule_classification_conflation() {
   local slug="$1" spec="$2"
@@ -239,7 +239,7 @@ rule_classification_conflation() {
 
   while IFS= read -r aud; do
     if [[ -z "$aud" ]]; then continue; fi
-    case " $CDSYNC_CHECK_CLASSIFICATION_ONLY " in
+    case " $CDTEMPL_CHECK_CLASSIFICATION_ONLY " in
       *" $aud "*)
         finding advisory "$slug" "rule-6" "audience carries '$aud', which answers only where a thing may be shown, never who it is for -- the two axes are conflated"
         ;;

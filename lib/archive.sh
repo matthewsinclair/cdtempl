@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# cdsync - getting an archive safely onto disk
+# cdtempl - getting an archive safely onto disk
 #
 # Every path that reads a drop from outside the repository comes through here:
 # pre-flight the source, unpack it somewhere disposable, hand back its root.
@@ -19,7 +19,7 @@
 # The staging directory's name, so it can be recognised later from a path
 # pointing inside it. Declared here because both halves of the pair depend on
 # it agreeing, and a literal repeated in two functions is a literal that drifts.
-CDSYNC_STAGE_PREFIX="cdsync-stage"
+CDTEMPL_STAGE_PREFIX="cdtempl-stage"
 
 # ============================================================================
 # PRE-FLIGHT
@@ -223,7 +223,7 @@ stage_drop() {
   # the return value goes through a command substitution, so anything the
   # function sets dies with its subshell.
   local tmp
-  tmp="$(mktemp -d "${TMPDIR:-/tmp}/$CDSYNC_STAGE_PREFIX.XXXXXX")" || {
+  tmp="$(mktemp -d "${TMPDIR:-/tmp}/$CDTEMPL_STAGE_PREFIX.XXXXXX")" || {
     error "could not create a staging directory"
     return 1
   }
@@ -294,7 +294,7 @@ stage_cleanup() {
 
   while [[ "$root" == */* ]]; do
     case "${root##*/}" in
-      "$CDSYNC_STAGE_PREFIX".*)
+      "$CDTEMPL_STAGE_PREFIX".*)
         rm -rf "$root"
         return 0
         ;;

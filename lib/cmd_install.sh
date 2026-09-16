@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# cdsync install - replace the target with an as-is drop, preserving what a drop
+# cdtempl install - replace the target with an as-is drop, preserving what a drop
 # cannot supply
 #
 # THE SECOND INSTALL PATH, and it exists because the first one cannot do this.
@@ -43,7 +43,7 @@
 
 if ! declare -F bootstrap_refresh >/dev/null 2>&1; then
   # shellcheck source=/dev/null
-  source "$CDSYNC_HOME/lib/cmd_bootstrap.sh"
+  source "$CDTEMPL_HOME/lib/cmd_bootstrap.sh"
 fi
 
 cmd_install() {
@@ -125,7 +125,7 @@ cmd_install() {
   }
 
   # Before the plan, so anything discarded shows up in a --dry-run too. Tracking
-  # policy flows from the repo outward; see CDSYNC_DROP_REFUSED_FILES.
+  # policy flows from the repo outward; see CDTEMPL_DROP_REFUSED_FILES.
   drop_strip_refused "$staged" || {
     stage_cleanup "$staged" "$src"
     return 1
@@ -193,7 +193,7 @@ install_newest_in_inbox() {
   if [[ ! -d "$inbox" ]]; then
     error "no archive given, and there is no $inbox to take one from"
     echo "" >&2
-    echo "  usage: cdsync install [zip|dir] [--target PATH] [--dry-run] [--yes] [--force]" >&2
+    echo "  usage: cdtempl install [zip|dir] [--target PATH] [--dry-run] [--yes] [--force]" >&2
     echo "" >&2
     echo "  Name an archive, or drop one in $inbox and run this again." >&2
     return 2
@@ -231,7 +231,7 @@ install_newest_in_inbox() {
     printf '%s' "$tied" >&2
     echo "" >&2
     echo "  They share a timestamp. Name the one you mean:" >&2
-    echo "    cdsync install <zip> --target $target" >&2
+    echo "    cdtempl install <zip> --target $target" >&2
     return 2
   fi
 
@@ -254,7 +254,7 @@ install_newest_in_inbox() {
 # than a gap in this function. It is whatever Claude Design exported: the four
 # 30 July drops carry design-system/, venture/, handoff/, prototypes/ and a
 # microsite, and not one of them would satisfy `drop_looks_valid` -- which is
-# exactly why `cdsync check` refused three of the four.
+# exactly why `cdtempl check` refused three of the four.
 #
 # So there is nothing here to validate a shape against, and inventing a shape
 # would refuse real drops. Safety comes from the three things around this
@@ -342,7 +342,7 @@ install_guard_recoverable() {
 # Two rationales, deliberately kept distinct in the output so neither gets
 # re-litigated as the other:
 #
-#   declared  -- CDSYNC_DROP_PROTECTED_PATHS. Repo-authored, flows BACK to Claude
+#   declared  -- CDTEMPL_DROP_PROTECTED_PATHS. Repo-authored, flows BACK to Claude
 #                Design, never arrives from an export.
 #   untracked -- gitignored. Preserved not because it is precious but because
 #                git cannot restore it, so the recoverability argument that
@@ -541,7 +541,7 @@ install_execute() {
   success "$written path(s) installed, $kept preserved, $removed replaced or removed"
   echo ""
   info "the design system is specification, not running code -- nothing in the app should read from $target"
-  info "run 'cdsync check' if this drop is Cdsync-shaped; an as-is export is not, and will refuse"
+  info "run 'cdtempl check' if this drop is Cdtempl-shaped; an as-is export is not, and will refuse"
   return 0
 }
 

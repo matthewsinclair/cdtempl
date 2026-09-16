@@ -5,14 +5,14 @@ status: Canon
 
 # The design system lifecycle
 
-**This is project-management canon for Cdsync and for every project that uses it.** Stated by
+**This is project-management canon for Cdtempl and for every project that uses it.** Stated by
 hv on 2026-07-30. Everything else in this repository defers to it -- if a brief, a spec or a
 board entry disagrees with this document, this document is right and the other is a defect.
 
 ## The one paragraph
 
 `design/system/` is the **output of the Claude Design process**, managed in and out of a
-project by Cdsync. The whole deliverable lives there -- venture documents, the markdown, the
+project by Cdtempl. The whole deliverable lives there -- venture documents, the markdown, the
 microsite, the lot -- and it is **checked into the repository with the rest of the project**.
 Nothing in the application runs on any of it. It is **specification**: requirements, and
 information. The design system that the project actually runs is **built separately, here,
@@ -37,28 +37,28 @@ With the tree authoritative: a correction is a commit, the high-water marks are 
 material, and truth has one direction with a rest point where the repository always wins.
 
 **What the project then does with the design system is entirely the project's business.** A
-project using Cdsync has exactly one concern -- `design/system/` -- and Cdsync's whole job is
-syncing that in and out of Claude Design. No Cdsync protocol material belongs inside a
-project's tree: no outbox, no whiteboard, no handover scaffolding. If Cdsync needs a sample or
-a template, it lives in Cdsync.
+project using Cdtempl has exactly one concern -- `design/system/` -- and Cdtempl's whole job is
+syncing that in and out of Claude Design. No Cdtempl protocol material belongs inside a
+project's tree: no outbox, no whiteboard, no handover scaffolding. If Cdtempl needs a sample or
+a template, it lives in Cdtempl.
 
 ## The loop
 
 The working relationship is a **long-running Claude Design project**, synced each round:
 
-1. Cdsync creates `design/system/` and generates `BOOTSTRAP-CD.md` -- over an empty tree, the
+1. Cdtempl creates `design/system/` and generates `BOOTSTRAP-CD.md` -- over an empty tree, the
    instructions telling a cold Claude Design project what to build and how.
 2. Claude Design runs a round and exports what it holds as an archive.
-3. The archive lands in `_inbox/`, and Cdsync unpacks it into `design/system/`.
-4. Cdsync checks the result against the process. **Gaps are recorded in `addenda/`, never
+3. The archive lands in `_inbox/`, and Cdtempl unpacks it into `design/system/`.
+4. Cdtempl checks the result against the process. **Gaps are recorded in `addenda/`, never
    repaired in place.**
-5. Cdsync generates the delta back out, and the next round starts from it.
+5. Cdtempl generates the delta back out, and the next round starts from it.
 
 **A cold start is the same generator, not a second mechanism.** Run over an empty tree it
 yields the initial instructions; run over a populated tree it yields everything a fresh
 Claude Design project needs to resume where the last one stopped. Two documents built
 separately drift, and hand-authored drift is the defect already recorded three times against
-`cdsync brief`.
+`cdtempl brief`.
 
 **Bootstrap is an invariant before it is a workflow.** Its value is that it states the SSOT
 claim in testable form: if a cold Claude Design project can be reconstructed from
@@ -78,10 +78,10 @@ by the mechanism meant to prevent it. **Regenerate after touching `addenda/`, an
 generated document against the tree before sending it** -- which is the standing rule, and it
 is the one that caught this.
 
-`BOOTSTRAP-CD.md` is declared in `CDSYNC_DROP_PROTECTED_PATHS` alongside `addenda/`. It is
-Cdsync's output living inside Claude Design's tree, so without that an export overwrites it.
+`BOOTSTRAP-CD.md` is declared in `CDTEMPL_DROP_PROTECTED_PATHS` alongside `addenda/`. It is
+Cdtempl's output living inside Claude Design's tree, so without that an export overwrites it.
 
-## Cdsync does not repair a drop
+## Cdtempl does not repair a drop
 
 When a check finds a problem there are two honest outcomes, and repair-in-place is not one:
 
@@ -89,7 +89,7 @@ When a check finds a problem there are two honest outcomes, and repair-in-place 
   Design and retires when a later drop absorbs it.
 - **Refuse**, and send it back to Claude Design to be fixed at source.
 
-If Cdsync edits drop content, the tree stops being what Claude Design produced and a re-export
+If Cdtempl edits drop content, the tree stops being what Claude Design produced and a re-export
 diff stops meaning *the design changed* -- the same reason `.prettierignore` excludes the
 tree. An addendum is therefore **the artefact itself, not a changelog of an edit made
 elsewhere**.
@@ -100,7 +100,7 @@ elsewhere**.
 | - | ---------------- | ---------------------------- |
 | What it is | The delivered specification | The running implementation |
 | Who authors it | Claude Design | This project |
-| How it changes | An iteration with CD, mediated by Cdsync | Ordinary development |
+| How it changes | An iteration with CD, mediated by Cdtempl | Ordinary development |
 | Hand-edited? | **Never** -- except `addenda/` | Continuously |
 | Does the app read it? | **No. Not ever.** | It *is* the app |
 
@@ -123,7 +123,7 @@ with the repo, which then goes silently stale. Baize had exactly that and delete
 was the older version.
 
 One exclusion remains and it needs no defending: `design/system/_inbox/` is the drop-off
-point for delivery archives. They are ephemeral transport -- dropped in, unpacked by Cdsync,
+point for delivery archives. They are ephemeral transport -- dropped in, unpacked by Cdtempl,
 regenerated from Claude Design whenever one is wanted again. Nothing is in them that is not
 already unpacked and tracked beside them. This used to be written up as a platform limit,
 with GitHub's 100MB refusal and blobs stuck in published history; that framing produced
@@ -259,32 +259,32 @@ a failure. Nothing should ever block because the app has not caught up with the 
 
 ## How it changes
 
-Through **an iteration with Claude Design, mediated by Cdsync**. Not by editing the tree.
+Through **an iteration with Claude Design, mediated by Cdtempl**. Not by editing the tree.
 
 The single sanctioned exception is `addenda/`: repo-authored material *about* the design,
 written where the design has a gap, which flows **back** to Claude Design and **retires when
-a drop absorbs it**. It is declared in `lib/drop.sh` as `CDSYNC_DROP_PROTECTED_PATHS` and no
+a drop absorbs it**. It is declared in `lib/drop.sh` as `CDTEMPL_DROP_PROTECTED_PATHS` and no
 install path may overwrite it. An addendum records a gap in the drop's own voice; it is not
 a place to design things.
 
 ## Two install paths, and choosing wrong is the most destructive thing here
 
-**Cdsync's owned-path contract is narrower than the deliverable.** `import` writes exactly
+**Cdtempl's owned-path contract is narrower than the deliverable.** `import` writes exactly
 `assets/`, `kit/`, `notes/`, `index.md` and `RETURN.md`. The deliverable is the *whole tree*
--- and this canon says Cdsync manages that tree in and out. So there are two commands, and
+-- and this canon says Cdtempl manages that tree in and out. So there are two commands, and
 they are not variants of each other:
 
 | The artefact | The command | What it does |
 | ------------ | ----------- | ------------ |
-| An **as-is export** -- the whole tree | `cdsync install` | Replaces. What the drop does not carry is **removed**, and every removal is printed |
-| A **converted drop** -- a subset, the five owned paths | `cdsync import` | Merges. What the drop does not carry **survives** |
+| An **as-is export** -- the whole tree | `cdtempl install` | Replaces. What the drop does not carry is **removed**, and every removal is printed |
+| A **converted drop** -- a subset, the five owned paths | `cdtempl import` | Merges. What the drop does not carry **survives** |
 
 **An as-is export is the whole tree, so it is installed. A converted drop is a subset of it,
 so it is imported.** Reach for the wrong one and either the venture set, the microsite and
 the prototypes are deleted, or nine-tenths of the drop is reported as `ignore` and dropped
 on the floor.
 
-`cdsync install` was built on 30 July 2026 and closed the gap this section used to describe:
+`cdtempl install` was built on 30 July 2026 and closed the gap this section used to describe:
 before it, `import` protected repo-authored work but could deliver only five paths, a
 hand-unzip replace delivered the whole tree but destroyed anything repo-authored, and there
 was no third option. **Hand-unzipping a drop is now never correct.**

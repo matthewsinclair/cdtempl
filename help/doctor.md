@@ -1,9 +1,9 @@
-# cdsync doctor
+# cdtempl doctor
 
 Check that the installation, its dependencies and the spec library are intact.
 
 ```
-cdsync doctor
+cdtempl doctor
 ```
 
 Takes no options. It reads and reports; it writes nothing, anywhere.
@@ -12,16 +12,16 @@ Takes no options. It reads and reports; it writes nothing, anywhere.
 
 | # | Check | What a failure means |
 |---|---|---|
-| 1 | `CDSYNC_HOME` is set and points at a real directory | The shim resolved home wrongly, or the install moved |
-| 2 | `bin`, `lib` and `help` are present, and `bin/cdsync` is executable | A partial install. Fix an executable bit with `chmod +x` |
-| 3 | `cdsync` is reachable on `$PATH` | Only a convenience -- everything still works by full path |
+| 1 | `CDTEMPL_HOME` is set and points at a real directory | The shim resolved home wrongly, or the install moved |
+| 2 | `bin`, `lib` and `help` are present, and `bin/cdtempl` is executable | A partial install. Fix an executable bit with `chmod +x` |
+| 3 | `cdtempl` is reachable on `$PATH` | Only a convenience -- everything still works by full path |
 | 4 | `jq`, `unzip` and `python3` are available | Each is named with what it is for, so a missing one tells you which command will break |
 | 5 | The spec library: how many specs, taxonomy slugs and bundles, and the library, structure and kit versions | A count of zero means the library did not resolve, not that it is empty |
 | 6 | Target resolution: which target, where it came from, and whether it versions with the project | A target outside the repository does not version with the project. Also warns, advisory, when the target's `BOOTSTRAP-CD.md` is older than the repository it describes |
 
 ## Why it reports the target's provenance
 
-**A target outside the repository is correct for a shared or confidential drop, and wrong by accident.** The two cases look identical once resolved, so every command that resolves a target says which of the four sources it came from -- `--target`, `$CDSYNC_TARGET`, `cdsync.json`, or the `design/` default -- and whether the result sits inside the repository.
+**A target outside the repository is correct for a shared or confidential drop, and wrong by accident.** The two cases look identical once resolved, so every command that resolves a target says which of the four sources it came from -- `--target`, `$CDTEMPL_TARGET`, `cdtempl.json`, or the `design/` default -- and whether the result sits inside the repository.
 
 `doctor` is where you check that deliberately, rather than discovering it from a command that has already written something.
 

@@ -1,13 +1,13 @@
-# cdsync import
+# cdtempl import
 
 Unpack a Claude Design drop into the target.
 
 ```
-cdsync import <zip|dir> [--target PATH] [--dry-run]
+cdtempl import <zip|dir> [--target PATH] [--dry-run]
 ```
 
 Stages the drop somewhere it can be inspected, validates it, then writes it into
-`$CDSYNC_TARGET`. Reports which target resolved and whether it sits inside the
+`$CDTEMPL_TARGET`. Reports which target resolved and whether it sits inside the
 repository before doing anything.
 
 ## Options
@@ -56,7 +56,7 @@ convention propping up a guarantee. Conventions do not hold.
 
 So the boundary is explicit instead. It is the same as-designed versus as-built
 separation the whole design rests on, applied one level down — and it means a
-venture can keep its own files in the target, and `cdsync site` can generate into it,
+venture can keep its own files in the target, and `cdtempl site` can generate into it,
 without a later drop eating either.
 
 ## Validation happens before any write
@@ -74,4 +74,4 @@ was built.
 
 ## After importing
 
-Run `cdsync check` to hold the drop against its own specifications.
+Run `cdtempl check` to hold the drop against its own specifications.

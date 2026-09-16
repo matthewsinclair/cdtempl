@@ -1,6 +1,6 @@
 # What a release tarball may not contain.
 #
-# `cdsync release cut` builds the tarball with `git archive` from the tag, so
+# `cdtempl release cut` builds the tarball with `git archive` from the tag, so
 # this file -- not a list inside lib/cmd_release.sh -- decides what ships. One
 # list, read by the tool that does the work.
 #
@@ -15,7 +15,7 @@ test/           export-ignore
 .gitignore      export-ignore
 
 # The agent contract and the Intent development furniture. These describe how
-# Cdsync is built and reviewed, which is the same reason intent/ is excluded --
+# Cdtempl is built and reviewed, which is the same reason intent/ is excluded --
 # a release carries the tool, not the workshop.
 AGENTS.md          export-ignore
 CLAUDE.md          export-ignore
@@ -24,7 +24,7 @@ usage-rules.md     export-ignore
 design/            export-ignore
 
 # The dev launcher and its vendored runtime. devbin drives the development of
-# Cdsync -- `bin/cdsync` is the tool -- so it is workshop, not product, and it
+# Cdtempl -- `bin/cdtempl` is the tool -- so it is workshop, not product, and it
 # shares `bin/` with the one thing a release must carry. The archive test pins
 # `bin/` one level down for exactly that reason.
 bin/devbin         export-ignore

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # ============================================================================
-# cdsync release -- read the version, move it, cut a release
+# cdtempl release -- read the version, move it, cut a release
 # ============================================================================
 #
 # Modelled on `bin/lamplight_version`, which is the house pattern: `VERSION` as
 # bare semver, one helper to read it, one to assert its shape, and `show` /
 # `bump` as separate verbs from the ceremony that uses them.
 #
-# Cdsync is the simple case of that pattern. Lamplight syncs three Cargo.toml
+# Cdtempl is the simple case of that pattern. Lamplight syncs three Cargo.toml
 # files and an iOS plist, so its comment about writing derived files first and
 # `VERSION` last -- leaving `VERSION` un-advanced if a sync fails, so a rerun
 # cannot double-bump -- guards a real hazard. Here `VERSION` is the ONLY place
@@ -27,7 +27,7 @@
 # exclusion is data rather than a second list this file would have to keep in
 # step with the first.
 release_dist_dir() {
-  echo "$CDSYNC_HOME/dist"
+  echo "$CDTEMPL_HOME/dist"
 }
 
 # Bare semver, no `v`, no suffix. The `v` belongs to the git tag and nowhere
@@ -73,7 +73,7 @@ release_version_lt() {
 # THE EXPLICIT FORM EXISTS BECAUSE THE FIRST RELEASE WAS UNREACHABLE WITHOUT
 # IT. The three bump parts all move forward, so the version a project is ON
 # could never be tagged -- and that is precisely the version a first release
-# needs. Cdsync sat at 0.1.0 with no tags and no way to cut 0.1.0; `cut minor`
+# needs. Cdtempl sat at 0.1.0 with no tags and no way to cut 0.1.0; `cut minor`
 # would have produced 0.2.0 and skipped the release the repository already
 # announced. The verbs presumed a previous release existed, and nothing said so.
 #
@@ -126,7 +126,7 @@ release_bump_part() {
 # does not terminate -- which is exactly why this defect reached a real cut.
 release_commit_version() {
   local next="$1"
-  local repo="${2:-$CDSYNC_HOME}"
+  local repo="${2:-$CDTEMPL_HOME}"
 
   git -C "$repo" add VERSION || return 1
 
@@ -147,16 +147,16 @@ release_gates() {
 
   echo "gates:"
 
-  if [[ -n "$(git -C "$CDSYNC_HOME" status --porcelain)" ]]; then
+  if [[ -n "$(git -C "$CDTEMPL_HOME" status --porcelain)" ]]; then
     echo "  FAIL  working tree is not clean"
-    git -C "$CDSYNC_HOME" status --short | sed 's/^/          /'
+    git -C "$CDTEMPL_HOME" status --short | sed 's/^/          /'
     failed=1
   else
     echo "  ok    working tree clean"
   fi
 
   local branch
-  branch="$(git -C "$CDSYNC_HOME" rev-parse --abbrev-ref HEAD)"
+  branch="$(git -C "$CDTEMPL_HOME" rev-parse --abbrev-ref HEAD)"
   if [[ "$branch" != "main" ]]; then
     echo "  FAIL  on branch '$branch', not main"
     failed=1
@@ -168,7 +168,7 @@ release_gates() {
   # it one further ahead. BEHIND is not: it means the tag would be cut from a
   # commit that is not what the remote holds.
   local behind
-  if behind="$(git -C "$CDSYNC_HOME" rev-list --count 'HEAD..@{upstream}' 2>/dev/null)"; then
+  if behind="$(git -C "$CDTEMPL_HOME" rev-list --count 'HEAD..@{upstream}' 2>/dev/null)"; then
     if [[ "$behind" -gt 0 ]]; then
       echo "  FAIL  $behind commits behind upstream -- pull first"
       failed=1
@@ -180,10 +180,10 @@ release_gates() {
     failed=1
   fi
 
-  if "$CDSYNC_HOME/bin/cdsync" doctor >/dev/null 2>&1; then
+  if "$CDTEMPL_HOME/bin/cdtempl" doctor >/dev/null 2>&1; then
     echo "  ok    doctor"
   else
-    echo "  FAIL  doctor -- run 'cdsync doctor' to see why"
+    echo "  FAIL  doctor -- run 'cdtempl doctor' to see why"
     failed=1
   fi
 
@@ -191,7 +191,7 @@ release_gates() {
   # the command found, which is how this repo believed shellcheck was clean for
   # several days while it was not.
   if command -v shellcheck >/dev/null 2>&1; then
-    if shellcheck "$CDSYNC_HOME/bin/cdsync" "$CDSYNC_HOME"/lib/*.sh >/dev/null 2>&1; then
+    if shellcheck "$CDTEMPL_HOME/bin/cdtempl" "$CDTEMPL_HOME"/lib/*.sh >/dev/null 2>&1; then
       echo "  ok    shellcheck"
     else
       echo "  FAIL  shellcheck -- run it bare to see the findings"
@@ -214,10 +214,10 @@ release_gates() {
     echo "  FAIL  tests -- cannot run the suite from inside the suite"
     failed=1
   elif command -v bats >/dev/null 2>&1; then
-    if bats "$CDSYNC_HOME/test/cdsync.bats" >/dev/null 2>&1; then
+    if bats "$CDTEMPL_HOME/test/cdtempl.bats" >/dev/null 2>&1; then
       echo "  ok    tests"
     else
-      echo "  FAIL  tests -- run 'bats test/cdsync.bats'"
+      echo "  FAIL  tests -- run 'bats test/cdtempl.bats'"
       failed=1
     fi
   else
@@ -231,7 +231,7 @@ release_gates() {
   # Either spelling. Intent uses LICENSE.md and GitHub recognises both, so a
   # gate that insisted on one would be enforcing a preference rather than the
   # thing that matters.
-  if [[ ! -f "$CDSYNC_HOME/LICENSE" && ! -f "$CDSYNC_HOME/LICENSE.md" ]]; then
+  if [[ ! -f "$CDTEMPL_HOME/LICENSE" && ! -f "$CDTEMPL_HOME/LICENSE.md" ]]; then
     warn "no LICENSE at the repository root -- a public release without one is 'all rights reserved'"
   fi
 
@@ -248,13 +248,13 @@ release_package() {
     error "could not create $dist"
     return 1
   }
-  tarball="$dist/cdsync-$version.tar.gz"
+  tarball="$dist/cdtempl-$version.tar.gz"
 
   # FROM THE TAG, NOT THE WORKING TREE. A tarball built from disk can contain a
   # file the tag does not, and that difference is invisible in the artefact.
-  if ! git -C "$CDSYNC_HOME" archive \
+  if ! git -C "$CDTEMPL_HOME" archive \
     --format=tar.gz \
-    --prefix="cdsync-$version/" \
+    --prefix="cdtempl-$version/" \
     -o "$tarball" \
     "v$version"; then
     error "could not archive v$version"
@@ -276,7 +276,7 @@ cmd_release() {
       return 0
       ;;
     show)
-      get_cdsync_version
+      get_cdtempl_version
       return 0
       ;;
     bump)
@@ -299,18 +299,18 @@ cmd_release() {
 release_do_bump() {
   local part="${1:-}"
   if [[ -z "$part" ]]; then
-    error "usage: cdsync release bump <major|minor|patch|X.Y.Z>"
+    error "usage: cdtempl release bump <major|minor|patch|X.Y.Z>"
     return 2
   fi
 
   local current next
-  current="$(get_cdsync_version)"
+  current="$(get_cdtempl_version)"
   release_assert_semver "$current" || return 1
   next="$(release_bump_part "$current" "$part")" || return 2
 
-  printf '%s\n' "$next" | atomic_write "$CDSYNC_HOME/VERSION" || return 1
+  printf '%s\n' "$next" | atomic_write "$CDTEMPL_HOME/VERSION" || return 1
   success "VERSION $current -> $next"
-  info "not committed, not tagged -- 'cdsync release cut $part' does the ceremony"
+  info "not committed, not tagged -- 'cdtempl release cut $part' does the ceremony"
   return 0
 }
 
@@ -343,12 +343,12 @@ release_do_cut() {
   done
 
   if [[ -z "$part" ]]; then
-    error "usage: cdsync release cut <major|minor|patch|X.Y.Z> [--push] [--dry-run]"
+    error "usage: cdtempl release cut <major|minor|patch|X.Y.Z> [--push] [--dry-run]"
     return 2
   fi
 
   local current next
-  current="$(get_cdsync_version)"
+  current="$(get_cdtempl_version)"
   release_assert_semver "$current" || return 1
   next="$(release_bump_part "$current" "$part")" || return 2
 
@@ -361,7 +361,7 @@ release_do_cut() {
     echo "  write   VERSION = $next"
     echo "  commit  release: v$next"
     echo "  tag     v$next (annotated)"
-    echo "  package $(release_dist_dir)/cdsync-$next.tar.gz, from the tag"
+    echo "  package $(release_dist_dir)/cdtempl-$next.tar.gz, from the tag"
     if [[ "$do_push" -eq 1 ]]; then
       echo "  push    commit and tag to upstream"
     else
@@ -377,31 +377,31 @@ release_do_cut() {
     return 1
   }
 
-  if git -C "$CDSYNC_HOME" rev-parse "v$next" >/dev/null 2>&1; then
+  if git -C "$CDTEMPL_HOME" rev-parse "v$next" >/dev/null 2>&1; then
     error "tag v$next already exists"
     return 1
   fi
 
-  printf '%s\n' "$next" | atomic_write "$CDSYNC_HOME/VERSION" || return 1
+  printf '%s\n' "$next" | atomic_write "$CDTEMPL_HOME/VERSION" || return 1
   echo "  write   VERSION = $next"
 
-  release_commit_version "$next" "$CDSYNC_HOME" || return 1
+  release_commit_version "$next" "$CDTEMPL_HOME" || return 1
 
-  git -C "$CDSYNC_HOME" tag -a "v$next" -m "cdsync $next" || return 1
+  git -C "$CDTEMPL_HOME" tag -a "v$next" -m "cdtempl $next" || return 1
   echo "  tag     v$next"
 
   release_package "$next" || return 1
 
   if [[ "$do_push" -eq 1 ]]; then
     local remote
-    remote="$(git -C "$CDSYNC_HOME" config --get branch.main.remote || echo origin)"
-    git -C "$CDSYNC_HOME" push "$remote" main || return 1
-    git -C "$CDSYNC_HOME" push "$remote" "v$next" || return 1
+    remote="$(git -C "$CDTEMPL_HOME" config --get branch.main.remote || echo origin)"
+    git -C "$CDTEMPL_HOME" push "$remote" main || return 1
+    git -C "$CDTEMPL_HOME" push "$remote" "v$next" || return 1
     echo "  push    $remote main + v$next"
   fi
 
   echo ""
-  success "cdsync $next"
+  success "cdtempl $next"
   if [[ "$do_push" -eq 0 ]]; then
     info "local only -- 'git push <remote> main && git push <remote> v$next' to publish"
   fi

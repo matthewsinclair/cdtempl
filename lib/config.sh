@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# cdsync - cdsync.json
+# cdtempl - cdtempl.json
 #
-# THE reader of cdsync.json. `target.sh` resolves the target through here and
+# THE reader of cdtempl.json. `target.sh` resolves the target through here and
 # `brief` assembles the venture's facts through here; nothing runs jq against
 # that file directly.
 #
-# cdsync.json holds the universal brief header -- the facts about the venture that
+# cdtempl.json holds the universal brief header -- the facts about the venture that
 # every brief carries, every time. That is deliberate: those facts have exactly
 # one home, so a brief is generated from them rather than restating them, and two
 # rounds cannot disagree about what stage the venture is at.
@@ -25,21 +25,21 @@
 # a file inside the tree pointing at the tree would be circular.
 #
 
-CDSYNC_CONFIG_NAME="cdsync.json"
+CDTEMPL_CONFIG_NAME="cdtempl.json"
 
 # The conventional tree roots, probed in order by config_probe. A tree kept
-# anywhere else needs --target or $CDSYNC_TARGET on every command, and `new`
+# anywhere else needs --target or $CDTEMPL_TARGET on every command, and `new`
 # says so when it scaffolds one.
-CDSYNC_CONFIG_PROBE_DIRS="design/system design"
+CDTEMPL_CONFIG_PROBE_DIRS="design/system design"
 
 # The directory config reads default to. `brief` binds this to the resolved
 # target once, so the dozen helpers underneath it do not each thread a base
 # through -- one home for the default, like the constant above.
-: "${CDSYNC_CONFIG_DIR:=}"
+: "${CDTEMPL_CONFIG_DIR:=}"
 
 config_path() {
-  local base="${1:-${CDSYNC_CONFIG_DIR:-$PWD}}"
-  local path="$base/$CDSYNC_CONFIG_NAME"
+  local base="${1:-${CDTEMPL_CONFIG_DIR:-$PWD}}"
+  local path="$base/$CDTEMPL_CONFIG_NAME"
 
   if [[ ! -f "$path" ]]; then
     return 1
@@ -48,14 +48,14 @@ config_path() {
   echo "$path"
 }
 
-# Find the venture's cdsync.json by probing the conventional tree roots under a
+# Find the venture's cdtempl.json by probing the conventional tree roots under a
 # project base. Emits the FILE path; the file's directory IS the target.
 config_probe() {
   local base="${1:-$PWD}"
   local dir path
 
-  for dir in $CDSYNC_CONFIG_PROBE_DIRS; do
-    path="$base/$dir/$CDSYNC_CONFIG_NAME"
+  for dir in $CDTEMPL_CONFIG_PROBE_DIRS; do
+    path="$base/$dir/$CDTEMPL_CONFIG_NAME"
     if [[ -f "$path" ]]; then
       echo "$path"
       return 0
@@ -65,7 +65,7 @@ config_probe() {
   return 1
 }
 
-# The fallback chain -- explicit base, then CDSYNC_CONFIG_DIR, then $PWD --
+# The fallback chain -- explicit base, then CDTEMPL_CONFIG_DIR, then $PWD --
 # lives in config_path ALONE. Every helper below hands its argument through
 # verbatim, empty when the caller gave none, so there is exactly one place the
 # default is decided. Each carrying its own `${2:-$PWD}` is how the tree-root

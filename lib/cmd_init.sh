@@ -1,36 +1,36 @@
 #!/usr/bin/env bash
 # ============================================================================
-# cdsync init -- start a design system inside a repository that already exists
+# cdtempl init -- start a design system inside a repository that already exists
 # ============================================================================
 #
-# `new` scaffolds a VENTURE: its own repository, `cdsync.json`, the agent
+# `new` scaffolds a VENTURE: its own repository, `cdtempl.json`, the agent
 # contract, and the target skeleton underneath. That is the right shape when the
 # venture is the new thing.
 #
 # It is the wrong shape when the project is already there. An existing site has
 # its own repository and its own history, and no agent contract or nested
 # repository belongs inside it -- the canon's no-protocol-material rule. The
-# design tree is the one Cdsync-owned carve-out in such a project, and
-# `cdsync.json` lives at its root -- one home for `new` ventures and `init`
+# design tree is the one Cdtempl-owned carve-out in such a project, and
+# `cdtempl.json` lives at its root -- one home for `new` ventures and `init`
 # projects alike (hv, 9 Aug 2026). That ruling superseded the older reading
-# under which an init'd project carried no `cdsync.json` at all, which left
+# under which an init'd project carried no `cdtempl.json` at all, which left
 # `brief` unrunnable there and scope supplied by hand.
 #
 # Before this command there was no way to start a tree at all. `bootstrap`
-# refused over a tree that did not exist and advised `cdsync new <name>`, which
+# refused over a tree that did not exist and advised `cdtempl new <name>`, which
 # would have created a second repository nested inside the first and written an
 # agent contract the canon forbids there. The advice was the only advice
 # available and it was wrong, which is the tell for a missing command rather
 # than a missing flag.
 #
 # So this does the small set of things that were missing and nothing else: the
-# directories, the `.gitkeep` in each, and the venture's `cdsync.json` stub at
+# directories, the `.gitkeep` in each, and the venture's `cdtempl.json` stub at
 # the tree root. `bootstrap` writes the document, `brief` orders the round,
 # `install` lands the export. One job each.
 
 # The skeleton is three directories and a `.gitkeep` apiece. `.gitkeep` because
 # git does not track an empty directory, and an absent `assets/` makes
-# `cdsync check` report "no drop here" rather than "nothing imported yet" -- the
+# `cdtempl check` report "no drop here" rather than "nothing imported yet" -- the
 # same reason `new` writes them.
 cmd_init() {
   local flag_target=""
@@ -73,12 +73,12 @@ cmd_init() {
     error "target already exists and is not empty: $target"
     echo "  init starts a design system; it does not adopt one." >&2
     echo "  To regenerate the document over a tree that already holds a drop:" >&2
-    echo "    cdsync bootstrap --target $target" >&2
+    echo "    cdtempl bootstrap --target $target" >&2
     return 1
   fi
 
   local dir
-  for dir in $CDSYNC_TARGET_DIRS; do
+  for dir in $CDTEMPL_TARGET_DIRS; do
     mkdir -p "$target/$dir" || {
       error "could not create $target/$dir"
       return 1
@@ -92,8 +92,8 @@ cmd_init() {
   # survive the first delivery it is meant to protect against.
   write_target_inbox_gitignore "$target" || return 1
 
-  # The venture's cdsync.json, at the tree root. This is what makes `brief`
-  # runnable for a project Cdsync does not own -- scope used to be supplied by
+  # The venture's cdtempl.json, at the tree root. This is what makes `brief`
+  # runnable for a project Cdtempl does not own -- scope used to be supplied by
   # hand for exactly this case. Protected from every install path, so the
   # first delivery cannot eat it.
   # Named after the TARGET'S repository, not the working directory -- the tree
@@ -101,14 +101,14 @@ cmd_init() {
   # numbering scan already carries.
   local venture
   venture="$(basename "$(git -C "$(dirname "$target")" rev-parse --show-toplevel 2>/dev/null || echo "$target")")"
-  render_venture_template "$CDSYNC_HOME/templates/venture/$CDSYNC_CONFIG_NAME.tmpl" \
-    "$target/$CDSYNC_CONFIG_NAME" "$venture" || return 1
-  echo "  create  $CDSYNC_CONFIG_NAME"
+  render_venture_template "$CDTEMPL_HOME/templates/venture/$CDTEMPL_CONFIG_NAME.tmpl" \
+    "$target/$CDTEMPL_CONFIG_NAME" "$venture" || return 1
+  echo "  create  $CDTEMPL_CONFIG_NAME"
 
   echo ""
   success "design system tree initialised at $target"
   echo ""
-  info "next: fill in $target/cdsync.json -- especially 'fixed', 'open' and 'order'"
-  info "then: cdsync bootstrap --target $target"
+  info "next: fill in $target/cdtempl.json -- especially 'fixed', 'open' and 'order'"
+  info "then: cdtempl bootstrap --target $target"
   info "then: commit the tree in the project's own repository"
 }

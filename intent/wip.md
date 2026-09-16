@@ -20,7 +20,7 @@ verblock: "15 Sep 2026:v2.1: Matthew Sinclair - ST0005 closed: the ledger matche
 
 Each close went through `intent st done`, which refuses while a contract is BLOCKED, so **each had to earn its number**. `intent st list` shows only open threads by default -- `--status all` shows every one.
 
-**Every one of them states a boundary and carries its remainder forward** rather than dropping it, and the boundary is the part worth reading. ST0001's bar was never "the whole taxonomy specified" -- the library grows one order at a time. ST0002's was never "all four pass `check`" -- three carry a pre-Cdsync convention the checker cannot read. **ST0004's boundary was simply wrong, and its contract now says so.** ST0003's bar was that every work package reached a terminal state **on the record**, not that every one was built -- the wind-back dissolved three and hv parked a fourth. ST0005's bar was the suite, CI and the dev launcher as they stand after the Intent v3 port -- the refocus away from Claude Design that hv raised the same day is not in it. **Read the contract (`intent ac list <ID>`) before assuming something was skipped** -- a closed thread's `acceptance.md` is no longer on disk.
+**Every one of them states a boundary and carries its remainder forward** rather than dropping it, and the boundary is the part worth reading. ST0001's bar was never "the whole taxonomy specified" -- the library grows one order at a time. ST0002's was never "all four pass `check`" -- three carry a pre-Cdtempl convention the checker cannot read. **ST0004's boundary was simply wrong, and its contract now says so.** ST0003's bar was that every work package reached a terminal state **on the record**, not that every one was built -- the wind-back dissolved three and hv parked a fourth. ST0005's bar was the suite, CI and the dev launcher as they stand after the Intent v3 port -- the refocus away from Claude Design that hv raised the same day is not in it. **Read the contract (`intent ac list <ID>`) before assuming something was skipped** -- a closed thread's `acceptance.md` is no longer on disk.
 
 ## The release record
 
@@ -35,7 +35,7 @@ Each one exists because the thing it guards went wrong at least once.
 - The front-page command table must list every command the dispatcher accepts.
 - Every flag a command implements must be documented in its help file.
 - The README's rule table must match `help/check.md`, its source.
-- Every colour form in `CDSYNC_COLOUR_RE` must be named in `help/check.md`.
+- Every colour form in `CDTEMPL_COLOUR_RE` must be named in `help/check.md`.
 - The bootstrap inventory must be ordered by bytes, not by locale.
 - No tracked file may carry an absolute home directory path.
 - No test may hang on the install prompt.

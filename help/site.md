@@ -1,12 +1,12 @@
-# cdsync site
+# cdtempl site
 
 Stand up the microsite over the target.
 
 ```
-cdsync site [--target PATH] [--port N] [--build]
+cdtempl site [--target PATH] [--port N] [--build]
 ```
 
-Generates `$CDSYNC_TARGET/site/index.html` from `index.md` and each asset's
+Generates `$CDTEMPL_TARGET/site/index.html` from `index.md` and each asset's
 `spec.md`, then serves it. One page: the documents, every asset with its status and
 blank count, links to each artefact, and the notes.
 
@@ -29,7 +29,7 @@ the build.
 
 ## site/ is not a path a drop owns
 
-`cdsync site` generates into the target, and `cdsync import` writes only `assets/`,
+`cdtempl site` generates into the target, and `cdtempl import` writes only `assets/`,
 `kit/`, `notes/`, `index.md` and `RETURN.md`.
 
 That is the owned-path list earning its keep: a generated site sitting in the target

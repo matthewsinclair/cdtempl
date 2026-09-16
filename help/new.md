@@ -1,17 +1,17 @@
-# cdsync new
+# cdtempl new
 
 Scaffold a venture.
 
 ```
-cdsync new <name> [--target PATH]
+cdtempl new <name> [--target PATH]
 ```
 
 Creates `./<name>/` as its own git repository, with the venture's facts in
-`design/cdsync.json` at the tree root, an agent contract in `AGENTS.md` and
+`design/cdtempl.json` at the tree root, an agent contract in `AGENTS.md` and
 `CLAUDE.md`, and the target skeleton underneath `design/`.
 
-A venture gets its own repository rather than living under Cdsync. The rejected
-alternative — `drops/<name>/` inside Cdsync — would couple every venture's
+A venture gets its own repository rather than living under Cdtempl. The rejected
+alternative — `drops/<name>/` inside Cdtempl — would couple every venture's
 confidential tree to one repository and make per-venture access impossible.
 
 ## Options
@@ -24,7 +24,7 @@ confidential tree to one repository and make per-venture access impossible.
 
 | Path | What it is |
 |---|---|
-| `design/cdsync.json` | The venture's facts, at the tree root. `brief` is generated from it, and its location is what the target resolves from |
+| `design/cdtempl.json` | The venture's facts, at the tree root. `brief` is generated from it, and its location is what the target resolves from |
 | `AGENTS.md` | The tool-agnostic agent contract |
 | `CLAUDE.md` | The Claude Code overlay |
 | `README.md` | The loop, written down |
@@ -37,7 +37,7 @@ confidential tree to one repository and make per-venture access impossible.
 
 Standing up an Elixir application is that toolchain's job and it does it better. A
 venture's stack is a fact this command records so the agent contract can state it —
-not scaffolding Cdsync would then have to keep current with somebody else's
+not scaffolding Cdtempl would then have to keep current with somebody else's
 generator.
 
 **A generated venture is not an Intent project in the full sense.** It borrows

@@ -1,14 +1,14 @@
-# cdsync init
+# cdtempl init
 
 Start a design system in a repository that already exists.
 
 ```
-cdsync init [--target PATH]
+cdtempl init [--target PATH]
 ```
 
 Creates the target skeleton -- `assets/`, `kit/`, `notes/`, each with a
 `.gitkeep` -- plus the repo-owned `.gitignore` that keeps delivery archives out
-of git. The tree is then cold, which is exactly what `cdsync bootstrap` wants to
+of git. The tree is then cold, which is exactly what `cdtempl bootstrap` wants to
 see.
 
 ## The one file written outside the target
@@ -43,19 +43,19 @@ They are not variants of each other. The question is what the new thing is.
 
 | The new thing | The command | What you get |
 |---|---|---|
-| A **venture** | `cdsync new <name>` | Its own git repository, the agent contract, the skeleton underneath `design/`, and `cdsync.json` at the tree root |
-| A **design system**, in a project that already exists | `cdsync init` | The skeleton and the `cdsync.json` stub, in the repository you are already in |
+| A **venture** | `cdtempl new <name>` | Its own git repository, the agent contract, the skeleton underneath `design/`, and `cdtempl.json` at the tree root |
+| A **design system**, in a project that already exists | `cdtempl init` | The skeleton and the `cdtempl.json` stub, in the repository you are already in |
 
 **An existing project must not get the `new` treatment.** No agent contract and
 no nested repository belong inside a project -- the canon's no-protocol-material
-rule. The design tree is the one Cdsync-owned carve-out there, and `cdsync.json`
+rule. The design tree is the one Cdtempl-owned carve-out there, and `cdtempl.json`
 lives at its root -- one home for `new` ventures and `init` projects alike
-(hv, 9 Aug 2026). That is what makes `brief` runnable for a project Cdsync does
+(hv, 9 Aug 2026). That is what makes `brief` runnable for a project Cdtempl does
 not own; scope used to be supplied by hand for exactly this case.
 
 ## Why this exists
 
-`bootstrap` refused over a tree that did not exist and advised `cdsync new
+`bootstrap` refused over a tree that did not exist and advised `cdtempl new
 <name>`, which for an existing project was the wrong command -- but it was the
 only advice available, because there was no right one. **A tool giving the only
 advice it has, and that advice being wrong, is the tell for a missing command
@@ -73,17 +73,17 @@ To regenerate the document over a tree that already holds a drop, that is what
 `bootstrap` does on its own:
 
 ```
-cdsync bootstrap --target <path>
+cdtempl bootstrap --target <path>
 ```
 
 ## What comes next
 
 ```
-cdsync init --target <repo>/design/system
-# fill in <repo>/design/system/cdsync.json -- especially fixed, open and order
-cdsync bootstrap --target <repo>/design/system
+cdtempl init --target <repo>/design/system
+# fill in <repo>/design/system/cdtempl.json -- especially fixed, open and order
+cdtempl bootstrap --target <repo>/design/system
 ```
 
 Then commit the tree in the project's own repository. It versions with that
-project, not with Cdsync -- the tree is the project's single source of truth for
+project, not with Cdtempl -- the tree is the project's single source of truth for
 its design system, and Claude Design is a clamp-on tool used to work on it.

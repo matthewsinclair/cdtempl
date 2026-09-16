@@ -1,31 +1,31 @@
 #!/usr/bin/env bats
-# cdsync.bats - dispatcher, target resolution, primitives, and the five commands
+# cdtempl.bats - dispatcher, target resolution, primitives, and the five commands
 
 setup() {
-  CDSYNC_HOME="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
-  export CDSYNC_HOME
-  export CDSYNC_BIN="$CDSYNC_HOME/bin/cdsync"
+  CDTEMPL_HOME="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
+  export CDTEMPL_HOME
+  export CDTEMPL_BIN="$CDTEMPL_HOME/bin/cdtempl"
 
   # Every test runs somewhere disposable so a stray write cannot touch the
   # working tree, and so target resolution has a predictable base.
-  TESTDIR="$(mktemp -d "${BATS_TMPDIR:-/tmp}/cdsync-test.XXXXXX")"
+  TESTDIR="$(mktemp -d "${BATS_TMPDIR:-/tmp}/cdtempl-test.XXXXXX")"
   cd "$TESTDIR"
 
-  # The default tree root, present so a fixture can drop cdsync.json straight
+  # The default tree root, present so a fixture can drop cdtempl.json straight
   # into it -- the file lives at the tree root since hv's 9 Aug 2026 ruling.
   # Empty, so tests of the no-config and cold paths are unaffected.
   mkdir -p "$TESTDIR/design"
 
   # Inherited state would silently change what resolve_target returns.
-  unset CDSYNC_TARGET
+  unset CDTEMPL_TARGET
 
   # `new` makes an initial commit, which needs an identity. Supplying one here
   # rather than relying on the machine's global config keeps the suite the same
   # on a bare CI box as on a developer's laptop -- and stops a real name being
   # written into throwaway commits.
-  export GIT_AUTHOR_NAME="cdsync test"
+  export GIT_AUTHOR_NAME="cdtempl test"
   export GIT_AUTHOR_EMAIL="test@example.invalid"
-  export GIT_COMMITTER_NAME="cdsync test"
+  export GIT_COMMITTER_NAME="cdtempl test"
   export GIT_COMMITTER_EMAIL="test@example.invalid"
 }
 
@@ -35,7 +35,7 @@ teardown() {
   return 0
 }
 
-# Run an expression against the sourced libraries, in the same order bin/cdsync
+# Run an expression against the sourced libraries, in the same order bin/cdtempl
 # sources them.
 #
 # The sourced path is in DOUBLE quotes on purpose. Single quotes here stop the
@@ -44,9 +44,9 @@ teardown() {
 # and no error -- which reads exactly like fifty-four broken functions.
 run_lib() {
   bash -c "set -euo pipefail
-    export CDSYNC_HOME='$CDSYNC_HOME'
+    export CDTEMPL_HOME='$CDTEMPL_HOME'
     for l in common config target frontmatter drop archive specs scan; do
-      source \"$CDSYNC_HOME/lib/\$l.sh\"
+      source \"$CDTEMPL_HOME/lib/\$l.sh\"
     done
     $*"
 }
@@ -141,39 +141,39 @@ EOF
 # ============================================================================
 
 @test "version reports the VERSION file" {
-  run "$CDSYNC_BIN" version
+  run "$CDTEMPL_BIN" version
   [ "$status" -eq 0 ]
-  assert_contains "cdsync $(cat "$CDSYNC_HOME/VERSION")"
+  assert_contains "cdtempl $(cat "$CDTEMPL_HOME/VERSION")"
 }
 
 @test "no arguments shows usage" {
-  run "$CDSYNC_BIN"
+  run "$CDTEMPL_BIN"
   [ "$status" -eq 0 ]
-  assert_contains "Usage: cdsync"
+  assert_contains "Usage: cdtempl"
 }
 
 @test "unknown command fails rather than falling through" {
-  run "$CDSYNC_BIN" definitely-not-a-command
+  run "$CDTEMPL_BIN" definitely-not-a-command
   [ "$status" -eq 1 ]
   assert_contains "unknown command"
 }
 
 @test "help renders a per-command topic" {
-  run "$CDSYNC_BIN" help import
+  run "$CDTEMPL_BIN" help import
   [ "$status" -eq 0 ]
-  assert_contains "cdsync import"
+  assert_contains "cdtempl import"
 }
 
 @test "help for an unknown topic fails" {
-  run "$CDSYNC_BIN" help nonexistent-topic
+  run "$CDTEMPL_BIN" help nonexistent-topic
   [ "$status" -ne 0 ]
   assert_contains "no help for"
 }
 
 @test "every command has a help file" {
   local c
-  for c in cdsync new brief import check site; do
-    [ -f "$CDSYNC_HOME/help/$c.md" ] || {
+  for c in cdtempl new brief import check site; do
+    [ -f "$CDTEMPL_HOME/help/$c.md" ] || {
       echo "missing help/$c.md" >&2
       return 1
     }
@@ -181,7 +181,7 @@ EOF
 }
 
 @test "usage advertises the settled layout, not the provisional one" {
-  run "$CDSYNC_BIN"
+  run "$CDTEMPL_BIN"
   assert_contains "assets/<slug>/"
   assert_contains "kit/"
   # `venture/` and MANIFEST.md were the earlier layout, replaced when the
@@ -200,29 +200,29 @@ EOF
   [ "$output" = "$TESTDIR/design" ]
 }
 
-@test "CDSYNC_TARGET overrides the default" {
+@test "CDTEMPL_TARGET overrides the default" {
   run bash -c "set -euo pipefail
-    export CDSYNC_HOME='$CDSYNC_HOME' CDSYNC_TARGET=/somewhere/else
-    for l in common config target; do source \"$CDSYNC_HOME/lib/\$l.sh\"; done
+    export CDTEMPL_HOME='$CDTEMPL_HOME' CDTEMPL_TARGET=/somewhere/else
+    for l in common config target; do source \"$CDTEMPL_HOME/lib/\$l.sh\"; done
     resolve_target '' '$TESTDIR'"
   [ "$status" -eq 0 ]
   [ "$output" = "/somewhere/else" ]
 }
 
-@test "cdsync.json's own directory supplies the target when no flag or env is set" {
+@test "cdtempl.json's own directory supplies the target when no flag or env is set" {
   # The file lives at the tree root (hv, 9 Aug 2026), so finding it IS finding
   # the target -- there is no `.target` field to read any more.
   mkdir -p "$TESTDIR/design"
-  echo '{"venture": "probe"}' > "$TESTDIR/design/cdsync.json"
+  echo '{"venture": "probe"}' > "$TESTDIR/design/cdtempl.json"
   run run_lib "resolve_target '' '$TESTDIR'"
   [ "$status" -eq 0 ]
   [ "$output" = "$TESTDIR/design" ]
 }
 
-@test "design/system/ wins the probe over design/ when both hold a cdsync.json" {
+@test "design/system/ wins the probe over design/ when both hold a cdtempl.json" {
   mkdir -p "$TESTDIR/design/system"
-  echo '{"venture": "outer"}' > "$TESTDIR/design/cdsync.json"
-  echo '{"venture": "inner"}' > "$TESTDIR/design/system/cdsync.json"
+  echo '{"venture": "outer"}' > "$TESTDIR/design/cdtempl.json"
+  echo '{"venture": "inner"}' > "$TESTDIR/design/system/cdtempl.json"
   run run_lib "resolve_target '' '$TESTDIR'"
   [ "$status" -eq 0 ]
   assert_contains "$TESTDIR/design/system"
@@ -232,7 +232,7 @@ EOF
   # A file inside the tree cannot also be the pointer to the tree. Silent
   # ignoring would leave a stale field that reads as if it steers.
   mkdir -p "$TESTDIR/design"
-  echo '{"venture": "probe", "target": "artwork"}' > "$TESTDIR/design/cdsync.json"
+  echo '{"venture": "probe", "target": "artwork"}' > "$TESTDIR/design/cdtempl.json"
   run run_lib "resolve_target '' '$TESTDIR'"
   [ "$status" -eq 0 ]
   assert_contains "$TESTDIR/design"
@@ -240,19 +240,19 @@ EOF
   refute_contains "$TESTDIR/artwork"
 }
 
-@test "the flag beats the environment, which beats cdsync.json" {
+@test "the flag beats the environment, which beats cdtempl.json" {
   mkdir -p "$TESTDIR/design"
-  echo '{"venture": "probe"}' > "$TESTDIR/design/cdsync.json"
+  echo '{"venture": "probe"}' > "$TESTDIR/design/cdtempl.json"
 
   run bash -c "set -euo pipefail
-    export CDSYNC_HOME='$CDSYNC_HOME' CDSYNC_TARGET=/from-env
-    for l in common config target; do source \"$CDSYNC_HOME/lib/\$l.sh\"; done
+    export CDTEMPL_HOME='$CDTEMPL_HOME' CDTEMPL_TARGET=/from-env
+    for l in common config target; do source \"$CDTEMPL_HOME/lib/\$l.sh\"; done
     resolve_target '/from-flag' '$TESTDIR'"
   [ "$output" = "/from-flag" ]
 
   run bash -c "set -euo pipefail
-    export CDSYNC_HOME='$CDSYNC_HOME' CDSYNC_TARGET=/from-env
-    for l in common config target; do source \"$CDSYNC_HOME/lib/\$l.sh\"; done
+    export CDTEMPL_HOME='$CDTEMPL_HOME' CDTEMPL_TARGET=/from-env
+    for l in common config target; do source \"$CDTEMPL_HOME/lib/\$l.sh\"; done
     resolve_target '' '$TESTDIR'"
   [ "$output" = "/from-env" ]
 
@@ -291,17 +291,17 @@ EOF
 }
 
 @test "a target that walks out of the repo is reported as outside it" {
-  run run_lib "target_is_in_repo '$CDSYNC_HOME/../elsewhere' '$CDSYNC_HOME'"
+  run run_lib "target_is_in_repo '$CDTEMPL_HOME/../elsewhere' '$CDTEMPL_HOME'"
   [ "$status" -ne 0 ]
 }
 
 @test "a target inside the repo is reported as inside it" {
-  run run_lib "target_is_in_repo '$CDSYNC_HOME/design' '$CDSYNC_HOME'"
+  run run_lib "target_is_in_repo '$CDTEMPL_HOME/design' '$CDTEMPL_HOME'"
   [ "$status" -eq 0 ]
 }
 
 @test "a target that walks out and back in is reported as inside" {
-  run run_lib "target_is_in_repo '$CDSYNC_HOME/../$(basename "$CDSYNC_HOME")/design' '$CDSYNC_HOME'"
+  run run_lib "target_is_in_repo '$CDTEMPL_HOME/../$(basename "$CDTEMPL_HOME")/design' '$CDTEMPL_HOME'"
   [ "$status" -eq 0 ]
 }
 
@@ -336,8 +336,8 @@ EOF
 @test "import announces the target scope before doing anything" {
   make_drop >/dev/null
   run bash -c "set -euo pipefail
-    export CDSYNC_TARGET='$TESTDIR/outside'
-    cd '$TESTDIR' && '$CDSYNC_BIN' import '$TESTDIR/drop'"
+    export CDTEMPL_TARGET='$TESTDIR/outside'
+    cd '$TESTDIR' && '$CDTEMPL_BIN' import '$TESTDIR/drop'"
   # TESTDIR is a bare mktemp directory, so the target is in no repository at
   # all -- the one case that genuinely does not version with anything.
   assert_contains "OUTSIDE any repository"
@@ -360,7 +360,7 @@ EOF
 
 @test "atomic_write leaves no temporary file behind" {
   run_lib "echo body | atomic_write '$TESTDIR/out.md'"
-  run bash -c "ls -a '$TESTDIR' | grep -c '^\.cdsync\.' || true"
+  run bash -c "ls -a '$TESTDIR' | grep -c '^\.cdtempl\.' || true"
   [ "$output" = "0" ]
 }
 
@@ -500,20 +500,20 @@ EOF
   # values of was the only one that could never be reported as working from a
   # superseded specification.
   make_drop >/dev/null
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop" --no-write
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop" --no-write
   assert_contains "kit"
-  run bash -c "'$CDSYNC_BIN' check --target '$TESTDIR/drop' --no-write 2>&1 | grep '^  kit '"
+  run bash -c "'$CDTEMPL_BIN' check --target '$TESTDIR/drop' --no-write 2>&1 | grep '^  kit '"
   assert_contains "rule-2"
 }
 
 @test "a kit stamped behind the library is reported as stale" {
   make_drop >/dev/null
   # The fixture kit carries no spec_version; stamp it one behind the library.
-  run run_lib "library=\$(fm_get '$CDSYNC_HOME/specs/kit.md' spec_version)
+  run run_lib "library=\$(fm_get '$CDTEMPL_HOME/specs/kit.md' spec_version)
     fm_set '$TESTDIR/drop/kit/kit.md' spec_version \$((library - 1))"
   [ "$status" -eq 0 ]
 
-  run bash -c "'$CDSYNC_BIN' check --target '$TESTDIR/drop' --no-write 2>&1 | grep '^  kit '"
+  run bash -c "'$CDTEMPL_BIN' check --target '$TESTDIR/drop' --no-write 2>&1 | grep '^  kit '"
   assert_contains "stale"
 }
 
@@ -538,7 +538,7 @@ EOF
   printf -- '# Spec - Landing page\n\n| Slug | `landing-page` |\n' \
     > "$TESTDIR/drop/assets/landing-page/spec.md"
 
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -ne 0 ]
   assert_contains "no front matter"
 
@@ -552,7 +552,7 @@ EOF
   mkdir -p "$TESTDIR/drop/assets/landing-page"
   printf -- '# Spec - Landing page\n' > "$TESTDIR/drop/assets/landing-page/spec.md"
 
-  "$CDSYNC_BIN" check --target "$TESTDIR/drop" >/dev/null 2>&1 || true
+  "$CDTEMPL_BIN" check --target "$TESTDIR/drop" >/dev/null 2>&1 || true
 
   # investor-update comes after landing-page in the walk, so this is the assertion
   # that the run carried on rather than dying at the first bad file.
@@ -648,7 +648,7 @@ EOF
 @test "the taxonomy is wider than the library" {
   # A slug can be legitimately named as a dependency long before it is
   # specified. pattern-library is real, declared by component-library, and
-  # unwritten -- most of the taxonomy is in that state, and `cdsync doctor` is
+  # unwritten -- most of the taxonomy is in that state, and `cdtempl doctor` is
   # what says how much of it. No figure here: this comment carried "32 of the
   # 50" while the table said otherwise, which is the drift the guard below
   # exists to stop.
@@ -852,12 +852,12 @@ EOF
   # in only one. Asserted on the SCANNERS rather than on the string `rgba?`,
   # which also appears twice inside normalise_colours as parsing and is not a
   # duplicate of anything.
-  run bash -c "grep -c 'grep -oiE' '$CDSYNC_HOME/lib/scan.sh'"
+  run bash -c "grep -c 'grep -oiE' '$CDTEMPL_HOME/lib/scan.sh'"
   [ "$output" = "2" ]
 
   # Both of them go through the declaration. Counted, so the probe is known able
   # to hit -- a guard that can only report zero is not a guard.
-  run bash -c "grep -c 'grep -oiE \"\$CDSYNC_COLOUR_RE\"' '$CDSYNC_HOME/lib/scan.sh'"
+  run bash -c "grep -c 'grep -oiE \"\$CDTEMPL_COLOUR_RE\"' '$CDTEMPL_HOME/lib/scan.sh'"
   [ "$output" = "2" ]
 }
 
@@ -876,7 +876,7 @@ EOF
 
 @test "check passes a clean drop and computes its blanks" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   assert_contains "clean"
   # Three: [period], [one sentence], [months remaining]. The verblock's bracket
@@ -897,7 +897,7 @@ EOF
 
 @test "rule 6 says so when nothing declares where an asset may be shown" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   assert_contains "no classification declared"
 }
@@ -907,7 +907,7 @@ EOF
   for c in public internal confidential; do
     run run_lib "fm_set '$TESTDIR/drop/assets/investor-update/spec.md' classification '$c'"
     [ "$status" -eq 0 ]
-    run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+    run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
     [ "$status" -eq 0 ]
     refute_contains "unknown classification"
     refute_contains "no classification declared"
@@ -918,7 +918,7 @@ EOF
   make_drop >/dev/null
   run run_lib "fm_set '$TESTDIR/drop/assets/investor-update/spec.md' classification 'secret'"
   [ "$status" -eq 0 ]
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   assert_contains "unknown classification 'secret'"
 }
@@ -931,7 +931,7 @@ EOF
 @test "rule 6 never blocks, because blocking would make it a delivery filter" {
   make_drop >/dev/null
   run run_lib "fm_set '$TESTDIR/drop/assets/investor-update/spec.md' classification 'confidential'"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   refute_contains "blocking"
 }
@@ -944,7 +944,7 @@ EOF
   make_drop >/dev/null
   run run_lib "fm_set '$TESTDIR/drop/assets/investor-update/spec.md' audience '[internal, investor]'"
   [ "$status" -eq 0 ]
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   assert_contains "the two axes are conflated"
 }
@@ -957,14 +957,14 @@ EOF
   make_drop >/dev/null
   run run_lib "fm_set '$TESTDIR/drop/assets/investor-update/spec.md' audience '[public, investor]'"
   [ "$status" -eq 0 ]
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   refute_contains "the two axes are conflated"
 }
 
 @test "check --no-write leaves the spec alone" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop" --no-write
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop" --no-write
   [ "$status" -eq 0 ]
   run run_lib "fm_has '$TESTDIR/drop/assets/investor-update/spec.md' blanks"
   [ "$status" -ne 0 ]
@@ -974,7 +974,7 @@ EOF
   make_drop >/dev/null
   sed -i.bak 's/^status: spec-only/status: complete/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 1 ]
   assert_contains "BLOCKING"
   assert_contains "rule-1"
@@ -985,7 +985,7 @@ EOF
   make_drop >/dev/null
   sed -i.bak 's/^status: spec-only/status: nearly/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "unknown status"
 }
 
@@ -993,7 +993,7 @@ EOF
   make_drop >/dev/null
   sed -i.bak 's/^spec_version: 1/spec_version: 0/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "rule-2"
   assert_contains "stale"
 }
@@ -1002,7 +1002,7 @@ EOF
   make_drop >/dev/null
   sed -i.bak 's/^spec_version: 1/spec_version: 9/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "rule-2"
   assert_contains "not a per-drop counter"
 }
@@ -1015,7 +1015,7 @@ EOF
   mv "$TESTDIR/drop/assets/investor-update" "$TESTDIR/drop/assets/portraits"
   sed -i.bak 's/^spec_version: 1/spec_version: unassigned/' \
     "$TESTDIR/drop/assets/portraits/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   # The fixture kit carries its own unrelated rule-2 advisory, so the refutes
   # pin the two findings a library-less ASSET could raise, not the rule id.
@@ -1026,7 +1026,7 @@ EOF
 @test "rule 2 names a number nobody issued on a library-less asset" {
   make_drop >/dev/null
   mv "$TESTDIR/drop/assets/investor-update" "$TESTDIR/drop/assets/portraits"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "rule-2"
   assert_contains "a number nobody issued"
 }
@@ -1035,7 +1035,7 @@ EOF
   make_drop >/dev/null
   sed -i.bak 's/^spec_version: 1/spec_version: unassigned/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "rule-2"
   assert_contains "the library now holds spec_version 1"
   assert_contains "rebuild against it"
@@ -1048,7 +1048,7 @@ EOF
   make_drop >/dev/null
   sed -i.bak 's/^spec_version: 1/spec_version: banana/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "unreadable spec_version 'banana'"
   refute_contains "stale"
 }
@@ -1062,7 +1062,7 @@ EOF
   make_drop >/dev/null
   sed -i.bak 's/^spec_version: 1/spec_version: 9/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   refute_contains "the library needs updating"
 }
 
@@ -1074,7 +1074,7 @@ EOF
   make_drop >/dev/null
   sed -i.bak 's/^spec_version: 1/spec_version: 0/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "rebuild against the newer spec"
 }
 
@@ -1082,7 +1082,7 @@ EOF
   make_drop >/dev/null
   sed -i.bak 's/^spec_version: 1/spec_version: 0/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "do not raise the stamp on its own"
 }
 
@@ -1096,7 +1096,7 @@ EOF
 # at all, so the cmd_check.sh miss means absence rather than a broken probe. An
 # empty search result trusted without that proof is this project's most-repeated
 # mistake.
-# `usage()` advertises every command AND promises `cdsync help <command>`, so a
+# `usage()` advertises every command AND promises `cdtempl help <command>`, so a
 # command without a help file makes the tool's own front page lie. `doctor` did
 # for as long as it existed: seven of eight worked, which is exactly the ratio
 # that never gets noticed by hand.
@@ -1131,7 +1131,7 @@ EOF
 # result at all, and only for the people most likely to be running it by hand.
 @test "no test can hang waiting for the install confirmation prompt" {
   local offenders
-  offenders="$(grep -n '"\$CDSYNC_BIN" install' "$BATS_TEST_FILENAME" \
+  offenders="$(grep -n '"\$CDTEMPL_BIN" install' "$BATS_TEST_FILENAME" \
     | grep -v -- '--yes' | grep -v -- '--dry-run' | grep -v '</dev/null' || true)"
 
   if [[ -n "$offenders" ]]; then
@@ -1142,13 +1142,13 @@ EOF
 
   # Prove the probe can hit: the pattern must match a real invocation, or its
   # silence means nothing.
-  grep -q '"\$CDSYNC_BIN" install' "$BATS_TEST_FILENAME"
+  grep -q '"\$CDTEMPL_BIN" install' "$BATS_TEST_FILENAME"
 }
 
 # ST0005 AT-00.6
 @test "no tracked file carries an absolute home directory path" {
   local hits
-  hits="$(git -C "$CDSYNC_HOME" grep -lIE '/Users/[a-zA-Z0-9._-]+|/home/[a-zA-Z0-9._-]+' \
+  hits="$(git -C "$CDTEMPL_HOME" grep -lIE '/Users/[a-zA-Z0-9._-]+|/home/[a-zA-Z0-9._-]+' \
     2>/dev/null || true)"
 
   if [[ -n "$hits" ]]; then
@@ -1179,14 +1179,14 @@ EOF
   # documented fails here, rather than surprising whoever's kit stops being
   # guarded.
   local form pattern
-  pattern="$(run_lib 'printf "%s" "$CDSYNC_COLOUR_RE"')"
+  pattern="$(run_lib 'printf "%s" "$CDTEMPL_COLOUR_RE"')"
 
   for form in rgb hsl oklch oklab lch lab color; do
     if ! printf '%s' "$pattern" | grep -qF "$form"; then
-      echo "named here but absent from CDSYNC_COLOUR_RE: $form" >&2
+      echo "named here but absent from CDTEMPL_COLOUR_RE: $form" >&2
       return 1
     fi
-    if ! grep -qF "$form()" "$CDSYNC_HOME/help/check.md"; then
+    if ! grep -qF "$form()" "$CDTEMPL_HOME/help/check.md"; then
       echo "read by the scanner but not documented in help/check.md: $form" >&2
       return 1
     fi
@@ -1323,7 +1323,7 @@ check_contract_citations() {
 # and an empty extract for each fixture to write its own threads into.
 make_contract_fixture() {
   mkdir -p "$TESTDIR/repo/test" "$TESTDIR/repo/intent/.canon/st"
-  printf '@test "%s" {\n  true\n}\n' "a test that exists" >"$TESTDIR/repo/test/cdsync.bats"
+  printf '@test "%s" {\n  true\n}\n' "a test that exists" >"$TESTDIR/repo/test/cdtempl.bats"
 }
 
 # write_contract <thread-id> <tests-json> -- one thread in the fixture's extract.
@@ -1348,7 +1348,7 @@ write_contract() {
   # the first of those; then in the v3 port, which it caught the same way. Where
   # the contracts live now, and why the realised views are the wrong place to
   # read them, is above check_contract_citations.
-  run check_contract_citations "$CDSYNC_HOME/intent/.canon/st" "$CDSYNC_HOME"
+  run check_contract_citations "$CDTEMPL_HOME/intent/.canon/st" "$CDTEMPL_HOME"
   if [ "$status" -ne 0 ]; then
     printf '%s\n' "$output" >&2
     return 1
@@ -1362,21 +1362,21 @@ write_contract() {
   # that, so the guard asks whether each mark is followed by a test.
   make_contract_fixture
   printf '\n# ST9001 AT-1\n# a further comment line is allowed\n@test "%s" {\n  true\n}\n' \
-    "a marked test" >>"$TESTDIR/repo/test/cdsync.bats"
+    "a marked test" >>"$TESTDIR/repo/test/cdtempl.bats"
   printf '\n# ST9001 AT-2\nnot_a_test=1\n# ST9001 AT-10\n# ST9001 AT-4\n' \
-    >>"$TESTDIR/repo/test/cdsync.bats"
+    >>"$TESTDIR/repo/test/cdtempl.bats"
   write_contract ST9001 '[
-    {"id": "AT-1", "kind": "test", "file": "test/cdsync.bats"},
-    {"id": "AT-2", "kind": "test", "file": "test/cdsync.bats"},
-    {"id": "AT-3", "kind": "test", "file": "test/cdsync.bats"},
-    {"id": "AT-4", "kind": "test", "file": "test/cdsync.bats"}
+    {"id": "AT-1", "kind": "test", "file": "test/cdtempl.bats"},
+    {"id": "AT-2", "kind": "test", "file": "test/cdtempl.bats"},
+    {"id": "AT-3", "kind": "test", "file": "test/cdtempl.bats"},
+    {"id": "AT-4", "kind": "test", "file": "test/cdtempl.bats"}
   ]'
 
   run check_contract_citations "$TESTDIR/repo/intent/.canon/st" "$TESTDIR/repo"
   [ "$status" -eq 1 ]
-  assert_contains 'ST9001 AT-2: test/cdsync.bats marks ST9001 AT-2 on a line no test follows'
+  assert_contains 'ST9001 AT-2: test/cdtempl.bats marks ST9001 AT-2 on a line no test follows'
   # A mark on the last line of a file has no test after it either.
-  assert_contains 'ST9001 AT-4: test/cdsync.bats marks ST9001 AT-4 on a line no test follows'
+  assert_contains 'ST9001 AT-4: test/cdtempl.bats marks ST9001 AT-4 on a line no test follows'
   # AT-10's mark begins with AT-1's characters, so reading it as AT-1's would
   # report AT-1 as well.
   refute_contains 'AT-1:'
@@ -1389,13 +1389,13 @@ write_contract() {
 @test "the contract guard reports a cited test the suite does not have" {
   make_contract_fixture
   write_contract ST9001 '[
-    {"id": "AT-1", "kind": "test", "legacy": {"raw": "test/cdsync.bats::\"a test that exists\""}},
-    {"id": "AT-2", "kind": "test", "file": "test/cdsync.bats::\"a test nobody wrote\""}
+    {"id": "AT-1", "kind": "test", "legacy": {"raw": "test/cdtempl.bats::\"a test that exists\""}},
+    {"id": "AT-2", "kind": "test", "file": "test/cdtempl.bats::\"a test nobody wrote\""}
   ]'
 
   run check_contract_citations "$TESTDIR/repo/intent/.canon/st" "$TESTDIR/repo"
   [ "$status" -eq 1 ]
-  assert_contains 'ST9001 AT-2: cites "a test nobody wrote", which test/cdsync.bats does not have'
+  assert_contains 'ST9001 AT-2: cites "a test nobody wrote", which test/cdtempl.bats does not have'
   # The real citation beside it was read and passed, so what failed is the
   # missing name -- not an extract the guard could not read.
   refute_contains 'AT-1'
@@ -1406,7 +1406,7 @@ write_contract() {
 @test "the contract guard refuses a test-backed row that cites nothing" {
   make_contract_fixture
   write_contract ST9001 '[
-    {"id": "AT-1", "kind": "test", "file": "test/cdsync.bats"},
+    {"id": "AT-1", "kind": "test", "file": "test/cdtempl.bats"},
     {"id": "AT-2", "kind": "test", "status": "green"},
     {"id": "AT-3", "kind": "non-test", "prose": "read by eye"}
   ]'
@@ -1423,7 +1423,7 @@ write_contract() {
 @test "the contract guard reports a cited file the repository does not have" {
   make_contract_fixture
   write_contract ST9001 '[
-    {"id": "AT-1", "kind": "test", "file": "test/cdsync.bats"},
+    {"id": "AT-1", "kind": "test", "file": "test/cdtempl.bats"},
     {"id": "AT-2", "kind": "test", "file": "test/elsewhere.bats"}
   ]'
 
@@ -1463,8 +1463,8 @@ write_contract() {
 
 @test "the README rule table matches help/check.md" {
   local from_help from_readme
-  from_help="$(grep -E '^\| [0-9] \|.*\|.*(blocking|advisory)' "$CDSYNC_HOME/help/check.md")"
-  from_readme="$(grep -E '^\| [0-9] \|.*\|.*(blocking|advisory)' "$CDSYNC_HOME/README.md")"
+  from_help="$(grep -E '^\| [0-9] \|.*\|.*(blocking|advisory)' "$CDTEMPL_HOME/help/check.md")"
+  from_readme="$(grep -E '^\| [0-9] \|.*\|.*(blocking|advisory)' "$CDTEMPL_HOME/README.md")"
 
   [ -n "$from_help" ]
   [ -n "$from_readme" ]
@@ -1478,7 +1478,7 @@ write_contract() {
 # `bin/devbin test all`, before anything is published.
 # ST0005 AT-00.10
 @test "every path CI hands to shellcheck and bash -n names a file that exists" {
-  local ci="$CDSYNC_HOME/.github/workflows/ci.yml"
+  local ci="$CDTEMPL_HOME/.github/workflows/ci.yml"
   local listed word missing=0
   local -a words
 
@@ -1489,11 +1489,11 @@ write_contract() {
   # nothing to check.
   [ "$(grep -c '^ *run: shellcheck ' "$ci")" -eq 1 ]
   [ "$(grep -c '^ *for f in .*; do$' "$ci")" -eq 1 ]
-  [ "$(tr ' ' '\n' <<<"$listed" | grep -cx 'bin/cdsync')" -eq 2 ]
+  [ "$(tr ' ' '\n' <<<"$listed" | grep -cx 'bin/cdtempl')" -eq 2 ]
 
   read -r -a words <<<"$listed"
   for word in "${words[@]}"; do
-    if ! compgen -G "$CDSYNC_HOME/$word" >/dev/null; then
+    if ! compgen -G "$CDTEMPL_HOME/$word" >/dev/null; then
       echo "ci.yml names $word, which matches no file" >&2
       missing=$((missing + 1))
     fi
@@ -1507,8 +1507,8 @@ write_contract() {
 # ST0005 AT-00.11
 @test "the shellcheck line in the README is the one CI runs" {
   local from_ci from_readme
-  from_ci="$(sed -n 's/^ *run: \(shellcheck .*\)$/\1/p' "$CDSYNC_HOME/.github/workflows/ci.yml")"
-  from_readme="$(grep -E '^shellcheck ' "$CDSYNC_HOME/README.md")"
+  from_ci="$(sed -n 's/^ *run: \(shellcheck .*\)$/\1/p' "$CDTEMPL_HOME/.github/workflows/ci.yml")"
+  from_readme="$(grep -E '^shellcheck ' "$CDTEMPL_HOME/README.md")"
 
   [ -n "$from_ci" ]
   [ -n "$from_readme" ]
@@ -1516,7 +1516,7 @@ write_contract() {
 }
 
 # `--target` is implemented by every command and was documented by seven of the
-# eight; `cdsync new` had it in its synopsis and no Options table at all. That is
+# eight; `cdtempl new` had it in its synopsis and no Options table at all. That is
 # the same ratio as the `doctor` help-file gap -- most of them right, which is
 # exactly the shape nobody notices by hand.
 #
@@ -1526,16 +1526,16 @@ write_contract() {
 @test "every flag a command implements is documented in its help file" {
   local commands c impl flag missing="" found_any=0
 
-  commands="$(grep -oE '^  [a-z|]+\)' "$CDSYNC_HOME/bin/cdsync" | tr -d ' )' | tr '|' '\n' \
+  commands="$(grep -oE '^  [a-z|]+\)' "$CDTEMPL_HOME/bin/cdtempl" | tr -d ' )' | tr '|' '\n' \
     | grep -vE '^(-h|--help|help|-v|--version|version|\*)$' | sort -u)"
   [ -n "$commands" ]
 
   for c in $commands; do
-    [[ -f "$CDSYNC_HOME/lib/cmd_$c.sh" ]] || continue
-    impl="$(grep -oE '^\s+--[a-z-]+\)' "$CDSYNC_HOME/lib/cmd_$c.sh" | tr -d ' )' | sort -u)"
+    [[ -f "$CDTEMPL_HOME/lib/cmd_$c.sh" ]] || continue
+    impl="$(grep -oE '^\s+--[a-z-]+\)' "$CDTEMPL_HOME/lib/cmd_$c.sh" | tr -d ' )' | sort -u)"
     for flag in $impl; do
       found_any=1
-      grep -qE "^\| \`$flag" "$CDSYNC_HOME/help/$c.md" || missing="$missing $c:$flag"
+      grep -qE "^\| \`$flag" "$CDTEMPL_HOME/help/$c.md" || missing="$missing $c:$flag"
     done
   done
 
@@ -1548,7 +1548,7 @@ write_contract() {
 }
 
 # A HELP FILE EXISTING IS NOT THE SAME AS THE FRONT PAGE ADVERTISING IT, and
-# the sibling test below checks only the first. `help/cdsync.md` carries the
+# the sibling test below checks only the first. `help/cdtempl.md` carries the
 # command table a reader meets before any of the per-command pages, and it has
 # now fallen behind the dispatcher twice: once losing `install` and `bootstrap`,
 # and once missing `init` on the day it was added -- by the same hand that had
@@ -1558,26 +1558,26 @@ write_contract() {
 # what needs the guard.
 @test "the front-page command table lists every command the dispatcher accepts" {
   local commands
-  commands="$(grep -oE '^  [a-z|]+\)' "$CDSYNC_HOME/bin/cdsync" | tr -d ' )' | tr '|' '\n' \
+  commands="$(grep -oE '^  [a-z|]+\)' "$CDTEMPL_HOME/bin/cdtempl" | tr -d ' )' | tr '|' '\n' \
     | grep -vE '^(-h|--help|help|-v|--version|version|\*)$' | sort -u)"
   [ -n "$commands" ]
 
   local missing="" c
   for c in $commands; do
-    if ! grep -qE "^\| \`cdsync $c( <[a-z]+>)?\`" "$CDSYNC_HOME/help/cdsync.md"; then
+    if ! grep -qE "^\| \`cdtempl $c( <[a-z]+>)?\`" "$CDTEMPL_HOME/help/cdtempl.md"; then
       missing="$missing $c"
     fi
   done
 
   if [[ -n "$missing" ]]; then
-    echo "commands absent from the help/cdsync.md command table:$missing" >&2
+    echo "commands absent from the help/cdtempl.md command table:$missing" >&2
     return 1
   fi
 }
 
 @test "every command the dispatcher accepts has a help file" {
   local commands
-  commands="$(grep -oE '^  [a-z|]+\)' "$CDSYNC_HOME/bin/cdsync" | tr -d ' )' | tr '|' '\n' \
+  commands="$(grep -oE '^  [a-z|]+\)' "$CDTEMPL_HOME/bin/cdtempl" | tr -d ' )' | tr '|' '\n' \
     | grep -vE '^(-h|--help|help|-v|--version|version|\*)$' | sort -u)"
 
   # The probe must be able to find commands at all before a pass means anything.
@@ -1585,7 +1585,7 @@ write_contract() {
 
   local missing="" c
   for c in $commands; do
-    if [[ ! -f "$CDSYNC_HOME/help/$c.md" ]]; then missing="$missing $c"; fi
+    if [[ ! -f "$CDTEMPL_HOME/help/$c.md" ]]; then missing="$missing $c"; fi
   done
 
   if [[ -n "$missing" ]]; then
@@ -1602,10 +1602,10 @@ write_contract() {
 # documented rules and passed a test that was measuring the wrong thing.
 @test "the documented rule count matches the rules check implements" {
   local implemented documented
-  implemented="$(grep -ohE '"rule-[0-9]"' "$CDSYNC_HOME/lib/cmd_check.sh" | sort -u | grep -c .)"
+  implemented="$(grep -ohE '"rule-[0-9]"' "$CDTEMPL_HOME/lib/cmd_check.sh" | sort -u | grep -c .)"
   [ "$implemented" -gt 0 ]
 
-  documented="$(grep -cE '^\| [0-9] \|.*\|.*(blocking|advisory)' "$CDSYNC_HOME/help/check.md")"
+  documented="$(grep -cE '^\| [0-9] \|.*\|.*(blocking|advisory)' "$CDTEMPL_HOME/help/check.md")"
   [ "$documented" -eq "$implemented" ]
 
   # THE TABLE IS NOT THE ONLY PLACE THE COUNT IS WRITTEN. The fix that added
@@ -1614,7 +1614,7 @@ write_contract() {
   # carried the same drift a second time, guarded by a test that was watching
   # the other half of it. Joining the lines first keeps this off the wrap.
   local prose_word prose_n
-  prose_word="$(tr '\n' ' ' <"$CDSYNC_HOME/help/check.md" |
+  prose_word="$(tr '\n' ' ' <"$CDTEMPL_HOME/help/check.md" |
     sed -n 's/.*applies \([a-z][a-z]*\) rules.*/\1/p')"
   [ -n "$prose_word" ]
   case "$prose_word" in
@@ -1631,11 +1631,11 @@ write_contract() {
 }
 
 @test "the conflating classifications are defined once, in the shared primitives" {
-  run grep -c '="internal confidential"' "$CDSYNC_HOME/lib/common.sh"
+  run grep -c '="internal confidential"' "$CDTEMPL_HOME/lib/common.sh"
   [ "$status" -eq 0 ]
   [ "$output" -ge 1 ]
 
-  run grep -c '="internal confidential"' "$CDSYNC_HOME/lib/cmd_check.sh"
+  run grep -c '="internal confidential"' "$CDTEMPL_HOME/lib/cmd_check.sh"
   [ "$output" -eq 0 ]
 }
 
@@ -1643,7 +1643,7 @@ write_contract() {
   make_drop >/dev/null
   sed -i.bak 's/reciprocal: \[roadmap\]/reciprocal: [not-a-real-asset]/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "not in the taxonomy"
 }
 
@@ -1651,7 +1651,7 @@ write_contract() {
   make_drop >/dev/null
   sed -i.bak 's/hard_assets: \[\]/hard_assets: [grid-and-layout]/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   refute_contains "grid-and-layout"
 }
 
@@ -1659,12 +1659,12 @@ write_contract() {
   make_drop >/dev/null
   echo 'ARR reached $1.2M this period.' \
     >> "$TESTDIR/drop/assets/investor-update/investor-update.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "rule-3"
 
   echo 'All figures illustrative.' \
     >> "$TESTDIR/drop/assets/investor-update/investor-update.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   refute_contains "rule-3"
 }
 
@@ -1672,7 +1672,7 @@ write_contract() {
   make_drop >/dev/null
   echo 'Revenue: [$0.0M, with units]' \
     >> "$TESTDIR/drop/assets/investor-update/investor-update.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   refute_contains "rule-3"
 }
 
@@ -1680,7 +1680,7 @@ write_contract() {
   make_drop >/dev/null
   printf '<span style="width: 40%%"></span>\n' \
     > "$TESTDIR/drop/assets/investor-update/page.html"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   refute_contains "rule-3"
 }
 
@@ -1688,7 +1688,7 @@ write_contract() {
   make_drop >/dev/null
   echo '<div style="color:#d97757">x</div>' \
     > "$TESTDIR/drop/assets/investor-update/page.html"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 1 ]
   assert_contains "rule-4"
   assert_contains "#d97757"
@@ -1709,7 +1709,7 @@ write_contract() {
   make_drop >/dev/null
   printf '{ "note": "a kit with no colour literal at all" }\n' \
     > "$TESTDIR/drop/kit/tokens.json"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   assert_contains "rule 4"
   assert_contains "cannot run"
@@ -1721,7 +1721,7 @@ write_contract() {
   # tree gets a clean bill from a rule that never executed.
   make_drop >/dev/null
   rm -f "$TESTDIR/drop/kit/tokens.json"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   assert_contains "rule 4"
   assert_contains "cannot run"
@@ -1731,7 +1731,7 @@ write_contract() {
   make_drop >/dev/null
   printf '// @generated -- do not edit\n.x { color: #d97757; }\n' \
     > "$TESTDIR/drop/assets/investor-update/support.js"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   refute_contains "#d97757"
 }
@@ -1743,7 +1743,7 @@ write_contract() {
   # up front, a sequence that matches the pattern further in.
   printf 'JFIF\000\000\000\000#d97757 trailing bytes\n' \
     > "$TESTDIR/drop/assets/investor-update/photo.jpg"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   refute_contains "#d97757"
 }
@@ -1755,7 +1755,7 @@ write_contract() {
   # the direction that stops checking.
   printf '.x { color: #d97757; }\n' \
     > "$TESTDIR/drop/assets/investor-update/notes.png"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 1 ]
   assert_contains "rule-4"
   assert_contains "#d97757"
@@ -1767,7 +1767,7 @@ write_contract() {
   # a function call, every one of them JavaScript in a .dc.html.
   printf '<p>text</p>\n<script>\nconst parts=[]; if(n("kit")) parts.push([k]);\n</script>\n' \
     > "$TESTDIR/drop/assets/investor-update/page.html"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   refute_contains "blanks remain"
 }
 
@@ -1854,33 +1854,33 @@ HTML
 # RELEASE
 # ============================================================================
 #
-# `release` operates on $CDSYNC_HOME, which in this suite IS the real repository.
+# `release` operates on $CDTEMPL_HOME, which in this suite IS the real repository.
 # So these exercise the pure helpers and the read-only and --dry-run paths, and
 # never a live bump -- a test that moved VERSION would move it for real.
 
 @test "release show prints the bare version" {
-  run "$CDSYNC_BIN" release show
+  run "$CDTEMPL_BIN" release show
   [ "$status" -eq 0 ]
   [[ "$output" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
 }
 
 @test "release bumps each part independently" {
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 major"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 major"
   [ "$output" = "2.0.0" ]
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 minor"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 minor"
   [ "$output" = "1.3.0" ]
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 patch"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 patch"
   [ "$output" = "1.2.4" ]
 }
 
 @test "release rejects a bump part that is not major, minor or patch" {
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 sideways"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 sideways"
   [ "$status" -ne 0 ]
 }
 
 # THE FIRST RELEASE WAS UNREACHABLE. `cut` took only major|minor|patch and
 # always moved forward, so the version a project is ON could never be tagged --
-# and that is exactly the version a project's FIRST release needs. Cdsync sat
+# and that is exactly the version a project's FIRST release needs. Cdtempl sat
 # at 0.1.0 with zero tags and no way to cut 0.1.0: `cut minor` would have
 # produced 0.2.0, skipping the release the repository already announced.
 #
@@ -1888,7 +1888,7 @@ HTML
 # gap is invisible from reading the code -- it only shows up the first time
 # anyone tries to release anything.
 @test "release accepts an explicit target version, not only a bump part" {
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 2.0.0"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 2.0.0"
   [ "$status" -eq 0 ]
   [ "$output" = "2.0.0" ]
 }
@@ -1898,7 +1898,7 @@ HTML
 # tag already exists, which is the check that actually knows whether a version
 # has been released. Refusing equality here would re-close the gap.
 @test "release accepts the current version as an explicit target, so a first release can be cut" {
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 0.1.0 0.1.0"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_bump_part 0.1.0 0.1.0"
   [ "$status" -eq 0 ]
   [ "$output" = "0.1.0" ]
 }
@@ -1906,18 +1906,18 @@ HTML
 # Forward or level, never backward. A tag that names a version older than the
 # one in VERSION would make the two disagree about what is current.
 @test "release refuses an explicit target older than the current version" {
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 1.0.0"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 1.0.0"
   [ "$status" -ne 0 ]
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 1.2.2"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 1.2.2"
   [ "$status" -ne 0 ]
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 0.10.0 0.9.0"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_bump_part 0.10.0 0.9.0"
   [ "$status" -ne 0 ]
 }
 
 # Each component compares as a NUMBER. String ordering puts 0.10.0 below 0.9.0
 # and would refuse a legitimate release on the tenth minor version.
 @test "release compares version components numerically, not as strings" {
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 0.9.0 0.10.0"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_bump_part 0.9.0 0.10.0"
   [ "$status" -eq 0 ]
   [ "$output" = "0.10.0" ]
 }
@@ -1927,7 +1927,7 @@ HTML
 @test "release refuses an explicit target that is not bare semver" {
   local bad
   for bad in v2.0.0 2.0.0-rc1 1.2.3.4 2.0.x; do
-    run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 '$bad'"
+    run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_bump_part 1.2.3 '$bad'"
     [ "$status" -ne 0 ] || {
       echo "accepted '$bad' as an explicit target, which is not bare semver" >&2
       return 1
@@ -1936,7 +1936,7 @@ HTML
 }
 
 @test "release cut plans the explicit version it was given" {
-  run "$CDSYNC_BIN" release cut 9.9.9 --dry-run
+  run "$CDTEMPL_BIN" release cut 9.9.9 --dry-run
   [ "$status" -eq 0 ]
   assert_contains "9.9.9"
   assert_contains "nothing was written"
@@ -1971,13 +1971,13 @@ HTML
   before="$(git -C "$repo" rev-list --count HEAD)"
 
   # VERSION already holds the target: nothing to commit. Must SUCCEED.
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_commit_version 0.1.0 '$repo'"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_commit_version 0.1.0 '$repo'"
   [ "$status" -eq 0 ]
   [ "$(git -C "$repo" rev-list --count HEAD)" -eq "$before" ]
 
   # A real move still commits exactly once, and leaves nothing behind.
   printf '0.2.0\n' >"$repo/VERSION"
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_commit_version 0.2.0 '$repo'"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_commit_version 0.2.0 '$repo'"
   [ "$status" -eq 0 ]
   [ "$(git -C "$repo" rev-list --count HEAD)" -eq "$((before + 1))" ]
   [ -z "$(git -C "$repo" status --porcelain)" ]
@@ -1987,11 +1987,11 @@ HTML
 # The `v` belongs to the git tag and nowhere else. A version string that
 # sometimes carries it is one that gets compared against one that does not.
 @test "release accepts bare semver and refuses everything else" {
-  run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_assert_semver 0.2.0"
+  run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_assert_semver 0.2.0"
   [ "$status" -eq 0 ]
   local bad
   for bad in v0.2.0 0.2 0.2.0-rc1 "" abc 1.2.3.4; do
-    run run_lib "source '$CDSYNC_HOME/lib/cmd_release.sh'; release_assert_semver '$bad'"
+    run run_lib "source '$CDTEMPL_HOME/lib/cmd_release.sh'; release_assert_semver '$bad'"
     [ "$status" -ne 0 ] || {
       echo "accepted '$bad', which is not bare semver" >&2
       return 1
@@ -2001,17 +2001,17 @@ HTML
 
 @test "release cut --dry-run writes nothing" {
   local before after
-  before="$(cat "$CDSYNC_HOME/VERSION")"
-  run "$CDSYNC_BIN" release cut minor --dry-run
-  after="$(cat "$CDSYNC_HOME/VERSION")"
+  before="$(cat "$CDTEMPL_HOME/VERSION")"
+  run "$CDTEMPL_BIN" release cut minor --dry-run
+  after="$(cat "$CDTEMPL_HOME/VERSION")"
   [ "$before" = "$after" ]
   assert_contains "nothing was written"
 }
 
 @test "release cut --dry-run states whether it would push" {
-  run "$CDSYNC_BIN" release cut patch --dry-run
+  run "$CDTEMPL_BIN" release cut patch --dry-run
   assert_contains "NO -- local only"
-  run "$CDSYNC_BIN" release cut patch --dry-run --push
+  run "$CDTEMPL_BIN" release cut patch --dry-run --push
   assert_contains "push    commit and tag"
 }
 
@@ -2020,12 +2020,12 @@ HTML
 # rather than skipping it -- so a release cannot be cut from inside the tests,
 # which is not a thing anyone should be able to do by accident.
 @test "the test gate refuses to run the suite from inside the suite" {
-  run "$CDSYNC_BIN" release cut patch --dry-run
+  run "$CDTEMPL_BIN" release cut patch --dry-run
   assert_contains "cannot run the suite from inside the suite"
 }
 
 @test "release refuses an unknown subcommand" {
-  run "$CDSYNC_BIN" release frobnicate
+  run "$CDTEMPL_BIN" release frobnicate
   [ "$status" -ne 0 ]
   assert_contains "unknown subcommand"
 }
@@ -2041,8 +2041,8 @@ HTML
   # alone, because without it check-ignore answers "not ignored" for any TRACKED
   # file, and the second half would never be reached. The index: an ignore rule
   # does not untrack a file that is already tracked.
-  git -C "$CDSYNC_HOME" check-ignore -q --no-index bin/.devbin/manifest.sha256
-  [ -z "$(git -C "$CDSYNC_HOME" ls-files bin/.devbin/manifest.sha256)" ]
+  git -C "$CDTEMPL_HOME" check-ignore -q --no-index bin/.devbin/manifest.sha256
+  [ -z "$(git -C "$CDTEMPL_HOME" ls-files bin/.devbin/manifest.sha256)" ]
 }
 
 # The tarball contract, checked against the mechanism that actually builds it.
@@ -2051,12 +2051,12 @@ HTML
 # ST0005 AT-00.8
 @test "a release archive carries the tool and not how it is made" {
   local listing
-  listing="$(git -C "$CDSYNC_HOME" archive --format=tar HEAD | tar -t 2>/dev/null)"
+  listing="$(git -C "$CDTEMPL_HOME" archive --format=tar HEAD | tar -t 2>/dev/null)"
 
   # The probe must be able to see the archive at all before an absence means
   # anything.
   [ -n "$listing" ]
-  printf '%s\n' "$listing" | grep -q '^bin/cdsync$'
+  printf '%s\n' "$listing" | grep -q '^bin/cdtempl$'
   printf '%s\n' "$listing" | grep -q '^lib/cmd_release.sh$'
   printf '%s\n' "$listing" | grep -q '^specs/'
   printf '%s\n' "$listing" | grep -q '^VERSION$'
@@ -2096,7 +2096,7 @@ HTML
   # dispatcher and nothing else.
   local bin_actual bin_expected
   bin_actual="$(printf '%s\n' "$listing" | grep '^bin/' | LC_ALL=C sort | tr '\n' ' ')"
-  bin_expected="bin/ bin/cdsync "
+  bin_expected="bin/ bin/cdtempl "
   if [[ "$bin_actual" != "$bin_expected" ]]; then
     echo "release archive bin/ changed" >&2
     echo "  expected: $bin_expected" >&2
@@ -2124,7 +2124,7 @@ HTML
     > "$TESTDIR/drop/assets/investor-update/vendor/runtime.js"
   printf 'This directory is generated.\n\n#abc\n' \
     > "$TESTDIR/drop/assets/investor-update/vendor/README.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 1 ]
   # Shorthand expanded, so the reported value is comparable to the kit's.
   assert_contains "#aabbcc"
@@ -2141,7 +2141,7 @@ HTML
   local dir="$TESTDIR/drop/assets/investor-update"
   printf 'Revenue 12%% and 34%% and 56%% and then £44 and £48 besides.\n' \
     > "$dir/figures.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "rule-3"
   assert_contains "more)"
 }
@@ -2149,7 +2149,7 @@ HTML
 @test "rule 3 does not annotate a file whose numbers all fit" {
   make_drop >/dev/null
   printf 'Just 12%% here.\n' > "$TESTDIR/drop/assets/investor-update/figures.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "rule-3"
   refute_contains "more)"
 }
@@ -2158,7 +2158,7 @@ HTML
   make_drop >/dev/null
   sed -i.bak 's/^status: spec-only/status: partial/' \
     "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "rule-5"
   assert_contains "requires a coverage field"
 }
@@ -2167,7 +2167,7 @@ HTML
   make_drop >/dev/null
   run_lib "fm_set '$TESTDIR/drop/assets/investor-update/spec.md' coverage '12/28 rendered'"
   run_lib "fm_set '$TESTDIR/drop/assets/investor-update/spec.md' status complete"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "coverage is 12/28"
 }
 
@@ -2180,7 +2180,7 @@ HTML
   make_drop >/dev/null
   run_lib "fm_set '$TESTDIR/drop/assets/investor-update/spec.md' coverage 'Three of four surfaces as built. No Frontdesk capture.'"
   run_lib "fm_set '$TESTDIR/drop/assets/investor-update/spec.md' status partial"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "assets checked"
   refute_contains "not in N/M form"
 }
@@ -2192,14 +2192,14 @@ HTML
   make_drop >/dev/null
   run_lib "fm_set '$TESTDIR/drop/assets/investor-update/spec.md' coverage 'Three of four surfaces as built. No Frontdesk capture.'"
   run_lib "fm_set '$TESTDIR/drop/assets/investor-update/spec.md' status complete"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   assert_contains "rule-5"
   assert_contains "totality cannot be checked"
 }
 
 @test "check refuses a target that is not a drop" {
   mkdir -p "$TESTDIR/empty"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/empty"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/empty"
   [ "$status" -eq 2 ]
   assert_contains "no drop at"
 }
@@ -2212,7 +2212,7 @@ HTML
   mkdir -p "$TESTDIR/bymedium/assets"
   touch "$TESTDIR/bymedium/assets/wordmark.svg"
   touch "$TESTDIR/bymedium/assets/mascot.png"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/bymedium"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/bymedium"
   [ "$status" -eq 2 ]
   assert_contains "0 assets checked"
   refute_contains "checked -- clean"
@@ -2220,7 +2220,7 @@ HTML
 
 @test "check refuses an assets/ that exists but is empty" {
   mkdir -p "$TESTDIR/hollow/assets"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/hollow"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/hollow"
   [ "$status" -eq 2 ]
   assert_contains "0 assets checked"
   refute_contains "checked -- clean"
@@ -2230,7 +2230,7 @@ HTML
 # many assets it checked.
 @test "check still passes a real drop and reports a nonzero count" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   assert_contains "assets checked"
   refute_contains "0 assets checked"
@@ -2239,7 +2239,7 @@ HTML
 @test "check reports an asset with no spec as blocking" {
   make_drop >/dev/null
   rm "$TESTDIR/drop/assets/investor-update/spec.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 1 ]
   assert_contains "no spec.md"
 }
@@ -2253,13 +2253,13 @@ HTML
   make_drop >/dev/null
   rm "$TESTDIR/drop/assets/investor-update/spec.md"
 
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 1 ]
   assert_contains "an asset must carry its definition of done"
   refute_contains "no index.md to say"
 
   rm "$TESTDIR/drop/index.md"
-  run "$CDSYNC_BIN" check --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/drop"
   [ "$status" -eq 1 ]
   assert_contains "no index.md to say whether this is an asset at all"
 }
@@ -2382,7 +2382,7 @@ HTML
   ( cd "$TESTDIR/hostile" && zip -qry "$TESTDIR/hostile.zip" . )
   echo "repo-authored" > "$TESTDIR/target/addenda-note.md"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/hostile.zip" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/hostile.zip" --target "$TESTDIR/target"
   [ "$status" -ne 0 ]
   assert_contains "symlink"
   [ ! -d "$TESTDIR/target/assets" ]
@@ -2402,7 +2402,7 @@ HTML
   echo "why the placeholder must be boring" > "$TESTDIR/target/README.md"
   echo "the order this drop answers" > "$TESTDIR/target/brief.md"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   [ "$status" -eq 0 ]
   [ "$(cat "$TESTDIR/target/README.md")" = "why the placeholder must be boring" ]
   [ "$(cat "$TESTDIR/target/brief.md")" = "the order this drop answers" ]
@@ -2419,7 +2419,7 @@ HTML
   echo "copy for four typed player states" > "$TESTDIR/target/addenda/typed-states.md"
   echo "the addenda protocol" > "$TESTDIR/target/addenda/README.md"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   [ "$status" -eq 0 ]
   [ "$(cat "$TESTDIR/target/addenda/typed-states.md")" = "copy for four typed player states" ]
   [ "$(cat "$TESTDIR/target/addenda/README.md")" = "the addenda protocol" ]
@@ -2436,7 +2436,7 @@ HTML
 }
 
 @test "a name declared both owned and protected refuses the install outright" {
-  run run_lib 'CDSYNC_DROP_OWNED_DIRS="assets kit notes addenda"; drop_guard_contract'
+  run run_lib 'CDTEMPL_DROP_OWNED_DIRS="assets kit notes addenda"; drop_guard_contract'
   [ "$status" -eq 1 ]
   assert_contains "contradicts itself"
   assert_contains "addenda"
@@ -2455,7 +2455,7 @@ HTML
   mkdir -p "$TESTDIR/target/addenda"
   echo "the repo's own" > "$TESTDIR/target/addenda/typed-states.md"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   [ "$status" -eq 0 ]
   assert_contains "protect addenda"
   [ "$(cat "$TESTDIR/target/addenda/typed-states.md")" = "the repo's own" ]
@@ -2471,7 +2471,7 @@ HTML
   echo "from the drop" > "$src/addenda/typed-states.md"
   mkdir -p "$TESTDIR/bare"
 
-  run "$CDSYNC_BIN" install "$src" --target "$TESTDIR/bare" --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$TESTDIR/bare" --yes
   [ "$status" -eq 0 ]
   assert_contains "discard  addenda"
   [ ! -e "$TESTDIR/bare/addenda" ]
@@ -2481,18 +2481,18 @@ HTML
   # Pins the declaration itself, not just the behaviour. The behaviour above
   # follows from import writing only the owned paths; the declaration is what a
   # brief and a future install path can both read.
-  run run_lib 'printf "%s\n" "$CDSYNC_DROP_PROTECTED_PATHS"'
+  run run_lib 'printf "%s\n" "$CDTEMPL_DROP_PROTECTED_PATHS"'
   [ "$status" -eq 0 ]
   assert_contains "addenda"
-  run run_lib 'printf "%s\n" "$CDSYNC_DROP_OWNED_DIRS"'
+  run run_lib 'printf "%s\n" "$CDTEMPL_DROP_OWNED_DIRS"'
   refute_contains "addenda"
 }
 
 @test "BOOTSTRAP-CD.md is declared protected alongside addenda" {
-  # Cdsync-side output living inside a tree Claude Design replaces wholesale.
+  # Cdtempl-side output living inside a tree Claude Design replaces wholesale.
   # Without the declaration an export silently eats it, and the guarantee it
   # states -- that a cold CD project can be rebuilt from the tree -- goes with it.
-  run run_lib 'printf "%s\n" "$CDSYNC_DROP_PROTECTED_PATHS"'
+  run run_lib 'printf "%s\n" "$CDTEMPL_DROP_PROTECTED_PATHS"'
   [ "$status" -eq 0 ]
   assert_contains "BOOTSTRAP-CD.md"
   run run_lib 'drop_path_is_protected "BOOTSTRAP-CD.md" && echo protected'
@@ -2501,8 +2501,8 @@ HTML
 
 # The venture's own facts and order, living at the tree root by hv's 9 Aug 2026
 # ruling. An install replacing it would hand the next round's order to the drop.
-@test "cdsync.json is declared protected alongside addenda" {
-  run run_lib 'drop_path_is_protected "cdsync.json" && echo protected'
+@test "cdtempl.json is declared protected alongside addenda" {
+  run run_lib 'drop_path_is_protected "cdtempl.json" && echo protected'
   assert_contains "protected"
 }
 
@@ -2521,7 +2521,7 @@ HTML
   mkdir -p "$TESTDIR/target/assets/roadmap"
   echo "an earlier drop's work" > "$TESTDIR/target/assets/roadmap/spec.md"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/target/assets/roadmap/spec.md" ]
 }
@@ -2531,7 +2531,7 @@ HTML
   mkdir -p "$TESTDIR/target/site"
   echo "<h1>generated</h1>" > "$TESTDIR/target/site/index.html"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   [ -f "$TESTDIR/target/site/index.html" ]
 }
 
@@ -2540,7 +2540,7 @@ HTML
   mkdir -p "$TESTDIR/target/notes"
   echo "round two's reasoning" > "$TESTDIR/target/notes/earlier.md"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   [ -f "$TESTDIR/target/notes/earlier.md" ]
   [ -f "$TESTDIR/target/notes/thinking.md" ]
 }
@@ -2550,7 +2550,7 @@ HTML
   mkdir -p "$TESTDIR/target/assets/investor-update"
   echo "old name" > "$TESTDIR/target/assets/investor-update/old-artefact.md"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   [ ! -f "$TESTDIR/target/assets/investor-update/old-artefact.md" ]
   [ -f "$TESTDIR/target/assets/investor-update/investor-update.md" ]
 }
@@ -2559,7 +2559,7 @@ HTML
   make_drop >/dev/null
   echo "not mine" > "$TESTDIR/drop/CHANGELOG.md"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   assert_contains "ignore  CHANGELOG.md"
   [ ! -f "$TESTDIR/target/CHANGELOG.md" ]
 }
@@ -2568,7 +2568,7 @@ HTML
   make_drop >/dev/null
   rm "$TESTDIR/drop/RETURN.md"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/never"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/never"
   [ "$status" -ne 0 ]
   assert_contains "no RETURN.md"
   [ ! -d "$TESTDIR/never" ]
@@ -2577,21 +2577,21 @@ HTML
 @test "import refuses something that is not a drop" {
   mkdir -p "$TESTDIR/notadrop"
   echo x > "$TESTDIR/notadrop/thing.txt"
-  run "$CDSYNC_BIN" import "$TESTDIR/notadrop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/notadrop" --target "$TESTDIR/target"
   [ "$status" -ne 0 ]
   assert_contains "does not look like a drop"
 }
 
 @test "import --dry-run writes nothing" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target" --dry-run
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target" --dry-run
   [ "$status" -eq 0 ]
   assert_contains "would be written"
   [ ! -d "$TESTDIR/target/assets" ]
 }
 
 @test "import of a missing file fails" {
-  run "$CDSYNC_BIN" import /no/such/file.zip
+  run "$CDTEMPL_BIN" import /no/such/file.zip
   [ "$status" -ne 0 ]
   assert_contains "no such file"
 }
@@ -2599,7 +2599,7 @@ HTML
 @test "import unpacks a real zip and descends the wrapper directory" {
   make_drop >/dev/null
   ( cd "$TESTDIR" && zip -qr fixture.zip drop )
-  run "$CDSYNC_BIN" import "$TESTDIR/fixture.zip" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/fixture.zip" --target "$TESTDIR/target"
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/target/assets/investor-update/spec.md" ]
 }
@@ -2615,7 +2615,7 @@ HTML
   mkdir -p "$TESTDIR/nest/design"
   mv "$TESTDIR/drop" "$TESTDIR/nest/design/system"
   ( cd "$TESTDIR/nest" && zip -qr "$TESTDIR/nested.zip" design )
-  run "$CDSYNC_BIN" import "$TESTDIR/nested.zip" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/nested.zip" --target "$TESTDIR/target"
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/target/assets/investor-update/spec.md" ]
   [ ! -e "$TESTDIR/target/system" ]
@@ -2660,7 +2660,7 @@ HTML
 
 @test "import leaves the source directory in place" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   [ -d "$TESTDIR/drop" ]
   [ -f "$TESTDIR/drop/RETURN.md" ]
 }
@@ -2711,23 +2711,23 @@ make_as_is_export() {
   mkdir -p "$TESTDIR/target/leftover"
   echo "an earlier round" > "$TESTDIR/target/leftover/old.md"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/target/leftover/old.md" ]
 
-  run "$CDSYNC_BIN" install "$TESTDIR/drop" --target "$TESTDIR/target" --yes
+  run "$CDTEMPL_BIN" install "$TESTDIR/drop" --target "$TESTDIR/target" --yes
   [ "$status" -eq 0 ]
   [ ! -e "$TESTDIR/target/leftover" ]
 }
 
 @test "install is dispatched as its own command" {
-  run "$CDSYNC_BIN" install </dev/null
+  run "$CDTEMPL_BIN" install </dev/null
   [ "$status" -eq 2 ]
-  assert_contains "usage: cdsync install"
+  assert_contains "usage: cdtempl install"
 }
 
 @test "install help renders" {
-  run "$CDSYNC_BIN" help install
+  run "$CDTEMPL_BIN" help install
   [ "$status" -eq 0 ]
   assert_contains "install"
 }
@@ -2737,7 +2737,7 @@ make_as_is_export() {
   target="$(make_installed_target)"
   src="$(make_as_is_export)"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --dry-run
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --dry-run
   [ "$status" -eq 0 ]
   assert_contains "remove   venture"
   assert_contains "replace  design-system"
@@ -2757,7 +2757,7 @@ make_as_is_export() {
   src="$(make_as_is_export)"
   echo "hand-written, never committed" > "$target/design-system/NOTES.md"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --yes
   [ "$status" -ne 0 ]
   assert_contains "could not give back"
   assert_contains "NOTES.md"
@@ -2771,7 +2771,7 @@ make_as_is_export() {
   src="$(make_as_is_export)"
   echo "hand-written, never committed" > "$target/design-system/NOTES.md"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --yes --force
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --yes --force
   [ "$status" -eq 0 ]
   [ "$(cat "$target/design-system/colour.md")" = "new colour doc" ]
 }
@@ -2781,7 +2781,7 @@ make_as_is_export() {
   target="$(make_installed_target)"
   src="$(make_as_is_export)"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --yes
   [ "$status" -eq 0 ]
   assert_contains "keep     addenda"
   assert_contains "repo-authored"
@@ -2796,7 +2796,7 @@ make_as_is_export() {
   target="$(make_installed_target)"
   src="$(make_as_is_export)"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --yes
   [ "$status" -eq 0 ]
   assert_contains "keep     _inbox"
   assert_contains "nothing else could restore it"
@@ -2808,7 +2808,7 @@ make_as_is_export() {
   target="$(make_installed_target)"
   src="$(make_as_is_export)"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --yes
   [ "$status" -eq 0 ]
   [ "$(cat "$target/design-system/colour.md")" = "new colour doc" ]
   [ -f "$target/prototypes/index.html" ]
@@ -2824,7 +2824,7 @@ make_as_is_export() {
   target="$(make_installed_target)"
   mkdir -p "$TESTDIR/hollow"
 
-  run "$CDSYNC_BIN" install "$TESTDIR/hollow" --target "$target" --yes
+  run "$CDTEMPL_BIN" install "$TESTDIR/hollow" --target "$target" --yes
   [ "$status" -ne 0 ]
   assert_contains "nothing to install"
   [ -f "$target/design-system/colour.md" ]
@@ -2844,7 +2844,7 @@ make_as_is_export() {
   target="$(make_installed_target)"
   src="$(make_as_is_export)"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" </dev/null
+  run "$CDTEMPL_BIN" install "$src" --target "$target" </dev/null
   [ "$status" -ne 0 ]
   assert_contains "without confirmation"
   [ "$(cat "$target/design-system/colour.md")" = "old colour doc" ]
@@ -2858,7 +2858,7 @@ make_as_is_export() {
   ln -s /etc/passwd "$TESTDIR/hostile/link.txt"
   ( cd "$TESTDIR/hostile" && zip -qry "$TESTDIR/hostile.zip" . )
 
-  run "$CDSYNC_BIN" install "$TESTDIR/hostile.zip" --target "$target" --yes
+  run "$CDTEMPL_BIN" install "$TESTDIR/hostile.zip" --target "$target" --yes
   [ "$status" -ne 0 ]
   assert_contains "symlink"
   [ "$(cat "$target/design-system/colour.md")" = "old colour doc" ]
@@ -2872,7 +2872,7 @@ make_as_is_export() {
   mkdir -p "$TESTDIR/loose"
   echo "standing" > "$TESTDIR/loose/existing.md"
 
-  run "$CDSYNC_BIN" install "$src" --target "$TESTDIR/loose" --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$TESTDIR/loose" --yes
   [ "$status" -eq 0 ]
   assert_contains "not inside a git repository"
 }
@@ -2881,15 +2881,15 @@ make_as_is_export() {
 # BRIEF
 # ============================================================================
 
-@test "brief refuses without a cdsync.json" {
-  run "$CDSYNC_BIN" brief
+@test "brief refuses without a cdtempl.json" {
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 2 ]
-  assert_contains "no cdsync.json"
+  assert_contains "no cdtempl.json"
 }
 
 @test "brief refuses an order with no specified assets" {
-  echo '{"venture":"acme","order":{"assets":[]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"assets":[]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 2 ]
   assert_contains "orders nothing"
 }
@@ -2898,8 +2898,8 @@ make_as_is_export() {
   # The refusal this test used to pin is gone (hv, 9 Aug 2026): an in-taxonomy
   # slug orders ahead of the library. What must still never happen is the
   # document inventing a specification section for it.
-  echo '{"venture":"acme","order":{"assets":["roadmap"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"assets":["roadmap"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "## Ordered ahead of the library"
@@ -2907,8 +2907,8 @@ make_as_is_export() {
 }
 
 @test "brief writes to the target and inlines the full specification" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/design/brief.md" ]
 
@@ -2922,35 +2922,35 @@ make_as_is_export() {
 
 @test "brief stamps the library versions rather than reading them from the venture" {
   echo '{"venture":"acme","spec_library_version":99,"order":{"assets":["investor-update"]}}' \
-    > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+    > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run run_lib "fm_get '$TESTDIR/design/brief.md' spec_library_version"
   [ "$output" = "$(run_lib 'library_get spec_library_version')" ]
 }
 
 @test "brief carries the fixed and open lists" {
-  cat > "$TESTDIR/design/cdsync.json" <<'EOF'
+  cat > "$TESTDIR/design/cdtempl.json" <<'EOF'
 { "venture": "acme",
   "fixed": ["the company name is Acme"],
   "open": ["everything visual"],
   "order": { "assets": ["investor-update"] } }
 EOF
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "the company name is Acme"
   assert_contains "everything visual"
 }
 
 @test "brief warns in the document when nothing is declared fixed" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "licence to invent everything"
 }
 
 @test "brief expands a bundle to its members" {
-  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains '`investor-update`'
@@ -2961,8 +2961,8 @@ EOF
   # names a group and its membership is the library's business, so refusing the
   # order would punish the venture for the library being incomplete -- but a
   # partial set is a different ask from a whole one, so the absence is stated.
-  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
   assert_contains "bundle members omitted"
 
@@ -2975,8 +2975,8 @@ EOF
 @test "brief does not inline a specification for an omitted asset" {
   # The omission has to be a statement about an absence, not a heading with
   # nothing under it -- an asset that appears in Specifications reads as ordered.
-  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"bundles":["operating-set"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
 
   run bash -c "grep '^### ' '$TESTDIR/design/brief.md'"
   assert_contains "investor-update"
@@ -2995,8 +2995,8 @@ EOF
   # it, so naming it is an order the library has not caught up with -- ordered
   # ahead, not refused (hv, 9 Aug 2026).
   mkdir -p "$TESTDIR/design"
-  echo '{"venture":"acme","order":{"assets":["hiring-plan"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"assets":["hiring-plan"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
   assert_contains "ahead of the library"
   [ -f "$TESTDIR/design/brief.md" ]
@@ -3007,8 +3007,8 @@ EOF
   # asset stamps. `unassigned` says it, so the order proceeds and the document
   # carries the contract its specification cannot.
   mkdir -p "$TESTDIR/design"
-  echo '{"venture":"acme","order":{"assets":["roadmap"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"assets":["roadmap"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
   assert_contains "1 ahead of the library, stamped unassigned"
 
@@ -3022,8 +3022,8 @@ EOF
   # The taxonomy is the identity space. A type it does not name is added to
   # the library first, never invented by an order.
   mkdir -p "$TESTDIR/design"
-  echo '{"venture":"acme","order":{"assets":["flux-capacitor"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"assets":["flux-capacitor"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 2 ]
   assert_contains "ordered by name but not in the taxonomy"
   [ ! -f "$TESTDIR/design/brief.md" ]
@@ -3034,8 +3034,8 @@ EOF
   # than quietly omitted with the bundle's other absentees.
   mkdir -p "$TESTDIR/design"
   echo '{"venture":"acme","order":{"bundles":["operating-set"],"assets":["hiring-plan"]}}' \
-    > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+    > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "## Ordered ahead of the library"
@@ -3048,8 +3048,8 @@ EOF
   # came back `[]` on the round that first asked, and that was the document's
   # fault rather than the supplier's.
   echo '{"venture":"acme","order":{"assets":["brand-guidelines","investor-update"]}}' \
-    > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+    > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "Facts that must be decided first:** mark-exists"
@@ -3069,13 +3069,13 @@ EOF
   # asserts at a layer the bug cannot reach. Counting the manifest directly here
   # is what makes this able to fail.
   local expected
-  expected="$(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$CDSYNC_HOME/specs/library.md" \
+  expected="$(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$CDTEMPL_HOME/specs/library.md" \
     | grep -oE '`[a-z0-9-]+`' | sort -u | grep -c . || true)"
   [ "$expected" -gt 0 ]
 
   mkdir -p "$TESTDIR/design"
-  echo '{"venture":"acme","order":{"assets":["flux-capacitor"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"assets":["flux-capacitor"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 2 ]
   assert_contains "The taxonomy names $expected asset types"
 }
@@ -3085,10 +3085,10 @@ EOF
   # way that recurs is someone counting inline again. Independent derivation as
   # above, for the same reason.
   local expected
-  expected="$(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$CDSYNC_HOME/specs/library.md" \
+  expected="$(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$CDTEMPL_HOME/specs/library.md" \
     | grep -oE '`[a-z0-9-]+`' | sort -u | grep -c . || true)"
 
-  run "$CDSYNC_BIN" doctor
+  run "$CDTEMPL_BIN" doctor
   assert_contains "$expected taxonomy slugs"
 }
 
@@ -3098,7 +3098,7 @@ EOF
   # "eight asset types", "0 assets checked" -- so a repo-wide version of this
   # guard would be a false-positive machine and would be switched off within a
   # month. Narrow and precise beats broad and ignored.
-  run bash -c "grep -niE '([0-9]+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(-(one|two|three|four|five|six|seven|eight|nine))?)[[:space:]]+(assets|asset types|taxonomy slugs|slugs|types)' '$CDSYNC_HOME/help/brief.md' '$CDSYNC_HOME/help/cdsync.md' || true"
+  run bash -c "grep -niE '([0-9]+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(-(one|two|three|four|five|six|seven|eight|nine))?)[[:space:]]+(assets|asset types|taxonomy slugs|slugs|types)' '$CDTEMPL_HOME/help/brief.md' '$CDTEMPL_HOME/help/cdtempl.md' || true"
   [ -z "$output" ]
 }
 
@@ -3120,7 +3120,7 @@ EOF
   # templates/claude_design/ is OUT OF SCOPE ON PURPOSE. templprj is a delivered
   # drop stamped spec_library_version 2, and a drop keeps the edition it was
   # ordered against; its "fifty-one" is a record, not a claim. Its README says so.
-  run bash -c "grep -rniE '(^|[^a-z-])(fifty|fifty-(one|two|three|four))([^a-z-]|\$)|([0-9]+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty)[[:space:]]+(artefacts|artifacts|asset types|taxonomy slugs)|[0-9]+ of the [0-9]+' '$CDSYNC_HOME/specs' '$CDSYNC_HOME/templates/venture' || true"
+  run bash -c "grep -rniE '(^|[^a-z-])(fifty|fifty-(one|two|three|four))([^a-z-]|\$)|([0-9]+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty)[[:space:]]+(artefacts|artifacts|asset types|taxonomy slugs)|[0-9]+ of the [0-9]+' '$CDTEMPL_HOME/specs' '$CDTEMPL_HOME/templates/venture' || true"
   [ -z "$output" ]
 }
 
@@ -3139,7 +3139,7 @@ EOF
   # essentially the whole library as dangling, which is the instrument lying in
   # the reassuring-looking direction of "lots found, must be working".
   run run_lib '
-    for spec in "$CDSYNC_HOME"/specs/*.md; do
+    for spec in "$CDTEMPL_HOME"/specs/*.md; do
       slug="$(basename "$spec" .md)"
       if [ "$slug" = "library" ]; then continue; fi
       for field in depends_on.hard_assets depends_on.reciprocal; do
@@ -3161,18 +3161,18 @@ EOF
   mkdir -p "$TESTDIR/fakehome/specs"
   # Only specs/ is stood in for -- lib/ is the real one, so this exercises the
   # shipped code against a doctored library rather than a mock of the tool.
-  ln -s "$CDSYNC_HOME/lib" "$TESTDIR/fakehome/lib"
+  ln -s "$CDTEMPL_HOME/lib" "$TESTDIR/fakehome/lib"
   awk '/^bundles:/ {
     print
     print "  ghost-set: [venture-thesis, problem-and-opportunity]"
     next
-  } { print }' "$CDSYNC_HOME/specs/library.md" > "$TESTDIR/fakehome/specs/library.md"
+  } { print }' "$CDTEMPL_HOME/specs/library.md" > "$TESTDIR/fakehome/specs/library.md"
   # Every brief carries the kit, so the library needs one or the earlier
   # broken-installation guard fires instead of the path under test.
-  cp "$CDSYNC_HOME/specs/kit.md" "$TESTDIR/fakehome/specs/kit.md"
+  cp "$CDTEMPL_HOME/specs/kit.md" "$TESTDIR/fakehome/specs/kit.md"
 
-  echo '{"venture":"acme","order":{"bundles":["ghost-set"]}}' > "$TESTDIR/design/cdsync.json"
-  run env CDSYNC_HOME="$TESTDIR/fakehome" "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"bundles":["ghost-set"]}}' > "$TESTDIR/design/cdtempl.json"
+  run env CDTEMPL_HOME="$TESTDIR/fakehome" "$CDTEMPL_BIN" brief
   [ "$status" -eq 2 ]
   assert_contains "nothing this order reached has a specification"
   [ ! -f "$TESTDIR/design/brief.md" ]
@@ -3183,8 +3183,8 @@ EOF
   # then required kit/kit.md and inlined it only if `kit` happened to be ordered.
   # An instance holding just the brief would have invented a kit -- the one
   # artefact that exists to stop invention.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "## The kit"
   assert_contains "The neutral kit"
@@ -3194,8 +3194,8 @@ EOF
 }
 
 @test "brief tells a first round to build the kit" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "target has no kit yet, so this round builds it"
 }
@@ -3203,10 +3203,10 @@ EOF
 @test "brief carries the real token values once the target has a kit" {
   # Round two onwards. Without this the reader has no way to restate values it
   # cannot see, so it would reinvent the palette every round.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
   mkdir -p "$TESTDIR/design/kit"
   echo '{"colour":{"grey-900":"#111111"}}' > "$TESTDIR/design/kit/tokens.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "target already has a kit"
   assert_contains "grey-900"
@@ -3219,7 +3219,7 @@ EOF
   # blank-counting scope. Carrying only the library spec left the reader to define
   # both again, differently -- and check would then measure against a rule the drop
   # no longer follows.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
   mkdir -p "$TESTDIR/design/kit"
   cat > "$TESTDIR/design/kit/kit.md" <<'EOF'
 ---
@@ -3231,7 +3231,7 @@ kit_version: 1
 
 Suffix it with a dagger and footnote the table.
 EOF
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "The kit as written"
   assert_contains "Suffix it with a dagger"
@@ -3239,8 +3239,8 @@ EOF
 }
 
 @test "a first round carries the kit specification and no written kit section" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "no kit yet, so this round builds it"
   refute_contains "The kit as written"
@@ -3248,8 +3248,8 @@ EOF
 }
 
 @test "the kit is inlined once, not twice, when it is also ordered" {
-  echo '{"venture":"acme","order":{"assets":["kit","investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["kit","investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "grep -c 'The neutral kit -- specification' '$TESTDIR/design/brief.md' || true"
   [ "$output" -le 1 ]
   run bash -c "grep -c '^### .kit.' '$TESTDIR/design/brief.md'"
@@ -3260,8 +3260,8 @@ EOF
   # pitch-deck declares it needs a colour system, typography system and logo
   # suite first. None was ordered and none is in the target, and the brief used
   # to render that as a line of prose and proceed.
-  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "Prerequisites this order does not meet"
   assert_contains "colour-system"
@@ -3283,19 +3283,19 @@ EOF
   # The behaviour is pinned against a doctored library now, so it survives the
   # data being correct.
   mkdir -p "$TESTDIR/fakehome/specs"
-  ln -s "$CDSYNC_HOME/lib" "$TESTDIR/fakehome/lib"
-  cp "$CDSYNC_HOME/specs/library.md" "$TESTDIR/fakehome/specs/library.md"
+  ln -s "$CDTEMPL_HOME/lib" "$TESTDIR/fakehome/lib"
+  cp "$CDTEMPL_HOME/specs/library.md" "$TESTDIR/fakehome/specs/library.md"
   # Every brief carries the kit, so the library needs one or the
   # broken-installation guard fires instead of the path under test.
-  cp "$CDSYNC_HOME/specs/kit.md" "$TESTDIR/fakehome/specs/kit.md"
+  cp "$CDTEMPL_HOME/specs/kit.md" "$TESTDIR/fakehome/specs/kit.md"
   sed 's/^  hard_assets: \[positioning-icp-personas,/  hard_assets: [positioning,/' \
-    "$CDSYNC_HOME/specs/pitch-deck.md" > "$TESTDIR/fakehome/specs/pitch-deck.md"
+    "$CDTEMPL_HOME/specs/pitch-deck.md" > "$TESTDIR/fakehome/specs/pitch-deck.md"
   # The doctoring must have landed, or this asserts nothing: a sed that quietly
   # matched nothing would leave a correct spec and a green test.
   grep -q 'hard_assets: \[positioning,' "$TESTDIR/fakehome/specs/pitch-deck.md"
 
-  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/design/cdsync.json"
-  env CDSYNC_HOME="$TESTDIR/fakehome" "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/design/cdtempl.json"
+  env CDTEMPL_HOME="$TESTDIR/fakehome" "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "grep 'positioning.*not in the taxonomy' '$TESTDIR/design/brief.md'"
   [ "$status" -eq 0 ]
 }
@@ -3306,8 +3306,8 @@ EOF
   # repackage, revise, extend and correct are four different jobs with one
   # filesystem signature.
   echo '{"venture":"acme","round_job":"Repackage the existing deck for a partner audience. Do not redesign it.","order":{"assets":["investor-update"]}}' \
-    > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+    > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
 
   run bash -c "cat '$TESTDIR/design/brief.md'"
@@ -3321,9 +3321,9 @@ EOF
   # Measured, not declared, and worth saying in every round. A supplier ordered
   # a slug that already exists and not told will rebuild it, and the rebuild
   # discards whatever the existing one carried -- silently, on both sides.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
   mkdir -p "$TESTDIR/design/assets/investor-update"
-  run "$CDSYNC_BIN" brief
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
 
   run bash -c "sed -n '/What this round is for/,/The order/p' '$TESTDIR/design/brief.md'"
@@ -3336,8 +3336,8 @@ EOF
   # The negative half. Without this, a section that always says "already in the
   # target" would pass the test above while being wrong every time.
   echo '{"venture":"acme","round_job":"Build the first set.","order":{"assets":["investor-update"]}}' \
-    > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+    > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
 
   run bash -c "cat '$TESTDIR/design/brief.md'"
@@ -3349,8 +3349,8 @@ EOF
   # No job declared and nothing already present. An empty section headed "What
   # this round is for" would train its reader to skim the part of the document
   # that matters most, which is the same reason brief_field omits empty keys.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
 
   run bash -c "cat '$TESTDIR/design/brief.md'"
@@ -3359,20 +3359,20 @@ EOF
 }
 
 @test "a dependency already in the target is not declared unmet" {
-  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/design/cdsync.json"
+  echo '{"venture":"acme","order":{"assets":["pitch-deck"]}}' > "$TESTDIR/design/cdtempl.json"
   mkdir -p "$TESTDIR/design/assets/colour-system"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "sed -n '/Prerequisites this order/,/declared, not refused/p' '$TESTDIR/design/brief.md'"
   refute_contains "colour-system"
   assert_contains "logo-suite"
 }
 
 @test "a dependency satisfied by this same order is not declared unmet" {
-  run run_lib "fm_list '$CDSYNC_HOME/specs/component-library.md' depends_on.hard_assets"
+  run run_lib "fm_list '$CDTEMPL_HOME/specs/component-library.md' depends_on.hard_assets"
   assert_contains "kit"
 
-  echo '{"venture":"acme","order":{"assets":["component-library","kit"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["component-library","kit"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "sed -n '/Prerequisites this order/,/declared, not refused/p' '$TESTDIR/design/brief.md'"
   refute_contains '`kit`'
 }
@@ -3382,8 +3382,8 @@ EOF
   # document reads -- and the front matter is stripped to do it. A reader shown
   # only that reproduced the table and put status in index.md, leaving check
   # unable to read status, spec_version or coverage on any asset in the drop.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "the one file with a required format"
   assert_contains "must open with a YAML front-matter"
@@ -3400,8 +3400,8 @@ EOF
   # meaning. Fourth time in this project that a field was explained without its
   # value, and the expensive misreading is one-directional.
   echo '{"venture":"acme","formats_required":["pdf"],"order":{"assets":["investor-update"]}}' \
-    > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+    > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   # The header must still carry what was asked for -- advisory is not ignored.
   assert_contains "formats_required: [pdf]"
@@ -3411,16 +3411,16 @@ EOF
 }
 
 @test "brief forbids declaring the counts the tool computes" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains 'Do not declare `blanks`'
   assert_contains "not where state lives"
 }
 
 @test "brief carries the ruling that a fixed colour belongs in the kit" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   assert_contains "neutral ramp is a default, not a constraint"
   assert_contains "the kit carries that colour"
@@ -3430,31 +3430,31 @@ EOF
   # The structure listed brief.md as part of the drop, eleven lines above saying
   # brief.md is not one of the paths a drop owns -- so import discarded it. A
   # second copy of the order is a copy that can disagree with the first.
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   refute_contains "this document, echoed back"
   assert_contains "Do not echo this brief back"
 }
 
 @test "brief says nothing about omissions when the order is whole" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/design/brief.md'"
   refute_contains "Not in this drop"
 }
 
 @test "brief --stdout emits the document as well as writing it" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief --stdout
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief --stdout
   [ "$status" -eq 0 ]
   assert_contains "# Brief -- acme, round 1"
   [ -f "$TESTDIR/design/brief.md" ]
 }
 
 @test "brief output is valid front matter" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run run_lib "fm_get '$TESTDIR/design/brief.md' venture"
   [ "$output" = "acme" ]
 }
@@ -3469,15 +3469,15 @@ EOF
 # reintroduces the bug.
 
 brief_lib() {
-  run_lib "source \"\$CDSYNC_HOME/lib/cmd_brief.sh\"; $*"
+  run_lib "source \"\$CDTEMPL_HOME/lib/cmd_brief.sh\"; $*"
 }
 
 ADR_PATTERN='[^A-Za-z0-9][Aa][Dd][Rr]-?[0-9]{3,4}'
 ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 
 @test "brief carries a numbering section" {
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief --stdout
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief --stdout
   [ "$status" -eq 0 ]
   assert_contains "Numbering, so you never have to infer it"
   assert_contains "High-water"
@@ -3544,12 +3544,12 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # INIT -- a design system inside a repository that already exists
 # ============================================================================
 
-# The four ported projects hold the tree and nothing else -- no cdsync.json, no
-# agent contract, no nested repository. That is the canon rule about Cdsync
+# The four ported projects hold the tree and nothing else -- no cdtempl.json, no
+# agent contract, no nested repository. That is the canon rule about Cdtempl
 # protocol material, and it is the entire reason this command is not `new`.
 @test "init creates the skeleton in an existing repository" {
   mkdir -p "$TESTDIR/site" && git -C "$TESTDIR/site" init -q .
-  run "$CDSYNC_BIN" init --target "$TESTDIR/site/design/system"
+  run "$CDTEMPL_BIN" init --target "$TESTDIR/site/design/system"
   [ "$status" -eq 0 ]
   local d
   for d in assets kit notes; do
@@ -3569,7 +3569,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # protect against -- and what it stops being committed is a 600MB archive.
 @test "init writes the repo-owned inbox gitignore beside the target" {
   mkdir -p "$TESTDIR/site" && git -C "$TESTDIR/site" init -q .
-  run "$CDSYNC_BIN" init --target "$TESTDIR/site/design/system"
+  run "$CDTEMPL_BIN" init --target "$TESTDIR/site/design/system"
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/site/design/.gitignore" ]
   # Anchored. Unanchored, `_inbox/` matches at any depth below the parent.
@@ -3586,7 +3586,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
   mkdir -p "$TESTDIR/site/design" && git -C "$TESTDIR/site" init -q .
   printf '# the project already ignored these\n_build/\n*.beam\n' \
     > "$TESTDIR/site/design/.gitignore"
-  run "$CDSYNC_BIN" init --target "$TESTDIR/site/design/system"
+  run "$CDTEMPL_BIN" init --target "$TESTDIR/site/design/system"
   [ "$status" -eq 0 ]
   run cat "$TESTDIR/site/design/.gitignore"
   assert_contains "_build/"
@@ -3597,20 +3597,20 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 @test "init does not add the inbox rule twice" {
   mkdir -p "$TESTDIR/site/design" && git -C "$TESTDIR/site" init -q .
   printf '/system/_inbox/\n' > "$TESTDIR/site/design/.gitignore"
-  "$CDSYNC_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
+  "$CDTEMPL_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
   run bash -c "grep -cxF '/system/_inbox/' '$TESTDIR/site/design/.gitignore'"
   [ "$output" -eq 1 ]
 }
 
-@test "init writes the cdsync.json stub and none of the agent scaffolding" {
+@test "init writes the cdtempl.json stub and none of the agent scaffolding" {
   mkdir -p "$TESTDIR/site" && git -C "$TESTDIR/site" init -q .
-  "$CDSYNC_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
+  "$CDTEMPL_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
 
   # The venture's facts live at the tree root -- one home for `new` ventures
   # and `init` projects alike (hv, 9 Aug 2026). This is what makes `brief`
-  # runnable for a project Cdsync does not own.
-  [ -f "$TESTDIR/site/design/system/cdsync.json" ]
-  run bash -c "jq -r .venture '$TESTDIR/site/design/system/cdsync.json'"
+  # runnable for a project Cdtempl does not own.
+  [ -f "$TESTDIR/site/design/system/cdtempl.json" ]
+  run bash -c "jq -r .venture '$TESTDIR/site/design/system/cdtempl.json'"
   [ "$output" = "site" ]
 
   # The agent contract still never lands in an existing project.
@@ -3629,13 +3629,13 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # bootstrap a warm tree it had been told was cold.
 @test "init refuses over a target that is not empty" {
   mkdir -p "$TESTDIR/site/design/system/assets/investor-update"
-  run "$CDSYNC_BIN" init --target "$TESTDIR/site/design/system"
+  run "$CDTEMPL_BIN" init --target "$TESTDIR/site/design/system"
   [ "$status" -ne 0 ]
   assert_contains "not empty"
 }
 
 # The end-to-end claim the command exists to make: what init leaves behind is a
-# tree bootstrap accepts. Before init, bootstrap refused and advised `cdsync new`,
+# tree bootstrap accepts. Before init, bootstrap refused and advised `cdtempl new`,
 # which was the wrong command for an existing project.
 #
 # ASSERTING THE FILE EXISTS IS NOT ENOUGH, and the first version of this test
@@ -3645,8 +3645,8 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # the claim worth pinning.
 @test "init leaves a tree bootstrap reads as cold" {
   mkdir -p "$TESTDIR/site" && git -C "$TESTDIR/site" init -q .
-  "$CDSYNC_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/site/design/system"
+  "$CDTEMPL_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/site/design/system"
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/site/design/system/BOOTSTRAP-CD.md" ]
   run cat "$TESTDIR/site/design/system/BOOTSTRAP-CD.md"
@@ -3655,26 +3655,26 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 }
 
 # The same defect through the older door. `new` has always written the skeleton,
-# so `cdsync new acme && cdsync bootstrap` produced a resume over an empty venture
+# so `cdtempl new acme && cdtempl bootstrap` produced a resume over an empty venture
 # for as long as both have existed -- which made the cold document unreachable
 # through any sequence of the tool's own commands.
 @test "a freshly scaffolded venture bootstraps as cold" {
-  "$CDSYNC_BIN" new acme >/dev/null 2>&1
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/acme/design"
+  "$CDTEMPL_BIN" new acme >/dev/null 2>&1
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/acme/design"
   [ "$status" -eq 0 ]
   run cat "$TESTDIR/acme/design/BOOTSTRAP-CD.md"
   assert_contains "This is a cold start"
 }
 
-# A cold tree holds no Cdsync-shaped assets, so the shape probe returned the
+# A cold tree holds no Cdtempl-shaped assets, so the shape probe returned the
 # absence answer and handed a project building from nothing the AS-IS contract:
-# "this document is not asking you to adopt" the shape `cdsync check` then
+# "this document is not asking you to adopt" the shape `cdtempl check` then
 # requires. Two generated documents disagreeing, with the one read first
 # winning.
-@test "a cold tree is told to build into the cdsync shape" {
+@test "a cold tree is told to build into the cdtempl shape" {
   mkdir -p "$TESTDIR/site" && git -C "$TESTDIR/site" init -q .
-  "$CDSYNC_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
-  "$CDSYNC_BIN" bootstrap --target "$TESTDIR/site/design/system" >/dev/null 2>&1
+  "$CDTEMPL_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
+  "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/site/design/system" >/dev/null 2>&1
   run cat "$TESTDIR/site/design/system/BOOTSTRAP-CD.md"
   assert_contains "the shape to build into"
   refute_contains "not asking you to adopt"
@@ -3684,12 +3684,12 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # The as-is contract still has to reach the tree it exists for: one that
 # arrived in some other shape and must not be restructured under a round that
 # never ordered it.
-@test "a warm tree that is not cdsync-shaped still gets the as-is contract" {
+@test "a warm tree that is not cdtempl-shaped still gets the as-is contract" {
   mkdir -p "$TESTDIR/site" && git -C "$TESTDIR/site" init -q .
-  "$CDSYNC_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
+  "$CDTEMPL_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
   mkdir -p "$TESTDIR/site/design/system/handoff"
   echo "delivered another way" > "$TESTDIR/site/design/system/handoff/styles.css"
-  "$CDSYNC_BIN" bootstrap --target "$TESTDIR/site/design/system" >/dev/null 2>&1
+  "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/site/design/system" >/dev/null 2>&1
   run cat "$TESTDIR/site/design/system/BOOTSTRAP-CD.md"
   assert_contains "the shape it already has"
   refute_contains "the shape to build into"
@@ -3701,11 +3701,11 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # shape, anywhere in the skeleton, is content.
 @test "a tree holding any content at all still bootstraps as warm" {
   mkdir -p "$TESTDIR/site" && git -C "$TESTDIR/site" init -q .
-  "$CDSYNC_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
-  # Deliberately NOT a Cdsync-shaped asset: the earlier each_drop_asset bug
+  "$CDTEMPL_BIN" init --target "$TESTDIR/site/design/system" >/dev/null 2>&1
+  # Deliberately NOT a Cdtempl-shaped asset: the earlier each_drop_asset bug
   # called Lamplight cold because its files are not in that shape.
   echo "notes on the thing" > "$TESTDIR/site/design/system/notes/thinking.md"
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/site/design/system"
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/site/design/system"
   [ "$status" -eq 0 ]
   run cat "$TESTDIR/site/design/system/BOOTSTRAP-CD.md"
   assert_contains "This is a resume"
@@ -3713,19 +3713,19 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 }
 
 @test "new without a name is a usage error" {
-  run "$CDSYNC_BIN" new
+  run "$CDTEMPL_BIN" new
   [ "$status" -eq 2 ]
   assert_contains "usage:"
 }
 
 @test "new rejects a path rather than a name" {
-  run "$CDSYNC_BIN" new some/where
+  run "$CDTEMPL_BIN" new some/where
   [ "$status" -eq 2 ]
   assert_contains "directory name, not a path"
 }
 
 @test "new scaffolds a venture" {
-  run "$CDSYNC_BIN" new acme
+  run "$CDTEMPL_BIN" new acme
   [ "$status" -eq 0 ]
   local f
   for f in AGENTS.md CLAUDE.md README.md .gitignore; do
@@ -3734,9 +3734,9 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
       return 1
     }
   done
-  # cdsync.json lives at the tree root, not the venture root (hv, 9 Aug 2026).
-  [ -f "$TESTDIR/acme/design/cdsync.json" ]
-  [ ! -f "$TESTDIR/acme/cdsync.json" ]
+  # cdtempl.json lives at the tree root, not the venture root (hv, 9 Aug 2026).
+  [ -f "$TESTDIR/acme/design/cdtempl.json" ]
+  [ ! -f "$TESTDIR/acme/cdtempl.json" ]
   [ -d "$TESTDIR/acme/design/assets" ]
   [ -d "$TESTDIR/acme/design/kit" ]
   [ -d "$TESTDIR/acme/design/notes" ]
@@ -3746,60 +3746,60 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # first delivery archive dropped into one would have been committed with it --
 # the same hole an existing project had, through the older door.
 @test "new ignores the target inbox as well as the generated site" {
-  "$CDSYNC_BIN" new acme >/dev/null 2>&1
+  "$CDTEMPL_BIN" new acme >/dev/null 2>&1
   run cat "$TESTDIR/acme/.gitignore"
   assert_contains "design/site/"
   assert_contains "/design/_inbox/"
 }
 
-@test "new writes a cdsync.json that parses and carries the name" {
-  "$CDSYNC_BIN" new acme >/dev/null 2>&1
-  run bash -c "jq -r .venture '$TESTDIR/acme/design/cdsync.json'"
+@test "new writes a cdtempl.json that parses and carries the name" {
+  "$CDTEMPL_BIN" new acme >/dev/null 2>&1
+  run bash -c "jq -r .venture '$TESTDIR/acme/design/cdtempl.json'"
   [ "$output" = "acme" ]
 
   # The .target field is retired: the file's own location is the target, and a
   # file inside the tree pointing at the tree would be circular.
-  run bash -c "jq -r '.target // \"absent\"' '$TESTDIR/acme/design/cdsync.json'"
+  run bash -c "jq -r '.target // \"absent\"' '$TESTDIR/acme/design/cdtempl.json'"
   [ "$output" = "absent" ]
 }
 
 @test "new substitutes the venture name into every template" {
-  "$CDSYNC_BIN" new acme >/dev/null 2>&1
+  "$CDTEMPL_BIN" new acme >/dev/null 2>&1
   run bash -c "grep -rl '{{VENTURE}}' '$TESTDIR/acme' || true"
   [ -z "$output" ]
 }
 
 @test "new initialises a git repository" {
-  "$CDSYNC_BIN" new acme >/dev/null 2>&1
+  "$CDTEMPL_BIN" new acme >/dev/null 2>&1
   [ -d "$TESTDIR/acme/.git" ]
 }
 
 @test "new commits the scaffold rather than leaving an unborn HEAD" {
   # `git init` alone leaves no branch, so git log, diff and show all fail in a
   # fresh venture -- the first thing anyone runs makes the scaffold look broken.
-  "$CDSYNC_BIN" new acme >/dev/null 2>&1
+  "$CDTEMPL_BIN" new acme >/dev/null 2>&1
   run git -C "$TESTDIR/acme" log --oneline
   [ "$status" -eq 0 ]
   [ -n "$output" ]
 }
 
 @test "the scaffold commit holds the scaffold and leaves nothing uncommitted" {
-  "$CDSYNC_BIN" new acme >/dev/null 2>&1
+  "$CDTEMPL_BIN" new acme >/dev/null 2>&1
   run git -C "$TESTDIR/acme" status --porcelain
   [ -z "$output" ]
 
   run git -C "$TESTDIR/acme" ls-files
-  assert_contains "cdsync.json"
+  assert_contains "cdtempl.json"
   assert_contains ".gitignore"
   assert_contains "design/assets/.gitkeep"
 }
 
 @test "the scaffold commit does not carry the generated site" {
   # .gitignore excludes it; a committed site is a stale view of the target.
-  "$CDSYNC_BIN" new acme >/dev/null 2>&1
+  "$CDTEMPL_BIN" new acme >/dev/null 2>&1
   cd "$TESTDIR/acme"
-  jq '.order.assets = ["investor-update"]' design/cdsync.json > tmp.json && mv tmp.json design/cdsync.json
-  "$CDSYNC_BIN" brief >/dev/null 2>&1
+  jq '.order.assets = ["investor-update"]' design/cdtempl.json > tmp.json && mv tmp.json design/cdtempl.json
+  "$CDTEMPL_BIN" brief >/dev/null 2>&1
   run git -C "$TESTDIR/acme" ls-files
   refute_contains "design/site/"
 }
@@ -3807,19 +3807,19 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 @test "new refuses a non-empty directory" {
   mkdir -p "$TESTDIR/acme"
   echo "existing work" > "$TESTDIR/acme/important.md"
-  run "$CDSYNC_BIN" new acme
+  run "$CDTEMPL_BIN" new acme
   [ "$status" -ne 0 ]
   assert_contains "not empty"
   [ "$(cat "$TESTDIR/acme/important.md")" = "existing work" ]
 }
 
 @test "a scaffolded venture can immediately produce a brief" {
-  "$CDSYNC_BIN" new acme >/dev/null 2>&1
+  "$CDTEMPL_BIN" new acme >/dev/null 2>&1
   cd "$TESTDIR/acme"
   # The template orders nothing, which must be a refusal rather than an empty
   # brief -- so add an order the way a human would.
-  jq '.order.assets = ["investor-update"]' design/cdsync.json > tmp.json && mv tmp.json design/cdsync.json
-  run "$CDSYNC_BIN" brief
+  jq '.order.assets = ["investor-update"]' design/cdtempl.json > tmp.json && mv tmp.json design/cdtempl.json
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/acme/design/brief.md" ]
 }
@@ -3830,14 +3830,14 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 
 @test "site --build generates a page without serving" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" site --target "$TESTDIR/drop" --build
+  run "$CDTEMPL_BIN" site --target "$TESTDIR/drop" --build
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/drop/site/index.html" ]
 }
 
 @test "the generated page declares itself generated on line one" {
   make_drop >/dev/null
-  "$CDSYNC_BIN" site --target "$TESTDIR/drop" --build >/dev/null 2>&1
+  "$CDTEMPL_BIN" site --target "$TESTDIR/drop" --build >/dev/null 2>&1
   run bash -c "head -1 '$TESTDIR/drop/site/index.html'"
   assert_contains "@generated"
   # Which means the colour check exempts it by the same rule every vendored
@@ -3848,8 +3848,8 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 
 @test "the generated page lists each asset with its status and links its artefacts" {
   make_drop >/dev/null
-  "$CDSYNC_BIN" check --target "$TESTDIR/drop" >/dev/null 2>&1
-  "$CDSYNC_BIN" site --target "$TESTDIR/drop" --build >/dev/null 2>&1
+  "$CDTEMPL_BIN" check --target "$TESTDIR/drop" >/dev/null 2>&1
+  "$CDTEMPL_BIN" site --target "$TESTDIR/drop" --build >/dev/null 2>&1
   run bash -c "cat '$TESTDIR/drop/site/index.html'"
   assert_contains "investor-update"
   assert_contains "spec-only"
@@ -3859,7 +3859,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 
 @test "site refuses a target that is not a drop" {
   mkdir -p "$TESTDIR/empty"
-  run "$CDSYNC_BIN" site --target "$TESTDIR/empty" --build
+  run "$CDTEMPL_BIN" site --target "$TESTDIR/empty" --build
   [ "$status" -eq 2 ]
   assert_contains "no drop at"
 }
@@ -3869,14 +3869,14 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # ============================================================================
 
 @test "doctor runs and reports on the target" {
-  run "$CDSYNC_BIN" doctor
-  assert_contains "CDSYNC_HOME"
+  run "$CDTEMPL_BIN" doctor
+  assert_contains "CDTEMPL_HOME"
   assert_contains "Dependencies"
   assert_contains "target:"
 }
 
 @test "doctor reports the spec library" {
-  run "$CDSYNC_BIN" doctor
+  run "$CDTEMPL_BIN" doctor
   assert_contains "Spec library"
   assert_contains "taxonomy slugs"
 }
@@ -3886,24 +3886,24 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # ============================================================================
 
 @test "new, brief, import, check and site compose end to end" {
-  "$CDSYNC_BIN" new acme >/dev/null 2>&1
+  "$CDTEMPL_BIN" new acme >/dev/null 2>&1
   cd "$TESTDIR/acme"
-  jq '.order.assets = ["investor-update"]' design/cdsync.json > tmp.json && mv tmp.json design/cdsync.json
+  jq '.order.assets = ["investor-update"]' design/cdtempl.json > tmp.json && mv tmp.json design/cdtempl.json
 
-  run "$CDSYNC_BIN" brief
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
 
   # A drop answering that brief, echoing brief.md back the way a real one does.
   make_drop "$TESTDIR/acme/incoming" >/dev/null
   cp design/brief.md "$TESTDIR/acme/incoming/brief.md"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/acme/incoming"
+  run "$CDTEMPL_BIN" import "$TESTDIR/acme/incoming"
   [ "$status" -eq 0 ]
 
-  run "$CDSYNC_BIN" check
+  run "$CDTEMPL_BIN" check
   [ "$status" -eq 0 ]
 
-  run "$CDSYNC_BIN" site --build
+  run "$CDTEMPL_BIN" site --build
   [ "$status" -eq 0 ]
 
   [ -f design/brief.md ]
@@ -3917,7 +3917,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # ============================================================================
 
 @test "bootstrap is dispatched as its own command" {
-  run "$CDSYNC_BIN" bootstrap --help
+  run "$CDTEMPL_BIN" bootstrap --help
   [ "$status" -eq 0 ]
 }
 
@@ -3940,7 +3940,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
   # dispatcher's `export LC_COLLATE=C` does not survive it -- which is how this
   # passed here and on ubuntu and failed on the macOS runner alone. The listing
   # now sorts itself, so no caller's environment can reach it.
-  LC_ALL=en_US.UTF-8 "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" >/dev/null 2>&1
+  LC_ALL=en_US.UTF-8 "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" >/dev/null 2>&1
 
   local zeta alpha
   zeta="$(grep -n '`Zeta.md`' "$TESTDIR/drop/BOOTSTRAP-CD.md" | head -1 | cut -d: -f1)"
@@ -3954,7 +3954,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 
 @test "bootstrap over an empty target reports a cold start" {
   mkdir -p "$TESTDIR/empty"
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/empty" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/empty" --stdout
   [ "$status" -eq 0 ]
   assert_contains "This is a cold start"
   refute_contains "This is a resume"
@@ -3962,7 +3962,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 
 @test "bootstrap over a populated target reports a resume and names the assets" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "This is a resume"
   assert_contains "investor-update"
@@ -3975,17 +3975,17 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # Design not to build the thing that is not there.
 @test "bootstrap decides cold or warm from the tree rather than a flag" {
   mkdir -p "$TESTDIR/becoming"
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/becoming" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/becoming" --stdout
   assert_contains "cold start"
 
   mkdir -p "$TESTDIR/becoming/assets/some-asset"
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/becoming" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/becoming" --stdout
   assert_contains "This is a resume"
 }
 
 @test "bootstrap writes BOOTSTRAP-CD.md into the target" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/drop/BOOTSTRAP-CD.md" ]
   grep -q "single source of truth" "$TESTDIR/drop/BOOTSTRAP-CD.md"
@@ -3993,7 +3993,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 
 @test "bootstrap --stdout emits without writing" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   [ ! -f "$TESTDIR/drop/BOOTSTRAP-CD.md" ]
 }
@@ -4004,14 +4004,14 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # would not inherit the lesson.
 @test "bootstrap carries the numbering high-water marks" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "Numbering"
 }
 
 @test "bootstrap tells Claude Design to export the whole tree, never a delta" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   assert_contains "whole tree"
 }
 
@@ -4019,7 +4019,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # working directory, which the tree then carried as deliverable.
 @test "bootstrap says a working directory is not the drop's to deliver" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "or any working directory of your own"
 }
@@ -4029,7 +4029,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # landing where that reader will see it.
 @test "bootstrap defines spec_version as the library's stamp" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "not yours to increment"
   assert_contains "specification the asset was built from"
@@ -4037,7 +4037,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 
 @test "bootstrap sends a round's progress to status rather than to a version" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   assert_contains "is \`status\` and \`coverage\`, not a version"
 }
 
@@ -4048,7 +4048,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # a value the library disagreed with. Three correct readings of a withheld fact.
 @test "bootstrap states the number the library holds, not only what it means" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "| \`investor-update\` | 1 |"
 }
@@ -4058,7 +4058,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # round of 31 July left unstamped.
 @test "bootstrap gives the kit its number too, which the asset walker would miss" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   assert_contains "| \`kit\` |"
 }
 
@@ -4068,7 +4068,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 @test "bootstrap tells a tree the library does not know to stamp unassigned" {
   make_drop >/dev/null
   mv "$TESTDIR/drop/assets/investor-update" "$TESTDIR/drop/assets/portraits"
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   assert_contains "no entry in the library"
   assert_contains "spec_version: unassigned"
   assert_contains "rather than inventing a value"
@@ -4077,7 +4077,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 @test "bootstrap says nothing takes a stamp when the tree holds no assets" {
   mkdir -p "$TESTDIR/bare"
   echo "# a tree of its own shape" >"$TESTDIR/bare/README.md"
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/bare" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/bare" --stdout
   assert_contains "Nothing in this tree carries a copyable number"
   assert_contains "spec_version:"
 }
@@ -4089,13 +4089,13 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # take the value out of the other field.
 @test "bootstrap tells the drop to take the classification out of audience" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   assert_contains "take it out of \`audience\`"
 }
 
 @test "bootstrap keeps public in audience while naming the two that conflate" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   assert_contains "\`public\` stays"
   assert_contains "\`internal\` and \`confidential\` reach \`audience\` by conflation"
 }
@@ -4105,12 +4105,12 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 # reader finds it declared and correctly moves on.
 @test "bootstrap aims the de-conflation at a tree that already classifies" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   assert_contains "already carries \`classification\`"
 }
 
 @test "bootstrap refuses a target that does not exist" {
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/nowhere" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/nowhere" --stdout
   [ "$status" -ne 0 ]
 }
 
@@ -4124,7 +4124,7 @@ ST_PATTERN='[^A-Za-z0-9][Ss][Tt]-?[0-9]{3,4}'
 The colour document gives no value for the error state.
 EOF
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "Addenda awaiting you"
   assert_contains "gap-in-the-colour-doc.md"
@@ -4134,7 +4134,7 @@ EOF
 @test "bootstrap says so when addenda is present but empty" {
   make_drop >/dev/null
   mkdir -p "$TESTDIR/drop/addenda"
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   assert_contains "holds nothing for you"
 }
 
@@ -4150,7 +4150,7 @@ EOF
   echo "# Addenda -- what belongs here" > "$TESTDIR/drop/addenda/README.md"
   echo "# The gap in round two"         > "$TESTDIR/drop/addenda/the-gap.md"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "**1 addenda"
   assert_contains '### `the-gap.md`'
@@ -4169,7 +4169,7 @@ EOF
   echo "info"     > "$TESTDIR/borrowed/handoff/intent/st/ST0016/info.md"
   echo "a doc"    > "$TESTDIR/borrowed/docs/overview.md"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/borrowed" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/borrowed" --stdout
   [ "$status" -eq 0 ]
   assert_contains "Borrowed from the project, and due back"
   assert_contains '`handoff/intent/` -- 2 files'
@@ -4188,18 +4188,18 @@ EOF
 # needs telling, and the next export brings it all back.
 @test "bootstrap says nothing about borrowing when nothing is borrowed" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   refute_contains "Borrowed from the project"
   # ...but the rules are still stated, unconditionally. Every one of these is
   # about material sitting in CLAUDE DESIGN's tree, which this side cannot see,
   # so a conditional rule would vanish at exactly the point it is needed.
-  # snorkeltoast is the live case: its Claude Design project holds a fake Cdsync
+  # snorkeltoast is the live case: its Claude Design project holds a fake Cdtempl
   # protocol tree that was deleted here before it was ever tracked, so nothing
   # on this side can detect it and its next export brings it straight back.
   assert_contains "Nor are the project's own working documents"
   assert_contains "must not survive more than one"
-  assert_contains "Nor is Cdsync's own protocol material"
+  assert_contains "Nor is Cdtempl's own protocol material"
   # The document must exclude ITSELF. It is handed over as an upload, and
   # uploads come back in the export -- Baize's tree already carries
   # note-for-cd-in-baize.md and export-brief-baize.md from earlier rounds for
@@ -4215,12 +4215,12 @@ EOF
   echo "design intent" > "$TESTDIR/notborrowed/docs/intent/brand-intent.md"
   echo "a doc"         > "$TESTDIR/notborrowed/docs/overview.md"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/notborrowed" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/notborrowed" --stdout
   [ "$status" -eq 0 ]
   refute_contains "Borrowed from the project"
 }
 
-# CD'S OWN PUSHBACK, TURNED INTO A TEST. The contract section printed the Cdsync
+# CD'S OWN PUSHBACK, TURNED INTO A TEST. The contract section printed the Cdtempl
 # shape unconditionally under the heading "The shape to export". Over an as-is
 # tree that is an order to restructure, and Baize's Claude Design project read
 # it that way on 31 July -- worked out that converting would break every
@@ -4230,11 +4230,11 @@ EOF
   echo "a doc"    > "$TESTDIR/asis2/docs/overview.md"
   echo "handover" > "$TESTDIR/asis2/handoff/notes.md"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/asis2" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/asis2" --stdout
   [ "$status" -eq 0 ]
   assert_contains "Export the tree in the shape it already has"
   assert_contains "this document is not asking you to adopt it"
-  refute_contains "Cdsync owns exactly these paths"
+  refute_contains "Cdtempl owns exactly these paths"
   # The whole-tree rule survives either branch.
   assert_contains "Export the whole tree, always"
 }
@@ -4244,23 +4244,23 @@ EOF
 # spec.md. Branching on "are there asset directories" put it on the shaped
 # branch and handed it the restructure order the branch exists to prevent. The
 # contract's marker for an asset is the spec, so that is what decides.
-@test "an assets directory without specs is not the Cdsync shape" {
+@test "an assets directory without specs is not the Cdtempl shape" {
   mkdir -p "$TESTDIR/named/assets/brand" "$TESTDIR/named/assets/shots" "$TESTDIR/named/docs"
   echo "logo"  > "$TESTDIR/named/assets/brand/logo.svg"
   echo "shot"  > "$TESTDIR/named/assets/shots/one.png"
   echo "a doc" > "$TESTDIR/named/docs/overview.md"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/named" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/named" --stdout
   [ "$status" -eq 0 ]
   assert_contains "Export the tree in the shape it already has"
-  refute_contains "Cdsync owns exactly these paths"
+  refute_contains "Cdtempl owns exactly these paths"
 }
 
 @test "bootstrap states the contract shape when the tree is already in it" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
-  assert_contains "Cdsync owns exactly these paths"
+  assert_contains "Cdtempl owns exactly these paths"
   assert_contains "this tree is already in"
   refute_contains "Export the tree in the shape it already has"
   assert_contains "Export the whole tree, always"
@@ -4269,7 +4269,7 @@ EOF
 # The step list must not point at a section this document did not produce.
 @test "bootstrap omits the absorb-addenda step when there are no addenda" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   refute_contains "Absorb the addenda above"
   assert_contains "Do this round's work"
@@ -4279,7 +4279,7 @@ EOF
   make_drop >/dev/null
   mkdir -p "$TESTDIR/drop/addenda"
   echo "# a gap" > "$TESTDIR/drop/addenda/the-gap.md"
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "Absorb the addenda above"
 }
@@ -4290,7 +4290,7 @@ EOF
   mkdir -p "$TESTDIR/drop/addenda"
   echo "# Addenda -- what belongs here" > "$TESTDIR/drop/addenda/README.md"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "holds nothing for you"
 }
@@ -4300,7 +4300,7 @@ EOF
   mkdir -p "$TESTDIR/drop/addenda"
   echo "a gap" >"$TESTDIR/drop/addenda/note.md"
 
-  run "$CDSYNC_BIN" bootstrap --delta --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --delta --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "Since your last export"
   assert_contains "note.md"
@@ -4310,7 +4310,7 @@ EOF
 
 @test "bootstrap --delta writes RETURN-DELTA.md rather than BOOTSTRAP-CD.md" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --delta --target "$TESTDIR/drop"
+  run "$CDTEMPL_BIN" bootstrap --delta --target "$TESTDIR/drop"
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/drop/RETURN-DELTA.md" ]
   [ ! -f "$TESTDIR/drop/BOOTSTRAP-CD.md" ]
@@ -4334,7 +4334,7 @@ EOF
   sleep 1
   ( cd "$src" && zip -qr "$target/_inbox/export-real.zip" . )
 
-  run "$CDSYNC_BIN" install --target "$target" --yes
+  run "$CDTEMPL_BIN" install --target "$target" --yes
   [ "$status" -eq 0 ]
   assert_contains "export-real.zip"
   [ -f "$target/design-system/colour.md" ]
@@ -4355,7 +4355,7 @@ EOF
   echo "new colour doc" > "$src/design-system/colour.md"
   ( cd "$src" && zip -qr "$target/_inbox/aaa-would-sort-first.zip" . )
 
-  run "$CDSYNC_BIN" install --target "$target" --yes
+  run "$CDTEMPL_BIN" install --target "$target" --yes
   [ "$status" -eq 0 ]
   assert_contains "aaa-would-sort-first.zip"
   [ "$(cat "$target/design-system/colour.md")" = "new colour doc" ]
@@ -4379,7 +4379,7 @@ EOF
   # pass or fail depending on the runner -- the very thing being fixed.
   touch -r "$target/_inbox/drop.zip" "$target/_inbox/aaa-same-second.zip"
 
-  run "$CDSYNC_BIN" install --target "$target" --yes
+  run "$CDTEMPL_BIN" install --target "$target" --yes
   [ "$status" -ne 0 ]
   assert_contains "cannot tell which archive"
   assert_contains "drop.zip"
@@ -4391,7 +4391,7 @@ EOF
   target="$(make_installed_target)"
   rm -f "$target/_inbox"/*.zip
 
-  run "$CDSYNC_BIN" install --target "$target" --yes
+  run "$CDTEMPL_BIN" install --target "$target" --yes
   [ "$status" -ne 0 ]
   assert_contains "no .zip"
 }
@@ -4401,7 +4401,7 @@ EOF
   target="$(make_installed_target)"
   rm -rf "$target/_inbox"
 
-  run "$CDSYNC_BIN" install --target "$target" --yes
+  run "$CDTEMPL_BIN" install --target "$target" --yes
   [ "$status" -ne 0 ]
   assert_contains "_inbox"
 }
@@ -4411,13 +4411,13 @@ EOF
   target="$(make_installed_target)"
   src="$(make_as_is_export)"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --yes
   [ "$status" -eq 0 ]
   [ -f "$target/BOOTSTRAP-CD.md" ]
   grep -q "single source of truth" "$target/BOOTSTRAP-CD.md"
 }
 
-# Cdsync-side output living inside a tree Claude Design replaces wholesale. The
+# Cdtempl-side output living inside a tree Claude Design replaces wholesale. The
 # replace removes what the drop does not carry -- and the drop never carries
 # this -- so without the declaration the guarantee it states dies on the first
 # install.
@@ -4434,7 +4434,7 @@ EOF
   git -C "$(dirname "$(dirname "$target")")" add -A
   git -C "$(dirname "$(dirname "$target")")" commit -qm "bootstrap doc"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --dry-run --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --dry-run --yes
   [ "$status" -eq 0 ]
   assert_contains "BOOTSTRAP-CD.md  (repo-authored, declared protected)"
   refute_contains "remove   BOOTSTRAP-CD.md"
@@ -4449,20 +4449,20 @@ EOF
   src="$(make_as_is_export)"
   echo "never committed" > "$target/BOOTSTRAP-CD.md"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --yes
   [ "$status" -ne 0 ]
   assert_contains "git could not give back"
 }
 
 @test "import regenerates BOOTSTRAP-CD.md" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   [ "$status" -eq 0 ]
   [ -f "$TESTDIR/target/BOOTSTRAP-CD.md" ]
 }
 
 @test "bootstrap help renders" {
-  run "$CDSYNC_BIN" help bootstrap
+  run "$CDTEMPL_BIN" help bootstrap
   [ "$status" -eq 0 ]
   assert_contains "invariant"
 }
@@ -4472,12 +4472,12 @@ EOF
 # each_drop_asset and called a tree cold when it found none -- which over
 # Lamplight (708 tracked files, 1.1GB) reported a COLD START and would have told
 # Claude Design to build a delivered design system from nothing.
-@test "bootstrap does not call a populated non-Cdsync-shaped tree cold" {
+@test "bootstrap does not call a populated non-Cdtempl-shaped tree cold" {
   mkdir -p "$TESTDIR/asis/design-system" "$TESTDIR/asis/venture" "$TESTDIR/asis/prototypes"
   echo "colour" > "$TESTDIR/asis/design-system/colour.md"
   echo "plan"   > "$TESTDIR/asis/venture/plan.md"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/asis" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/asis" --stdout
   [ "$status" -eq 0 ]
   refute_contains "This is a cold start"
   assert_contains "This is a resume"
@@ -4487,12 +4487,12 @@ EOF
   mkdir -p "$TESTDIR/asis/design-system" "$TESTDIR/asis/venture"
   echo "colour" > "$TESTDIR/asis/design-system/colour.md"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/asis" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/asis" --stdout
   [ "$status" -eq 0 ]
   assert_contains "The rest of the tree"
   assert_contains "design-system/"
   assert_contains "venture/"
-  assert_contains "no assets in the Cdsync shape"
+  assert_contains "no assets in the Cdtempl shape"
 }
 
 # "4 assets" over a tree holding 708 files is true and useless. It reads as a
@@ -4502,7 +4502,7 @@ EOF
   mkdir -p "$TESTDIR/drop/venture"
   echo "the raise" > "$TESTDIR/drop/venture/plan.md"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "not the whole tree"
   assert_contains "venture/"
@@ -4510,13 +4510,13 @@ EOF
 }
 
 # The listing's rule is INVERTED: everything appears unless another section
-# already accounts for it. So a Cdsync-shaped tree still lists `kit/` and
+# already accounts for it. So a Cdtempl-shaped tree still lists `kit/` and
 # `notes/` -- nothing else in the document enumerates them, and they have to
 # come back in the export like anything else. What it must not do is repeat
 # `assets/`, which the table above just named slug by slug.
 @test "bootstrap lists the shaped paths nothing else reports, and does not repeat the assets" {
   make_drop >/dev/null
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   assert_contains "The rest of the tree"
   assert_contains '`kit/`'
@@ -4542,7 +4542,7 @@ EOF
   echo "png"    > "$TESTDIR/flat/assets/icon-512.png"
   echo "a doc"  > "$TESTDIR/flat/docs/overview.md"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/flat" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/flat" --stdout
   [ "$status" -eq 0 ]
   assert_contains '`assets/` -- 2 files'
   assert_contains "All of it is yours and all of it comes back"
@@ -4556,7 +4556,7 @@ EOF
   echo "a doc" > "$TESTDIR/dotted/docs/overview.md"
   echo "thumb" > "$TESTDIR/dotted/.thumbnail"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/dotted" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/dotted" --stdout
   [ "$status" -eq 0 ]
   assert_contains '`.thumbnail`'
 }
@@ -4572,7 +4572,7 @@ EOF
   echo "_inbox/"  > "$TESTDIR/refused/.gitignore"
   echo "thumb"    > "$TESTDIR/refused/.thumbnail"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/refused" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/refused" --stdout
   [ "$status" -eq 0 ]
   refute_contains '- `.gitignore`'
   assert_contains '`.thumbnail`'
@@ -4589,7 +4589,7 @@ EOF
   printf 'junk' > "$TESTDIR/noisy/docs/.DS_Store"
   printf 'junk' > "$TESTDIR/noisy/.DS_Store"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/noisy" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/noisy" --stdout
   [ "$status" -eq 0 ]
   assert_contains '`docs/` -- 2 files'
   refute_contains '.DS_Store'
@@ -4611,28 +4611,28 @@ EOF
   mkdir -p "$TESTDIR/drop/addenda"
   echo "# a gap" > "$TESTDIR/drop/addenda/the-gap.md"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   refute_contains "$TESTDIR"
 
-  run "$CDSYNC_BIN" bootstrap --delta --target "$TESTDIR/drop" --stdout
+  run "$CDTEMPL_BIN" bootstrap --delta --target "$TESTDIR/drop" --stdout
   [ "$status" -eq 0 ]
   refute_contains "$TESTDIR"
 
-  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdsync.json"
-  run "$CDSYNC_BIN" brief
+  echo '{"venture":"acme","order":{"assets":["investor-update"]}}' > "$TESTDIR/design/cdtempl.json"
+  run "$CDTEMPL_BIN" brief
   [ "$status" -eq 0 ]
   run bash -c "cat '$TESTDIR/design/brief.md'"
   refute_contains "$TESTDIR"
 }
 
-# _inbox/ and the two generated documents are Cdsync's own, not tree content. A
+# _inbox/ and the two generated documents are Cdtempl's own, not tree content. A
 # tree holding only those is still empty.
 @test "bootstrap ignores its own output when deciding cold or warm" {
   mkdir -p "$TESTDIR/fresh/_inbox"
   echo "an archive" > "$TESTDIR/fresh/_inbox/drop.zip"
 
-  run "$CDSYNC_BIN" bootstrap --target "$TESTDIR/fresh" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$TESTDIR/fresh" --stdout
   [ "$status" -eq 0 ]
   assert_contains "This is a cold start"
 }
@@ -4654,13 +4654,13 @@ EOF
   mkdir -p "$TESTDIR/proj/intent/st/ST0999"
   echo "# newer, outside the design tree" > "$TESTDIR/proj/intent/st/ST0999/info.md"
 
-  # The tree refuses the asset walk (nothing in the Cdsync shape), and the
+  # The tree refuses the asset walk (nothing in the Cdtempl shape), and the
   # advisory must fire anyway -- the poster cases for staleness are exactly
   # the trees check cannot walk.
-  run "$CDSYNC_BIN" check --target "$TESTDIR/proj/design/system"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/proj/design/system"
   assert_contains "BOOTSTRAP-CD.md is older"
   assert_contains "ST0999"
-  assert_contains "cdsync bootstrap --target"
+  assert_contains "cdtempl bootstrap --target"
 }
 
 @test "the staleness warning is silent when the document is current" {
@@ -4670,7 +4670,7 @@ EOF
   touch -t 202601010000 "$TESTDIR/proj/intent/st/ST0999/info.md"
   echo "# doc, newest" > "$TESTDIR/proj/design/system/BOOTSTRAP-CD.md"
 
-  run "$CDSYNC_BIN" check --target "$TESTDIR/proj/design/system"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/proj/design/system"
   refute_contains "BOOTSTRAP-CD.md is older"
 }
 
@@ -4683,7 +4683,7 @@ EOF
   mkdir -p "$TESTDIR/proj/_build"
   echo "churn" > "$TESTDIR/proj/_build/artifact"
 
-  run "$CDSYNC_BIN" check --target "$TESTDIR/proj/design/system"
+  run "$CDTEMPL_BIN" check --target "$TESTDIR/proj/design/system"
   refute_contains "BOOTSTRAP-CD.md is older"
 }
 
@@ -4694,7 +4694,7 @@ EOF
   echo "# newer" > "$TESTDIR/proj/newer.md"
 
   cd "$TESTDIR/proj"
-  run "$CDSYNC_BIN" doctor
+  run "$CDTEMPL_BIN" doctor
   assert_contains "BOOTSTRAP-CD.md is older"
   assert_contains "newer.md"
 }
@@ -4723,7 +4723,7 @@ EOF
   git -C "$theirs" commit -qm "theirs"
 
   cd "$here"
-  run "$CDSYNC_BIN" bootstrap --target "$theirs/design/system" --stdout
+  run "$CDTEMPL_BIN" bootstrap --target "$theirs/design/system" --stdout
   [ "$status" -eq 0 ]
 
   # Asserted on the IDS HANDED OVER, not on a path in the prose. The document
@@ -4741,13 +4741,13 @@ EOF
 # wearing a correctness argument: run inside the project, the git toplevel IS
 # the working directory.
 @test "the numbering scan is unchanged when run from inside the project" {
-  "$CDSYNC_BIN" new acme >/dev/null 2>&1
+  "$CDTEMPL_BIN" new acme >/dev/null 2>&1
   cd "$TESTDIR/acme"
   # The template orders nothing, and brief refuses an empty order rather than
   # emitting an empty brief -- so add one the way a human would.
-  jq '.order.assets = ["investor-update"]' design/cdsync.json > tmp.json && mv tmp.json design/cdsync.json
+  jq '.order.assets = ["investor-update"]' design/cdtempl.json > tmp.json && mv tmp.json design/cdtempl.json
 
-  run "$CDSYNC_BIN" brief --stdout
+  run "$CDTEMPL_BIN" brief --stdout
   [ "$status" -eq 0 ]
   assert_contains "Numbering"
   assert_contains "$TESTDIR/acme"
@@ -4758,7 +4758,7 @@ EOF
 # ============================================================================
 
 @test "a drop-carried .gitignore is declared refused" {
-  run run_lib 'printf "%s\n" "$CDSYNC_DROP_REFUSED_FILES"'
+  run run_lib 'printf "%s\n" "$CDTEMPL_DROP_REFUSED_FILES"'
   [ "$status" -eq 0 ]
   assert_contains ".gitignore"
   run run_lib 'drop_file_is_refused ".gitignore" && echo refused'
@@ -4768,10 +4768,10 @@ EOF
 }
 
 # The order flows from the venture to the drop, never back. A drop-carried
-# cdsync.json landing anywhere in the tree would sit where the next round reads
+# cdtempl.json landing anywhere in the tree would sit where the next round reads
 # its order from -- uncontrolled input steering what gets built.
-@test "a drop-carried cdsync.json is declared refused" {
-  run run_lib 'drop_file_is_refused "cdsync.json" && echo refused'
+@test "a drop-carried cdtempl.json is declared refused" {
+  run run_lib 'drop_file_is_refused "cdtempl.json" && echo refused'
   assert_contains "refused"
 }
 
@@ -4785,7 +4785,7 @@ EOF
   src="$(make_as_is_export)"
   printf 'docs/\n' > "$src/.gitignore"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --yes
   [ "$status" -eq 0 ]
   [ ! -f "$target/.gitignore" ]
   assert_contains "discard"
@@ -4799,7 +4799,7 @@ EOF
   printf '*.pdf\n' > "$src/design-system/.gitignore"
   printf '*.png\n' > "$src/design-system/deep/.gitignore"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --yes
   [ "$status" -eq 0 ]
   [ ! -f "$target/design-system/.gitignore" ]
   [ ! -f "$target/design-system/deep/.gitignore" ]
@@ -4813,7 +4813,7 @@ EOF
   src="$(make_as_is_export)"
   printf 'docs/\n' > "$src/design-system/.gitignore"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --dry-run --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --dry-run --yes
   [ "$status" -eq 0 ]
   assert_contains "design-system/.gitignore"
   assert_contains "the repository owns tracking policy"
@@ -4825,7 +4825,7 @@ EOF
   src="$(make_as_is_export)"
   printf 'docs/\n' > "$src/.gitignore"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --dry-run --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --dry-run --yes
   [ "$status" -eq 0 ]
   assert_contains "discard"
   [ ! -f "$target/.gitignore" ]
@@ -4835,7 +4835,7 @@ EOF
   make_drop >/dev/null
   printf '*.png\n' > "$TESTDIR/drop/assets/investor-update/.gitignore"
 
-  run "$CDSYNC_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
+  run "$CDTEMPL_BIN" import "$TESTDIR/drop" --target "$TESTDIR/target"
   [ "$status" -eq 0 ]
   [ ! -f "$TESTDIR/target/assets/investor-update/.gitignore" ]
 }
@@ -4850,7 +4850,7 @@ EOF
   printf '/system/_inbox/\n' > "$repo/design/.gitignore"
   git -C "$repo" add -A && git -C "$repo" commit -qm "repo-owned guard"
 
-  run "$CDSYNC_BIN" install "$src" --target "$target" --yes
+  run "$CDTEMPL_BIN" install "$src" --target "$target" --yes
   [ "$status" -eq 0 ]
   [ -f "$repo/design/.gitignore" ]
   [ "$(cat "$repo/design/.gitignore")" = "/system/_inbox/" ]

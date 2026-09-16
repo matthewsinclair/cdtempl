@@ -1,15 +1,15 @@
-# cdsync brief
+# cdtempl brief
 
 Assemble the brief for Claude Design.
 
 ```
-cdsync brief [--stdout] [--target PATH]
+cdtempl brief [--stdout] [--target PATH]
 ```
 
-Reads the venture's facts from `cdsync.json` at the design tree root, expands the
+Reads the venture's facts from `cdtempl.json` at the design tree root, expands the
 order, and assembles a complete document: the header, the fixed/open lists, the
 output structure, every ordered asset's **full specification**, the standing gaps,
-and the `RETURN.md` contract. Written atomically to `$CDSYNC_TARGET/brief.md`.
+and the `RETURN.md` contract. Written atomically to `$CDTEMPL_TARGET/brief.md`.
 
 ## Options
 
@@ -29,20 +29,20 @@ Claude Design is scoped to one directory and cannot read this repository. **That
 scoping is deliberate.** If it could read the repo, briefs would drift toward being
 thin and reference-rich — pointers to specs, to design docs, to steel threads. That
 works now and breaks completely the day Claude Design is scoped to a real venture,
-where Cdsync's internals genuinely are not visible.
+where Cdtempl's internals genuinely are not visible.
 
 So a pointer to a file the reader cannot open is a hole in the brief, not a
 reference. Every ordered asset's full specification is inlined, **always, with no
 shorter mode**. A brief that is complete only sometimes is a brief nobody can trust
 without checking.
 
-## cdsync.json
+## cdtempl.json
 
-**It lives at the design tree root** — `design/cdsync.json`, or
-`design/system/cdsync.json` where the tree sits one level down — one home for
+**It lives at the design tree root** — `design/cdtempl.json`, or
+`design/system/cdtempl.json` where the tree sits one level down — one home for
 `new` ventures and `init` projects alike. Target resolution probes those two
 locations, so the file's own directory *is* the target; a tree kept anywhere
-else needs `--target` or `$CDSYNC_TARGET` on every command. There is no
+else needs `--target` or `$CDTEMPL_TARGET` on every command. There is no
 `.target` field any more — a file inside the tree pointing at the tree would be
 circular, and a leftover one is ignored with a warning. No install path may
 overwrite the file, and a drop may not deliver one.
@@ -100,7 +100,7 @@ asset and is `spec_version`'s job. `specs/library.md` states both, and why treat
 the edition as a staleness measure would make the signal mean nothing.
 
 **`formats_required` is advisory.** It says which renderings the venture would like;
-it is not part of the definition of done, and no rule in `cdsync check` reads it. An
+it is not part of the definition of done, and no rule in `cdtempl check` reads it. An
 asset is complete when its specification is satisfied and its blanks are closed, so
 a missing PDF does not hold it open. The brief says so to the supplier, because two
 read it the other way and held finished work back.
@@ -116,7 +116,7 @@ lifecycle, not an error.
 
 A named slug **outside the taxonomy** is still a refusal. The taxonomy is the
 identity space — a new asset *type* is added to the library, never invented by
-an order. The refusal prints the taxonomy's real size, and `cdsync doctor`
+an order. The refusal prints the taxonomy's real size, and `cdtempl doctor`
 prints all three counts — neither is written out here, because a count restated
 in prose drifts from the table it describes.
 

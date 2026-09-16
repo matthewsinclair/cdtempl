@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# cdsync - the spec library
+# cdtempl - the spec library
 #
 # THE reader of specs/. `brief` assembles from here, `check` compares a drop
 # against here, and nothing else touches it.
@@ -16,7 +16,7 @@
 # ============================================================================
 
 spec_library_dir() {
-  echo "$CDSYNC_HOME/specs"
+  echo "$CDTEMPL_HOME/specs"
 }
 
 # The library's own manifest: version fields and the bundle definitions. Named
@@ -165,7 +165,7 @@ each_taxonomy_slug() {
 # A count restated in prose is a count that drifts from the thing it describes,
 # and that is on the standing watch-out list by name -- so there is now one
 # function, two callers, and no figure written out in `lib/` or `help/`. Prose
-# that wants the number says to run `cdsync doctor`, which is the same ruling
+# that wants the number says to run `cdtempl doctor`, which is the same ruling
 # already taken for the spec-library counts.
 #
 # THE COPIES OUTSIDE THIS TREE ARE SETTLED, at library edition 4 (9 Aug 2026).
@@ -176,7 +176,7 @@ each_taxonomy_slug() {
 # `spec_library_version: 2`, and a drop is never restamped when the library
 # moves. Editing it would falsify the delivery it records.
 #
-# ITS README CLAIMED `cdsync new` DRAWS FROM IT, AND THAT WAS NEVER TRUE OF THE
+# ITS README CLAIMED `cdtempl new` DRAWS FROM IT, AND THAT WAS NEVER TRUE OF THE
 # AS-BUILT: `new` renders `templates/venture/*.tmpl` and nothing else, so those
 # two files reach no venture at all. The claim was inherited into WP-03 and into
 # this comment before anyone opened `cmd_new.sh`. **A premise restated often

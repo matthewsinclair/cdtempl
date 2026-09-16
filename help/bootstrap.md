@@ -1,9 +1,9 @@
-# cdsync bootstrap
+# cdtempl bootstrap
 
 Hand the design system to a Claude Design project.
 
 ```
-cdsync bootstrap [--delta] [--stdout] [--target PATH]
+cdtempl bootstrap [--delta] [--stdout] [--target PATH]
 ```
 
 Writes `BOOTSTRAP-CD.md` into the target: the document a Claude Design project
@@ -70,28 +70,28 @@ the number is one Claude Design can reconcile against.
 
 ## It is protected from the drop
 
-`BOOTSTRAP-CD.md` is declared in `CDSYNC_DROP_PROTECTED_PATHS` alongside
-`addenda/` and `cdsync.json`. It is Cdsync's output living inside a tree Claude
+`BOOTSTRAP-CD.md` is declared in `CDTEMPL_DROP_PROTECTED_PATHS` alongside
+`addenda/` and `cdtempl.json`. It is Cdtempl's output living inside a tree Claude
 Design replaces wholesale, so without that declaration an export would silently
 eat it.
 
 The three are protected for different reasons: `addenda/` is written by the
 project *about* a drop and flows **back**; `BOOTSTRAP-CD.md` is written by
-Cdsync *for* Claude Design and flows **out**; `cdsync.json` is the venture's
+Cdtempl *for* Claude Design and flows **out**; `cdtempl.json` is the venture's
 own facts and order, living at the tree root, and flows **nowhere** -- a drop
 may not deliver one either.
 
 ## `--delta`
 
 ```
-cdsync bootstrap --delta
+cdtempl bootstrap --delta
 ```
 
 Writes `RETURN-DELTA.md`: what changed on the repository side since the last
 export, for a project that **already holds** the design system. The addenda and
 the numbering, without the whole adoption document.
 
-The inbound leg was always tooled -- archive into `_inbox/`, Cdsync unpacks it.
+The inbound leg was always tooled -- archive into `_inbox/`, Cdtempl unpacks it.
 This is the outbound leg. Canon says an addendum flows back to Claude Design and
 retires when a drop absorbs it; it said *that* it flows back and never *how*, and
 before this the answer was a human carrying notes in `~/Downloads`.
@@ -119,6 +119,6 @@ Beyond the inventory and the numbering, three rules the programme has paid for:
 
 ## See also
 
-- `cdsync brief` -- the *order* for a round. Bootstrap is its inverse: an adoption
-- `cdsync install` -- lands what Claude Design exports, and regenerates this
+- `cdtempl brief` -- the *order* for a round. Bootstrap is its inverse: an adoption
+- `cdtempl install` -- lands what Claude Design exports, and regenerates this
 - `intent/docs/design-system-lifecycle.md` -- canon

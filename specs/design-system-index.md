@@ -89,6 +89,6 @@ Beyond the universal header:
 Reciprocal with everything it indexes: each sibling asset's status is authoritative
 in that asset's `spec.md`, and the index mirrors it. That mirroring is a drift
 risk of exactly the kind `notes/tokens-and-artefacts.md` describes, and the same
-answer applies — it should be computed by `cdsync check` from the sibling specs
+answer applies — it should be computed by `cdtempl check` from the sibling specs
 rather than maintained by hand. Recommend that as a fifth check rule once the
 design-system assets exist to be counted.

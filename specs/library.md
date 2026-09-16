@@ -18,7 +18,7 @@ drop carries a stamped copy of each spec it delivers; this is the original those
 copies are stamped from, and the version difference between the two is what makes
 staleness detectable.
 
-`cdsync brief` assembles from here. `cdsync check` compares a drop against here.
+`cdtempl brief` assembles from here. `cdtempl check` compares a drop against here.
 Nothing else reads it.
 
 ## Why the library is not the drop
@@ -45,7 +45,7 @@ it was.
 ## What a library edition bump does, and does not do
 
 `spec_library_version` in the front matter above is the library's **edition**.
-`cdsync brief` stamps it into every round, so a drop records which edition it was
+`cdtempl brief` stamps it into every round, so a drop records which edition it was
 ordered against. **It is not a staleness measure, and nothing is restamped when it
 moves.**
 
@@ -57,7 +57,7 @@ reason — that is the stamp being right, not the example being stale.
 
 **Staleness is per asset, and it is `spec_version`'s job.** An edition bump makes
 nothing stale by itself. A spec whose *text* moves raises its own `spec_version`,
-and `cdsync check` then reports only the assets built from that spec. Edition 4
+and `cdtempl check` then reports only the assets built from that spec. Edition 4
 moved three specs — `kit`, `pitch-deck` and `positioning-icp-personas` — so those
 three are what went stale, and nothing else did.
 
@@ -72,7 +72,7 @@ A brief may carry `formats_required` — `["pdf", "pptx"]` and the like — decl
 which renderings the venture would like to end up with. **It is a request, not part
 of the definition of done.** An asset is complete when its specification is
 satisfied and its blanks are closed; a missing PDF does not hold it open, and no
-rule in `cdsync check` reads the field.
+rule in `cdtempl check` reads the field.
 
 Ruled 9 Aug 2026, after two suppliers independently read it this way and were right
 to. It is written down because the alternative reading is expensive in one direction
@@ -120,7 +120,7 @@ can be worked at once.
 **The table below is where the taxonomy's size is recorded, and this document
 writes no figure for it.** Numbers and slugs do not count the same — a number is
 identity, a slug is what gets ordered, and `positioning-icp-personas` is one slug
-covering three numbers. `cdsync doctor` reports both figures. A count restated in
+covering three numbers. `cdtempl doctor` reports both figures. A count restated in
 prose drifts from the table it describes, which is how this very file came to
 contradict its own table twice over — once on the taxonomy's size, and once on how
 much of it had been written.
@@ -269,7 +269,7 @@ reason is now spent.** The delivered projects are delivered and the loop does no
 run back to Claude Design for them, so no round remains for the finding to reach.
 A reference that can never resolve, preserved for a report that will never be
 written, is worse than a repair with the finding kept — which is what this section
-now is. The two specs each moved a `spec_version`, so `cdsync check` reports the
+now is. The two specs each moved a `spec_version`, so `cdtempl check` reports the
 drops built from the old ones as stale, advisory, with the remedy named.
 
 **A fourth thing surfaced during the repair, and is flagged rather than invented.**
@@ -282,12 +282,12 @@ which is the drop-repair mistake one level up. Recorded, not resolved.
 
 Distinguish all of these from a dependency that is legitimately **not built yet**,
 which is correct to declare and reports the same way. `component-library` requires
-`pattern-library`: real, in the taxonomy, and unwritten. `cdsync check` reports both
+`pattern-library`: real, in the taxonomy, and unwritten. `cdtempl check` reports both
 cases as advisory, which is right — the difference is that one will resolve when the
 spec is written and the other never could.
 
 `grid-and-layout` held that example until it was specified on 30 Jul, along with
 `colour-system`, `typography-system`, `logo-suite`, `print-collateral`,
 `social-and-ad-kit` and `email-templates`. **Most of the taxonomy is still
-unwritten, and `cdsync doctor` says how much** — no figure is recorded here, for
+unwritten, and `cdtempl doctor` says how much** — no figure is recorded here, for
 the reason given under the taxonomy above.
