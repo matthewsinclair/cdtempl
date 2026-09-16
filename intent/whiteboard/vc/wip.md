@@ -1,6 +1,6 @@
 ---
 node: vc
-name: cdsync-vc
+name: cdtempl-vc
 role: vc
 session_id: none
 heartbeat_at: 2026-09-16 07:33Z
@@ -9,7 +9,7 @@ focus: ""
 claims: []
 ---
 
-# cdsync-vc (vc)
+# cdtempl-vc (vc)
 
 ## DOING
 
@@ -21,7 +21,7 @@ _(none)_
 
 ## Holds
 
-- Until hv rules on the six decisions in intent/docs/refocus-proposal.md (token format, PDF engine, web target, mobile depth, rename, the delivered projects) -- hv takes them up in the morning session: then open thread A, canon and scope, as ST0006
+- Until hv schedules thread A, canon and scope: then open it and carry hv's 16 September refocus rulings, now Decisions on cc's board, into canon
 
 ## Watch-outs
 
