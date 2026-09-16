@@ -3,8 +3,8 @@ node: vc
 name: cdtempl-vc
 role: vc
 session_id: none
-heartbeat_at: 2026-09-16 07:33Z
-status: active
+heartbeat_at: 2026-09-16 14:15Z
+status: paused
 focus: ""
 claims: []
 ---

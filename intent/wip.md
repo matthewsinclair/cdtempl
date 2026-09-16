@@ -1,10 +1,10 @@
 ---
-verblock: "15 Sep 2026:v2.1: Matthew Sinclair - ST0005 closed: the ledger matches the store, and four structural guards join the list"
+verblock: "16 Sep 2026:v2.2: Matthew Sinclair - globalfold: no thread open; thread A, canon and scope, is next and waits on hv"
 ---
 
 # Work In Progress
 
-**There is none.** Every steel thread is Completed and nothing is open -- so this file is no longer a snapshot of work in flight. It is the **settled ledger**: the threads and their gates, the release record, and the cumulative structural guards.
+**There is none.** Every steel thread is Completed and nothing is open. **Next is thread A, canon and scope, when hv schedules it** -- `intent/restart.md` says what it carries and what else awaits hv -- so this file is no longer a snapshot of work in flight. It is the **settled ledger**: the threads and their gates, the release record, and the cumulative structural guards.
 
 **Everything else has one home elsewhere, and this file points rather than restates.** It previously carried a second copy of the orientation, the rename story and the day's builds, which is the drift hazard this project keeps naming. Orientation is `intent/restart.md`. Rulings and watch-outs are `intent/whiteboard/cc/wip.md`. What each work package found is its own record (`intent wp list ST0003`).
 

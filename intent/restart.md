@@ -1,5 +1,5 @@
 ---
-verblock: "16 Sep 2026:v2.3: Matthew Sinclair - hv's refocus answers are Decisions on cc's board, which is rewritten to the whiteboard model"
+verblock: "16 Sep 2026:v2.4: Matthew Sinclair - globalfold: the rename and board repair are live, thread A waits on hv, and today's Intent findings await routing"
 ---
 
 # Restart Context
@@ -27,11 +27,11 @@ verblock: "16 Sep 2026:v2.3: Matthew Sinclair - hv's refocus answers are Decisio
 
 It has completed a **full cold round trip** -- initialise an empty tree, hand it to Claude Design, take the return back, check it -- for matthewsinclair and geodica. **Both came back Cdtempl-shaped, so the cold-start document works.** **Six projects hold a design system tree**: those two, whose rollout hv is doing in Laksa, plus the original four, of which three were already integrated before anyone checked and **Lamplight is unchecked by design**.
 
-**Nothing is open. hv answered the refocus proposal's six decisions on 16 September**, and **the answers are Decisions on cc's board**. The proposal asked whether the tool should stop being a way to sync a design system with Claude Design and become a way to bootstrap a venture's design system from a family of tried assets; it is `intent/docs/refocus-proposal.md`. **No thread is open for the refocus, and nothing in the transport is retired until thread A carries the rulings into canon.** The next piece of work opens a thread (`intent st new`) rather than resuming one -- and the carried-forward list below is what to read first.
+**Nothing is open. hv answered the refocus proposal's six decisions on 16 September**, and **the answers are Decisions on cc's board**. The proposal asked whether the tool should stop being a way to sync a design system with Claude Design and become a way to bootstrap a venture's design system from a family of tried assets; it is `intent/docs/refocus-proposal.md`. **No thread is open for the refocus, and nothing in the transport is retired until thread A carries the rulings into canon.** **Thread A waits on hv to schedule it**, and vc's board holds it until then. The next piece of work opens a thread (`intent st new`) rather than resuming one -- and the carried-forward list below and what awaits hv are what to read first.
 
 **The tool was renamed to Cdtempl on 16 September, after `v0.1.0` was published under its former name**, which that release and its tag keep: a rename after a release carries a published artefact with it. The 6 August rename's contract (ST0004) has the verification method this one reuses, and the lesson is on the board.
 
-**The repository went public the same day. Everything committed here is published on push** -- no key, token, absolute path or real contact address belongs in a tracked file. The pre-public history is not recoverable from here; where it is kept is in `intent/wip.md`.
+**The repository has been public since 6 August. Everything committed here is published on push** -- no key, token, absolute path or real contact address belongs in a tracked file. The pre-public history is not recoverable from here; where it is kept is in `intent/wip.md`.
 
 ## Canon, and it outranks this file
 
@@ -75,7 +75,22 @@ It has completed a **full cold round trip** -- initialise an empty tree, hand it
 - **devbin records a home directory in its manifest.** `devbin install` and `devbin upgrade` write `# source: <absolute path>` into `bin/.devbin/manifest.sha256`, and every sibling estate checked that tracks the manifest carries the line. Here the manifest is gitignored, and a test pins that, rather than edited. Filed in devbin's own tracker as issue `0069`. **Re-open when devbin records its source without a home directory** -- then track the manifest again and retire that test.
 - **Intent v3 cannot read a citation the port carried over from v2.** `intent at lint` examines none of ST0001 to ST0004's legacy rows and still says `ok`; the suite's contract guard is what checks them. **Re-open if Intent learns to read `legacy.raw`**, and drop the guard's legacy half then, rather than keep two checks of one thing.
 - **Intent renders an empty note as a trailing separator.** A test row whose note is the empty string ends its line in the realised `acceptance.md` with ` -- `, and CI's hygiene job fails on the trailing space; an absent note renders cleanly, and `intent at edit` has no way back to absent. ST0005 hit it by clearing notes and fixed forward by giving each row the evidence of its red. **Re-open when Intent renders an empty note the way it renders an absent one.**
-- **Two files describe a test layout this project does not have.** `AGENTS.md`, which is generated, says `bats -r tests/`, and `intent/llm/ARCHITECTURE-shell.md`, Intent's shell seed, says tests live under `tests/unit/`; the suite is `test/cdtempl.bats`. **Re-open when either is next touched** -- `AGENTS.md` through `intent agents sync`, never by hand.
+- **Two files describe a test layout this project does not have.** `AGENTS.md` says `bats -r tests/` and `intent/llm/ARCHITECTURE-shell.md`, Intent's shell seed, says tests live under `tests/unit/`; the suite is `test/cdtempl.bats`. **The old re-open condition fired on 16 September and did not fix it**: `intent claude upgrade --apply` regenerated `AGENTS.md` and the line came back, so it is Intent's template talking, not this project -- `intent agents sync` cannot correct it, and it is listed under what awaits hv. **The seed is this project's to edit; re-open it when `intent/llm/` is next worked on.**
+
+## Awaiting hv
+
+**None of these is queued for a node.** Each waits on a decision that is hv's.
+
+- **When to open thread A, canon and scope.** It carries the 16 September refocus rulings into `intent/docs/design-system-lifecycle.md`. **`VERSION` still reads `0.1.0`, released under the former name**, so the first cut under Cdtempl moves it and publishes `cdtempl-X.Y.Z.tar.gz`.
+- **Whether, and by whom, today's Intent findings are filed upstream.** None is filed:
+  - `intent doctor` reports a registered but unmigrated board as view skew, yet the renderer never renders one, so its remedy `intent sync --to-disk` cannot clear it.
+  - `intent claude upgrade --apply` adds a tracked `.prettierignore` with no `export-ignore`, so a project that pins its release archive's top level fails its own test. This project added the rule.
+  - No verb edits a whiteboard item, and `intent set` refuses a node's `focus`.
+  - A row ported from v2 (`legacy.raw`) has no CLI route; it moves only by editing the extract and running `intent sync --to-store`.
+  - Whiteboard writes do not reach the event log.
+  - The `AGENTS.md` template names a test layout (`bats -r tests/`) whatever the project's is.
+- **Whether to prune cc's and vc's store backups** in `intent/.backup/db/`, three from 16 September. Gitignored and local-only; nothing depends on them.
+- **The whiteboard has no `hv` node** and no roster file, deferred by hv on 15 September, so a node's escalation path to hv is the conversation.
 
 ## Loose ends
 
