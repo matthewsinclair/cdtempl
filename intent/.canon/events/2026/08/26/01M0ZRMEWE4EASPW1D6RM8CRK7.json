@@ -1,0 +1,14 @@
+{
+  "id": "01M0ZRMEWE4EASPW1D6RM8CRK7",
+  "ts": "2026-08-26T19:26:59.122Z",
+  "principal": "local",
+  "project_id": "7403ad23-f7fd-4a1e-91d2-3d5a9251ffff",
+  "op": "attachment.put",
+  "subject": {
+    "type": "attachment",
+    "id": "ST0001/round-1-answer.md"
+  },
+  "payload": {
+    "via": "address"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "01M0ZRMD3P84K3DWV8ZC0BSBXV",
+  "ts": "2026-08-26T19:26:57.152Z",
+  "principal": "local",
+  "project_id": "7403ad23-f7fd-4a1e-91d2-3d5a9251ffff",
+  "op": "attachment.put",
+  "subject": {
+    "type": "attachment",
+    "id": "ST0002/export-brief-baize.md"
+  },
+  "payload": {
+    "via": "address"
+  }
+}

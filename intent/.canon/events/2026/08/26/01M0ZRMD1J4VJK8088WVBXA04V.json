@@ -1,0 +1,14 @@
+{
+  "id": "01M0ZRMD1J4VJK8088WVBXA04V",
+  "ts": "2026-08-26T19:26:57.078Z",
+  "principal": "local",
+  "project_id": "7403ad23-f7fd-4a1e-91d2-3d5a9251ffff",
+  "op": "attachment.put",
+  "subject": {
+    "type": "attachment",
+    "id": "ST0002/check-against-all-four-drops.md"
+  },
+  "payload": {
+    "via": "address"
+  }
+}

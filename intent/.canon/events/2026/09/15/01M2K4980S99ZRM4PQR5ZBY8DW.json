@@ -1,0 +1,16 @@
+{
+  "id": "01M2K4980S99ZRM4PQR5ZBY8DW",
+  "ts": "2026-09-15T18:11:50.426Z",
+  "principal": "local",
+  "project_id": "7403ad23-f7fd-4a1e-91d2-3d5a9251ffff",
+  "op": "st.done",
+  "subject": {
+    "type": "thread",
+    "id": "ST0005"
+  },
+  "payload": {
+    "from": "wip",
+    "reason": null,
+    "to": "completed"
+  }
+}

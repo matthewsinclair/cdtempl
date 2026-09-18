@@ -1,0 +1,14 @@
+{
+  "id": "01M0ZRMD5GMXCEN7HYYT768EA4",
+  "ts": "2026-08-26T19:26:57.212Z",
+  "principal": "local",
+  "project_id": "7403ad23-f7fd-4a1e-91d2-3d5a9251ffff",
+  "op": "attachment.put",
+  "subject": {
+    "type": "attachment",
+    "id": "ST0002/extract-brief-snorkeltoast.md"
+  },
+  "payload": {
+    "via": "address"
+  }
+}

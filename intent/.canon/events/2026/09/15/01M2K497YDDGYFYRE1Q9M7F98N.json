@@ -1,0 +1,14 @@
+{
+  "id": "01M2K497YDDGYFYRE1Q9M7F98N",
+  "ts": "2026-09-15T18:11:50.349Z",
+  "principal": "local",
+  "project_id": "7403ad23-f7fd-4a1e-91d2-3d5a9251ffff",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0005/AC-00.6"
+  },
+  "payload": {
+    "evidence": "intent/wip.md lists all five threads under the titles intent st show gives them, and ST0001 to ST0004 at the figures intent ac status gives; intent doctor --scope all reports 0 findings and no stale-render advisory"
+  }
+}

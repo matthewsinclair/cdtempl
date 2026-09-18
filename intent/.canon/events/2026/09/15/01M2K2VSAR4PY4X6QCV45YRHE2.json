@@ -1,0 +1,14 @@
+{
+  "id": "01M2K2VSAR4PY4X6QCV45YRHE2",
+  "ts": "2026-09-15T17:47:00.824Z",
+  "principal": "local",
+  "project_id": "7403ad23-f7fd-4a1e-91d2-3d5a9251ffff",
+  "op": "ac.satisfy",
+  "subject": {
+    "type": "ac",
+    "id": "ST0005/AC-00.5"
+  },
+  "payload": {
+    "evidence": "commit 4085030 removed it: at that commit git grep finds no not_implemented in bin/, lib/, help/ or test/, and the same probe finds render_venture_template in lib/common.sh"
+  }
+}

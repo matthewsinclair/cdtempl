@@ -1,0 +1,14 @@
+{
+  "id": "01M2JZV4J5H286R1XH27CS11XX",
+  "ts": "2026-09-15T16:54:13.829Z",
+  "principal": "local",
+  "project_id": "7403ad23-f7fd-4a1e-91d2-3d5a9251ffff",
+  "op": "st.new",
+  "subject": {
+    "type": "thread",
+    "id": "ST0005"
+  },
+  "payload": {
+    "title": "Bring the suite and dev tooling current after the Intent v3 port"
+  }
+}

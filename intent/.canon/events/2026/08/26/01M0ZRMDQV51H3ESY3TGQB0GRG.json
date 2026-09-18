@@ -1,0 +1,14 @@
+{
+  "id": "01M0ZRMDQV51H3ESY3TGQB0GRG",
+  "ts": "2026-08-26T19:26:57.833Z",
+  "principal": "local",
+  "project_id": "7403ad23-f7fd-4a1e-91d2-3d5a9251ffff",
+  "op": "attachment.put",
+  "subject": {
+    "type": "attachment",
+    "id": "ST0002/dispatch.md"
+  },
+  "payload": {
+    "via": "address"
+  }
+}

@@ -35,7 +35,6 @@ intent/.treeindex/
 intent/.cache/
 
 # D53: the event log lives in the store; its file form is produced by `intent export`.
-intent/events.jsonl
 intent/.backup/
 
 # devbin's manifest records the absolute path of the devbin it was installed
