@@ -11,6 +11,12 @@ on:
     # are not evaluated for pushes of tags, so this cannot suppress a release.
     paths-ignore:
       - 'intent/whiteboard/**'
+      # BOTH PATHS OR NEITHER (devbin#0110): GitHub skips a push only when EVERY
+      # changed path matches, and `intent wb` writes a canon event beside the
+      # board view it renders -- so the whiteboard line ALONE suppresses nothing
+      # a node actually does. Justified by what no job READS, not by a hit rate:
+      # no job here opens either tree, and that stays true as habits change.
+      - 'intent/.canon/**'
   pull_request:
   workflow_dispatch:
 
