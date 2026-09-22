@@ -2030,19 +2030,49 @@ HTML
   assert_contains "unknown subcommand"
 }
 
-# devbin's manifest is the one file devbin writes a home directory into:
-# `devbin install` and `devbin upgrade` both record the absolute path of the
-# devbin they came from. The home-path guard sees a file only once it is tracked,
-# and this repository publishes on push -- so .gitignore keeps the manifest out
-# of the tree, and this pins that it stays out.
+# THIS ARM WAS INVERTED ON 2026-09-22 AND THE INVERSION IS THE POINT. It used
+# to assert the devbin manifest was NEVER TRACKED, because devbin 0.1.1 wrote
+# `# source: <absolute path>` into it. devbin issue 0069 fixed that -- the path
+# is written through `home_relative`, so it reads `~/Devel/opt/devbin` -- and
+# the ignore outlived its reason by a week with nothing able to notice.
+#
+# Untracking it was never the guard. AT-00.6 above greps every TRACKED file for
+# a home path, so keeping this one file untracked EXEMPTED the only file anyone
+# suspected from the check built to catch it. That is a silently shrunk
+# population, which is the failure this suite exists to make loud.
+#
+# So the arm now pins the POPULATION rather than the exemption: the manifest is
+# tracked, therefore AT-00.6 sees it, therefore a home path reappearing in it --
+# `home_relative` still returns an absolute path when HOME is empty or the
+# source lies outside it -- turns AT-00.6 red instead of going unlooked-at.
 # ST0005 AT-00.7
-@test "the devbin manifest is never tracked, because it records a home directory" {
-  # Two halves, each asked on its own. The rule: --no-index asks the patterns
-  # alone, because without it check-ignore answers "not ignored" for any TRACKED
-  # file, and the second half would never be reached. The index: an ignore rule
-  # does not untrack a file that is already tracked.
-  git -C "$CDTEMPL_HOME" check-ignore -q --no-index bin/.devbin/manifest.sha256
-  [ -z "$(git -C "$CDTEMPL_HOME" ls-files bin/.devbin/manifest.sha256)" ]
+@test "the devbin manifest is TRACKED, so the home-path guard actually covers it" {
+  # 1. It is tracked -- which is what puts it inside AT-00.6's population.
+  [ -n "$(git -C "$CDTEMPL_HOME" ls-files bin/.devbin/manifest.sha256)" ]
+
+  # 2. No ignore rule is waiting to take it back out. Asked with --no-index
+  #    because check-ignore answers "not ignored" for any TRACKED file
+  #    regardless of the patterns, which would make this pass vacuously.
+  run git -C "$CDTEMPL_HOME" check-ignore -q --no-index bin/.devbin/manifest.sha256
+  [ "$status" -ne 0 ]
+
+  # 3. And the file AT-00.6 now covers does not, in fact, carry a home path.
+  #    Checked here as well as there so this arm fails for its own reason
+  #    rather than only as collateral when AT-00.6 goes red.
+  local manifest="$CDTEMPL_HOME/bin/.devbin/manifest.sha256"
+  [ -f "$manifest" ]
+  ! grep -qE '/Users/[a-zA-Z0-9._-]+|/home/[a-zA-Z0-9._-]+' "$manifest"
+
+  # Prove the probe can hit before trusting the miss -- same construction as
+  # AT-00.6, and for the same reason: this file is itself tracked, so a literal
+  # home path written here would be found by AT-00.6.
+  local head="/Us" tail="ers/someone/opt/devbin"
+  local planted="$TESTDIR/planted-manifest.txt"
+  printf '# source: %s%s\n' "$head" "$tail" > "$planted"
+  grep -qE '/Users/[a-zA-Z0-9._-]+|/home/[a-zA-Z0-9._-]+' "$planted" || {
+    echo "the probe cannot match a home path it was handed -- the pass above means nothing" >&2
+    return 1
+  }
 }
 
 # The tarball contract, checked against the mechanism that actually builds it.

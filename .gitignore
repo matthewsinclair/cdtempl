@@ -37,9 +37,19 @@ intent/.cache/
 # D53: the event log lives in the store; its file form is produced by `intent export`.
 intent/.backup/
 
-# devbin's manifest records the absolute path of the devbin it was installed
-# from -- a home directory, in a repository that publishes on push. Every
-# `devbin install` and `devbin upgrade` writes that line afresh, so ignoring the
-# file is the only form that survives the next upgrade. The cost is on a fresh
-# clone, which has no manifest, so `bin/devbin doctor` reports it missing there.
-bin/.devbin/manifest.sha256
+# bin/.devbin/manifest.sha256 WAS IGNORED HERE AND NO LONGER IS (2026-09-22).
+# The reason was real when written on 2026-09-15 against devbin 0.1.1: the
+# manifest recorded `# source: <absolute path>` of the devbin it came from, a
+# home directory, in a repository that publishes on push. devbin issue 0069
+# fixed that -- `home_relative` in lib/helpers now writes `~/Devel/opt/devbin`
+# -- and the ignore had been obsolete ever since with nothing to say so. Across
+# the twelve other estates the tracked manifest carries zero home-shaped lines.
+#
+# It is tracked now because ignoring it EXEMPTED it from the check that matters.
+# `home_relative` still emits an absolute path when HOME is empty or the source
+# lies outside it, so the hazard is conditional rather than gone -- and an
+# untracked file is invisible to AT-00.6, which greps every TRACKED file for a
+# home path. Hiding the one file that could carry one is the weaker guard.
+# Tracking it also restores `bin/devbin doctor` on a fresh clone, which used to
+# report the manifest missing. The release archive is unaffected either way:
+# .gitattributes export-ignores `bin/.devbin/` entirely.

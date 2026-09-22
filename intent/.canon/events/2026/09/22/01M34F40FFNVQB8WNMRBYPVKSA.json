@@ -1,0 +1,14 @@
+{
+  "id": "01M34F40FFNVQB8WNMRBYPVKSA",
+  "ts": "2026-09-22T11:48:18.543Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "7403ad23-f7fd-4a1e-91d2-3d5a9251ffff",
+  "op": "ac.edit",
+  "subject": {
+    "type": "ac",
+    "id": "ST0005/AC-00.3"
+  },
+  "payload": {
+    "text": "devbin is committed without publishing an absolute home directory path: no tracked file carries one, and the manifest -- the one file devbin writes a source path into -- is TRACKED, so it sits inside that check rather than outside it. Reworded 2026-09-22: this criterion previously required the manifest never to be tracked, which was right against devbin 0.1.1 (it recorded an absolute path) and became an exemption from the check that matters once devbin 0069 made the path home-relative. home_relative still returns an absolute path when HOME is empty or the source lies outside it, so the hazard is conditional rather than gone, and a tracked file is the form that gets checked."
+  }
+}
