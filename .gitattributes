@@ -23,6 +23,10 @@ usage-rules.md     export-ignore
 .intent_critic.yml export-ignore
 .prettierignore    export-ignore
 design/            export-ignore
+# Written by `intent claude upgrade --apply`, which is how this project is
+# driven rather than anything it ships. It arrived with the Intent 3.1.0 canon
+# upgrade and has failed the release-archive test ever since.
+.mcp.json          export-ignore
 
 # The dev launcher and its vendored runtime. devbin drives the development of
 # Cdtempl -- `bin/cdtempl` is the tool -- so it is workshop, not product, and it
