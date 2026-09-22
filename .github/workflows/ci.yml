@@ -3,13 +3,27 @@ name: CI
 on:
   push:
     branches: [main]
+    # ONE TAG FILTER FOR THE WHOLE FLEET, carrying both release forms (hv,
+    # 2026-09-22): Cdtempl tags v0.1.0, and Utilz has tagged bare since 2.7.0.
+    # This is the only place in this file where a tag's FORM is written.
+    tags: ['v[0-9]*', '[0-9]*']
+    # A push that only moves a board starts no run (devbin#0110). Path filters
+    # are not evaluated for pushes of tags, so this cannot suppress a release.
+    paths-ignore:
+      - 'intent/whiteboard/**'
   pull_request:
   workflow_dispatch:
 
 # A second push to the same branch cancels the first. The suite is the contract,
 # and there is no value in finishing a run against code nobody will ship.
+#
+# THE EVENT IS NOW PART OF THE KEY (hv's ruling of 2026-09-21; devbin#0108
+# carries the reasoning). A push to main and a workflow_dispatch on main share a
+# ref, so a group keyed on the ref alone would let a push cancel an on-demand
+# macOS run after its ten-times minutes had been spent, and let a dispatch
+# cancel a push's run.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -20,14 +34,24 @@ jobs:
     name: tests (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
-      # Both platforms always report. A failure on one is a portability finding
-      # worth seeing next to the other's pass, not a reason to hide it.
+      # BOTH PLATFORMS REPORT ON A RELEASE TAG AND ON DEMAND. A push to main
+      # runs Ubuntu alone (hv's ruling of 2026-09-21, devbin#0108): a macOS
+      # minute is billed at ten times a Linux one, and this leg ran on every
+      # push. The reasoning this comment carried before today has not changed --
+      # a failure on one platform is a portability finding worth seeing beside
+      # the other's pass -- it now happens at a tag or on demand rather than on
+      # every push, and `workflow_dispatch` above is how it is asked for.
+      #
+      # THE MATRIX ITSELF IS CONDITIONAL because a job-level `if:` cannot drop
+      # ONE LEG of a matrix: it gates the whole job or nothing. The tag half
+      # asks the ref's TYPE, never a tag's spelling, so the filter above stays
+      # the only place a form is written.
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: ${{ fromJSON((github.ref_type == 'tag' || github.event_name == 'workflow_dispatch') && '["ubuntu-latest","macos-latest"]' || '["ubuntu-latest"]') }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Pinned to a tag and installed from source rather than taken from a
       # third-party action. A public repository's CI is a supply chain, and
@@ -78,7 +102,7 @@ jobs:
     name: hygiene
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Deliberately NOT shfmt. The project's stated rule is two-space
       # indentation, which the code already satisfies; shfmt's remaining
