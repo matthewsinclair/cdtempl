@@ -34,3 +34,11 @@ design/            export-ignore
 # `bin/` one level down for exactly that reason.
 bin/devbin         export-ignore
 bin/.devbin/       export-ignore
+
+# >>> devbin: line endings >>>
+# Written by devbin install and kept by devbin upgrade, which replace
+# what is between these two lines: the vendored runtime checks out with
+# LF line endings on every machine, Windows included.
+bin/devbin text=auto eol=lf
+bin/.devbin/** text=auto eol=lf
+# <<< devbin: line endings <<<
