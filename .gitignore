@@ -53,3 +53,11 @@ intent/.backup/
 # Tracking it also restores `bin/devbin doctor` on a fresh clone, which used to
 # report the manifest missing. The release archive is unaffected either way:
 # .gitattributes export-ignores `bin/.devbin/` entirely.
+
+# Intent's hook carriers are SHIPPED CANON, written by `intent claude upgrade
+# --apply` into whatever `git rev-parse --git-path hooks` resolves to -- .githooks
+# here, since core.hooksPath points at it (the guards adoption pass, 2026-10-23).
+# The dispatchers beside them are tracked so a clone receives them; the carriers
+# are the installer's, and a fresh clone gets them from `intent claude upgrade
+# --apply`, refusing every commit as GATE ABSENT until it runs.
+.githooks/*.intent
