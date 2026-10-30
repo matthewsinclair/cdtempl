@@ -1,0 +1,15 @@
+{
+  "id": "01M59HQEWPZ0FPDVKF9KHW19N0",
+  "ts": "2026-10-19T07:41:28.854Z",
+  "principal": "Matthew Sinclair <hello@matthewsinclair.com>",
+  "project_id": "7403ad23-f7fd-4a1e-91d2-3d5a9251ffff",
+  "op": "issues.add",
+  "subject": {
+    "type": "issue",
+    "id": "0001"
+  },
+  "payload": {
+    "severity": "medium",
+    "title": "check: rule 1 counts CSS attribute selectors as blanks, and rule 4 reads numeric character references as colours"
+  }
+}
