@@ -1,7 +1,7 @@
 ---
 node: vc
-name: cdtempl-vc
-role: vc
+name: Validation Claude
+role: validation
 session_id: none
 heartbeat_at: 2026-09-16 14:15Z
 status: paused
@@ -9,7 +9,7 @@ focus: ""
 claims: []
 ---
 
-# cdtempl-vc (vc)
+# Validation Claude (vc)
 
 ## DOING
 
