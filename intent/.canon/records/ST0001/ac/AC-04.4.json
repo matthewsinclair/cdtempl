@@ -1,0 +1,9 @@
+{
+  "id": "AC-04.4",
+  "text": "A template exists for each specified type where a template makes sense",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`templates/claude_design/templprj/`, the worked example carrying the neutral kit and Form C assets"
+  }
+}

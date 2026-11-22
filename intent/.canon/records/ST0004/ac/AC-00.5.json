@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.5",
+  "text": "**CI is green on every job, read per job rather than off the summary line**",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "run `31086141984` on PR #1, `success` on hygiene, `tests (ubuntu-latest)` and `tests (macos-latest)`, read from `gh run view --json jobs` per job"
+  }
+}

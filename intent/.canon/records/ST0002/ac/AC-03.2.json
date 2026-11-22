@@ -1,0 +1,8 @@
+{
+  "id": "AC-03.2",
+  "text": "A tree the checker cannot read is refused rather than passed, so `0 assets checked` can never read as a clean bill",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.2",
+  "text": "**Nothing in this thread is awaiting a ruling.** The state this thread sat in on 8 August -- every remaining item blocked on hv -- is cleared, not inherited by the next reader",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`intent/whiteboard/cc/wip.md` `## Wants hv` records both remaining asks answered on 9 Aug; no WP `info.md` names an open question"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AC-01.6",
+  "text": "**The tarball is built from the tag, not from the working tree**",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`release_package` runs `git archive` against the tag; `VERSION` inside the artefact reads `0.1.0`"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AT-01.7",
+  "kind": "test",
+  "covers": [
+    "AC-01.2"
+  ],
+  "status": "green",
+  "legacy": {
+    "raw": "test/cdtempl.bats::\"release commits a version change, and tags in place when VERSION is already correct\""
+  }
+}

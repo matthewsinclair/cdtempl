@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.4",
+  "text": "**Static analysis stays silent and the tool's own self-check passes**",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`shellcheck bin/cdsync lib/*.sh` silent at default severity; `cdsync doctor` passes"
+  }
+}

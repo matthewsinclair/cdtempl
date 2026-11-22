@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.8",
+  "text": "**Both user-level symlinks resolve** to the renamed entry point, having been left dangling by the earlier directory move",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "the two dangling links were removed and replaced; `~/bin/cdsync` and `~/.local/bin/cdsync` each execute and report `cdsync 0.1.0`"
+  }
+}

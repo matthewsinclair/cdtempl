@@ -1,0 +1,9 @@
+{
+  "id": "AC-04.5",
+  "text": "The library is self-describing about its own gaps rather than silently short",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`specs/library.md` names `pattern-library` as the live exemplar of a real-but-unwritten slug; `cdsync doctor` prints spec, taxonomy and bundle counts"
+  }
+}

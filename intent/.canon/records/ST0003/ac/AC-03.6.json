@@ -1,0 +1,9 @@
+{
+  "id": "AC-03.6",
+  "text": "**What was deliberately not done is named with its reason, so the next reader does not read it as an omission**",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`WP/03/info.md` \"What was deliberately NOT done\" covers `pattern-library` (no order needs one; the two-part dance recorded for the day one does), `templprj` (a delivery record, left as delivered), and the reciprocal asymmetry (flagged, not invented)"
+  }
+}

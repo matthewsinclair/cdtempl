@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.4",
+  "text": "**Four decisions this thread produced are written where the tool's readers will find them, not only in Intent**",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`cdsync.json`'s home and the `unassigned` lifecycle in `help/` and the generators; the staleness advisory in `doctor` and `check`; the edition-bump rule and `formats_required` in `specs/library.md` and `help/brief.md`; the last of these also in the brief the supplier reads"
+  }
+}

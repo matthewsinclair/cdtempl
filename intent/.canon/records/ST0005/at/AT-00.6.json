@@ -1,0 +1,10 @@
+{
+  "id": "AT-00.6",
+  "kind": "test",
+  "file": "test/cdtempl.bats",
+  "covers": [
+    "AC-00.3"
+  ],
+  "status": "green",
+  "note": "predates this thread; red here is the route the state machine requires, not a failure observed in ST0005"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.3",
+  "text": "**The boundary is stated and the remainder is carried forward rather than dropped**",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "WP-02 parked with the condition for re-opening named (\"nothing moves until a live venture trips one\"); `pattern-library`'s two-part dance recorded in `WP/03/info.md` against the day an order names it; the reciprocal asymmetry recorded in `specs/library.md`"
+  }
+}

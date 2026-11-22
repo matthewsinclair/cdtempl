@@ -1,0 +1,8 @@
+{
+  "id": "AC-03.2",
+  "text": "Bundles are defined over slugs, not taxonomy numbers",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

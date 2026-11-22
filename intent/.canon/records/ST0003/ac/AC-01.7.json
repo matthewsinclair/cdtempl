@@ -1,0 +1,9 @@
+{
+  "id": "AC-01.7",
+  "text": "**Both defects were found by running the tool for a real purpose, and each is fenced by a test that fails without its fix**",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "four mutations (string-compare, refuse-equality, remove-the-case, remove-the-commit-guard), each confirmed landed by diff, each killing exactly the test meant to catch it"
+  }
+}

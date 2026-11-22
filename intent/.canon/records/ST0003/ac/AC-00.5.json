@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.5",
+  "text": "**The suite is green and shellcheck silent at the close**, and every behaviour this thread added is fenced by a test that fails without it",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "360 tests green, shellcheck clean at default severity; mutation cycles with landing proof recorded in WP-03, WP-05 and WP-08"
+  }
+}

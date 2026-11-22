@@ -1,0 +1,8 @@
+{
+  "id": "AC-02.2",
+  "text": "`import` writes only the five owned paths and leaves everything else standing",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

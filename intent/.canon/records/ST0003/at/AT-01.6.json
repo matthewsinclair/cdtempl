@@ -1,0 +1,11 @@
+{
+  "id": "AT-01.6",
+  "kind": "test",
+  "covers": [
+    "AC-01.1"
+  ],
+  "status": "green",
+  "legacy": {
+    "raw": "test/cdtempl.bats::\"release cut plans the explicit version it was given\""
+  }
+}

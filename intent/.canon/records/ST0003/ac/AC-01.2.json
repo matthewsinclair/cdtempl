@@ -1,0 +1,8 @@
+{
+  "id": "AC-01.2",
+  "text": "**The ceremony completes when `VERSION` does not change.** Cutting the version already held writes the same bytes, so there is nothing to commit; the tag goes on the commit that is already the release rather than on an empty one manufactured beside it -- covered by AT-01.7",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "AC-01.1",
+  "text": "An install preserves anything the drop does not carry, so a port cannot silently drop pre-existing material",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

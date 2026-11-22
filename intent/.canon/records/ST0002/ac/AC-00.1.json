@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.1",
+  "text": "All four projects hold a design-system record at `design/system/`, installed by the tool rather than by hand, and committed",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "Lamplight, Baize, gyreandgymble and snorkeltoast all installed and committed by 31 Jul; `intent/st/ST0002/tasks.md` carries the per-project table"
+  }
+}

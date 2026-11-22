@@ -1,0 +1,8 @@
+{
+  "id": "AC-03.1",
+  "text": "The taxonomy is enumerable by the tool, and its numbering is identity rather than sequence",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

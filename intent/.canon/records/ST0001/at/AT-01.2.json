@@ -1,0 +1,12 @@
+{
+  "id": "AT-01.2",
+  "kind": "test",
+  "covers": [
+    "AC-01.2"
+  ],
+  "status": "green",
+  "note": "**Superseded in part, 9 Aug 2026**: hv ruled an in-taxonomy slug may be ordered ahead of the library (`spec_version: unassigned`), so the refusal this AT pinned now applies only outside the taxonomy. The original test was renamed to \"an ordered-ahead slug gets the contract section, not an invented spec\"; the refusal boundary lives in the test named here.",
+  "legacy": {
+    "raw": "test/cdtempl.bats::\"brief still refuses a named slug outside the taxonomy\""
+  }
+}

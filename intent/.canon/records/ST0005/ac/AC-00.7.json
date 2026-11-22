@@ -1,0 +1,8 @@
+{
+  "id": "AC-00.7",
+  "text": "CI names no file that does not exist: every path its shellcheck and `bash -n` steps are handed matches a file, and the README shows the shellcheck line CI runs.",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.6",
+  "text": "**The six file renames preserve history** rather than reading as unrelated deletes and adds",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "all six staged as `R` in `git status --porcelain`"
+  }
+}

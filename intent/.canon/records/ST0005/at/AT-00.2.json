@@ -1,0 +1,10 @@
+{
+  "id": "AT-00.2",
+  "kind": "test",
+  "file": "test/cdtempl.bats",
+  "covers": [
+    "AC-00.1"
+  ],
+  "status": "green",
+  "note": "red under mutation: a guard that stops judging passes it"
+}

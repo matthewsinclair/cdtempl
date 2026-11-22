@@ -1,0 +1,8 @@
+{
+  "id": "AC-04.1",
+  "text": "A spec's definition of done is machine-checkable, and `check` applies every rule it claims to",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

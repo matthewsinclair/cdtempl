@@ -1,0 +1,8 @@
+{
+  "id": "AC-03.3",
+  "text": "**The supplier is told that `formats_required` is advisory**, in the brief and not only in the library. A ruling that never reaches the supplier changes nothing -- covered by AT-03.3",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

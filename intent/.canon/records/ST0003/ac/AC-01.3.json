@@ -1,0 +1,9 @@
+{
+  "id": "AC-01.3",
+  "text": "**`v0.1.0` exists as an annotated tag** on the release commit",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`git tag -l -n99 v0.1.0` reports an annotated tag object on `e54ebbc`"
+  }
+}

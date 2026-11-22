@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.1",
+  "text": "**No occurrence of the former name remains in this repository** in tracked content, in any filename, or on disk including untracked and ignored files",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`git grep -oi` = 0, `git ls-files | grep -ic` = 0, `grep -ril` over the working tree = 0 files"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "AC-01.3",
+  "text": "A generated site is not eaten by the next round",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

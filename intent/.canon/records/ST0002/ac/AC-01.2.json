@@ -1,0 +1,8 @@
+{
+  "id": "AC-01.2",
+  "text": "Repo-authored material inside the target survives an install by declaration, not by luck",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AC-01.3",
+  "text": "The brief that went to Claude Design is self-contained, because the supplier cannot read this repository",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`cd-brief.md`, and five completed rounds answered from it"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "AC-03.1",
+  "text": "**The shipped library states no count of itself.** The figure in `specs/kit.md` is inlined into every brief, so it went to the supplier every round while the 8 August guard reported the number settled -- that guard's sampling frame never included `specs/` -- covered by AT-03.1",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "path": "design.md",
+  "text": "# Design - ST0004: Rename the tool to Cdsync\n\n## Approach\n\n[Planned approach for implementing this steel thread, including methodology and key steps]\n\n## Design Decisions\n\n[Key design decisions and their rationale]\n\n## Architecture\n\n[Architectural considerations and diagrams if applicable]\n\n## Alternatives Considered\n\n[Other approaches that were considered and why they were not chosen]\n",
+  "bytes": 389,
+  "sha256": "823554ed7889aab3eefd43b070e246cad112c9c59c331adac97a365824c1fee9"
+}

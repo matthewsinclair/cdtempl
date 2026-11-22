@@ -1,0 +1,9 @@
+{
+  "id": "AC-03.4",
+  "text": "**What a library edition bump means for already-stamped drops is decided and written where the library's readers find it**",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`specs/library.md` \"What a library edition bump does, and does not do\"; restated for the CLI reader in `help/brief.md`; the decision itself recorded in `WP/03/info.md`"
+  }
+}

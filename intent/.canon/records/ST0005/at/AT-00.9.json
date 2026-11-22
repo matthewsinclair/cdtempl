@@ -1,0 +1,10 @@
+{
+  "id": "AT-00.9",
+  "kind": "test",
+  "file": "test/cdtempl.bats",
+  "covers": [
+    "AC-00.1"
+  ],
+  "status": "green",
+  "note": "red under three mutations: stray marks unreported, no end-of-file case, no digit boundary"
+}

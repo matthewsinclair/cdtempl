@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.1",
+  "text": "**Every work package this thread opened has reached a terminal state on the record, and its finding lives in its own `info.md` rather than in a snapshot**",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`intent wp list ST0003` shows seven Done and one Not Started; the one is WP-02, parked by hv on 9 Aug with its evidence and recommendations written up in `WP/02/info.md`"
+  }
+}

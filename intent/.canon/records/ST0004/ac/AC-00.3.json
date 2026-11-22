@@ -1,0 +1,8 @@
+{
+  "id": "AC-00.3",
+  "text": "**The tool still does what it did**, under the new name, with no test weakened or removed to achieve it -- covered by AT-00.1; test count must remain 328",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

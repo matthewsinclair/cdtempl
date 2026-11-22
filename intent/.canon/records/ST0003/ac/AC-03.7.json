@@ -1,0 +1,9 @@
+{
+  "id": "AC-03.7",
+  "text": "**Each new guard was proven able to fail, against a mutation proven to land**",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "three mutants, each shown landed by diff and each killing exactly its own test; the harness's own inverted-`diff` bug caught and recorded"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AC-01.8",
+  "text": "**Nothing was published.** `cut` stops after tagging unless `--push` is passed",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "remote carries 0 tags and is 2 commits behind at close"
+  }
+}

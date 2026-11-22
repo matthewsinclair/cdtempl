@@ -1,0 +1,8 @@
+{
+  "id": "AC-03.2",
+  "text": "**Every dependency the library names resolves in the taxonomy.** `check`'s rule 2 catches a dangling `depends_on` in a drop; nothing looked at the library, which is how three sat there from July -- covered by AT-03.2 and AT-03.4",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

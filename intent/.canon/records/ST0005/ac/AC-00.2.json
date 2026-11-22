@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.2",
+  "text": "`bin/devbin test all` runs the whole bats suite as a sealed gate, so its verdict is a file: red while any test fails, green only on a completed run in which none did.",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "bin/devbin test all sealed tmp/test/20260915-1700.SHELL.errors non-empty when 360 tests ran with one failing, and tmp/test/20260915-1733.SHELL.errors empty when 366 of 366 passed"
+  }
+}

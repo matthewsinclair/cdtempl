@@ -1,0 +1,8 @@
+{
+  "id": "AC-02.1",
+  "text": "A design system tree renders to a browsable site from its own repository, without serving",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

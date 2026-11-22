@@ -1,0 +1,8 @@
+{
+  "id": "AC-01.2",
+  "text": "An order naming a slug the library does not specify is refused, and a bundle reaching one declares it absent",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

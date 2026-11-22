@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.7",
+  "text": "**No occurrence of the former name remains in the four sibling repositories**, each verified with the same paired positive control",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "Utilz, Laksa, Lamplight and Baize all at 0 tracked, 0 filenames and 0 on disk; each one's positive control equals its own pre-mutation baseline exactly (42, 39, 43, 25)"
+  }
+}

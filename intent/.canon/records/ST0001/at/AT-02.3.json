@@ -1,0 +1,11 @@
+{
+  "id": "AT-02.3",
+  "kind": "test",
+  "covers": [
+    "AC-02.3"
+  ],
+  "status": "green",
+  "legacy": {
+    "raw": "test/cdtempl.bats::\"install replaces what the drop carries and removes what it does not\""
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "AT-00.1",
+  "kind": "test",
+  "file": "test/cdtempl.bats",
+  "covers": [
+    "AC-00.3"
+  ],
+  "status": "green",
+  "note": "(whole suite, 328 tests)"
+}

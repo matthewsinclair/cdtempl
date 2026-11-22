@@ -1,0 +1,9 @@
+{
+  "id": "AC-03.5",
+  "text": "**Exactly the specs whose text moved went stale, verified rather than asserted**",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`cdsync check --target templates/claude_design/templprj` reports `pitch-deck` and `positioning-icp-personas` stale against the new numbers and no asset stale that should not be; `cdsync doctor` reports library version 4"
+  }
+}

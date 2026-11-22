@@ -1,0 +1,9 @@
+{
+  "id": "AC-03.3",
+  "text": "The conversion needed to make the remaining trees checkable is specified and ready to send, not merely identified",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`port-brief-lamplight.md`, `port-brief-baize.md`, `port-brief-snorkeltoast.md`, all complete and unsent; G&G needs none"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "AT-00.10",
+  "kind": "test",
+  "file": "test/cdtempl.bats",
+  "covers": [
+    "AC-00.7"
+  ],
+  "status": "green",
+  "note": "red in a clone of the committed tree, where ci.yml still named .claude/scripts"
+}

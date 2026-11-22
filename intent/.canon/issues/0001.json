@@ -1,6 +1,7 @@
 {
-  "schema": "intent/issue@3.0",
-  "number": 1,
+  "schema": "intent/issue@4.0",
+  "id": "0001",
+  "realised": true,
   "slug": "check-rule-1-counts-css-attribute-selectors-as-b",
   "title": "check: rule 1 counts CSS attribute selectors as blanks, and rule 4 reads numeric character references as colours",
   "status": "open",

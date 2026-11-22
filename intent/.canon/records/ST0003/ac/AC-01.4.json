@@ -1,0 +1,9 @@
+{
+  "id": "AC-01.4",
+  "text": "**All six release gates passed on the real cut**, not on a dry run",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "working tree clean, on main, not behind upstream, doctor, shellcheck, tests"
+  }
+}

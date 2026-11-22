@@ -1,0 +1,8 @@
+{
+  "id": "AC-00.1",
+  "text": "The acceptance-contract guard reads every contract from the store's committed extract (`intent/.canon/st/<id>.json`), open threads and closed alike, and fails on a cited test or file the repository does not have, on a test-backed row that cites nothing, and on an extract it reads nothing from.",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

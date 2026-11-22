@@ -1,0 +1,8 @@
+{
+  "id": "AC-01.1",
+  "text": "**The tool can cut the version a project is currently on.** Every bump part moves forward, so the first release of any project was unreachable through `cut` -- covered by AT-01.1 through AT-01.6",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

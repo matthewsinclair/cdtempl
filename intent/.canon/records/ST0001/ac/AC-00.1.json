@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.1",
+  "text": "All four deliverables exist and have been exercised end to end by a real supplier round, not only by fixtures",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "matthewsinclair and geodica went out cold on 1 Aug and returned Cdsync-shaped on 2 Aug; both installed and checked (`intent/whiteboard/cc/.history/20260802/wip.md`)"
+  }
+}

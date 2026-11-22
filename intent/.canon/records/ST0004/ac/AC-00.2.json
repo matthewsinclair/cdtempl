@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.2",
+  "text": "**The probe reporting that zero is proven able to hit**, by a positive control reconciling exactly against the pre-mutation baseline",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "baseline 653 + 284 + 483 = 1420 recorded in `info.md` before any mutation; post-substitution count of the new name = 1420, exact"
+  }
+}

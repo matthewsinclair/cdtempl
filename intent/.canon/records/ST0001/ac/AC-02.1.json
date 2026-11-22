@@ -1,0 +1,8 @@
+{
+  "id": "AC-02.1",
+  "text": "The mandated layout has exactly one definition, and both install paths read it from there",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

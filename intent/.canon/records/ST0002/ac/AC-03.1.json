@@ -1,0 +1,9 @@
+{
+  "id": "AC-03.1",
+  "text": "`check` was run against all four and the results recorded as measured rather than as hoped",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`check-against-all-four-drops.md`; G&G clean, Lamplight clean, Baize and snorkeltoast refusing with `0 assets checked`"
+  }
+}

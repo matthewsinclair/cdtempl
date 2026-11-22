@@ -1,0 +1,11 @@
+{
+  "id": "AT-01.3",
+  "kind": "test",
+  "covers": [
+    "AC-01.2"
+  ],
+  "status": "green",
+  "legacy": {
+    "raw": "test/cdtempl.bats::\"brief orders what a partial bundle has and declares the rest absent\""
+  }
+}

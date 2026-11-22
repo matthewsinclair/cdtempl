@@ -1,0 +1,8 @@
+{
+  "id": "AC-04.3",
+  "text": "A rule's published reach matches its implemented reach",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

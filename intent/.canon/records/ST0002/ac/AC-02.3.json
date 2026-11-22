@@ -1,0 +1,9 @@
+{
+  "id": "AC-02.3",
+  "text": "Each of the four carries a manifest",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`index.md` landed in all four on 31 Jul; two had no manifest of any kind before it"
+  }
+}

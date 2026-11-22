@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.2",
+  "text": "**Nothing that already existed was lost.** Every deletion is accounted for against the supplier's own statement of what it delivered",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "every deletion matched a sentence in that project's `RETURN.md`"
+  }
+}

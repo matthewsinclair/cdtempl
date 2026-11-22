@@ -1,0 +1,9 @@
+{
+  "id": "AC-01.4",
+  "text": "The two projects that had never been extracted were extracted straight into Cdsync's shape, rather than extracted twice",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "`extract-brief-gyreandgymble.md` and `extract-brief-snorkeltoast.md` were written before any extract ran, which was the stated precondition in `info.md`"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AT-04.2",
+  "kind": "test",
+  "covers": [
+    "AC-04.2"
+  ],
+  "status": "green",
+  "legacy": {
+    "raw": "test/cdtempl.bats::\"rule 4 says it cannot run when the kit holds no colour it can read\""
+  }
+}

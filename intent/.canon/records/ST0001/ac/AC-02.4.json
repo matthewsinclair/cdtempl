@@ -1,0 +1,8 @@
+{
+  "id": "AC-02.4",
+  "text": "A drop may not deliver `.gitignore`, and it is discarded by name rather than silently",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

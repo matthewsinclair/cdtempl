@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.9",
+  "text": "**Every generated document carrying the name agrees with what the renamed generator now emits**, rather than merely having been substituted to look right",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "both regenerated with the renamed tool via `bootstrap --stdout` and diffed against the substituted text; **zero name-related differences** in either. The residual diff is pre-existing numbering drift (Lamplight's steel-thread count, Baize's ADR and steel-thread counts) that predates this thread and is those projects' own to reconcile"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "AC-01.1",
+  "text": "A brief is assembled from the spec library rather than hand-written, and names the specs it orders",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

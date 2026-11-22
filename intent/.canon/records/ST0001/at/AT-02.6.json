@@ -1,0 +1,11 @@
+{
+  "id": "AT-02.6",
+  "kind": "test",
+  "covers": [
+    "AC-02.4"
+  ],
+  "status": "green",
+  "legacy": {
+    "raw": "test/cdtempl.bats::\"install names each discarded .gitignore rather than removing it quietly\""
+  }
+}

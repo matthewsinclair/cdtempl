@@ -1,0 +1,8 @@
+{
+  "id": "AC-02.2",
+  "text": "The generator refuses a target that is not a drop, rather than producing an empty site",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

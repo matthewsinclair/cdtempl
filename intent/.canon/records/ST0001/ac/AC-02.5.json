@@ -1,0 +1,9 @@
+{
+  "id": "AC-02.5",
+  "text": "A supplier working only from the generated document produces the mandated shape",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "two cold trees returned on 2 Aug with an identical drop root of `assets brief.md index.md kit notes RETURN.md`"
+  }
+}

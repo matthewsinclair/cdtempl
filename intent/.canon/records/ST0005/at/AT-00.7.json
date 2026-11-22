@@ -1,0 +1,10 @@
+{
+  "id": "AT-00.7",
+  "kind": "test",
+  "file": "test/cdtempl.bats",
+  "covers": [
+    "AC-00.3"
+  ],
+  "status": "green",
+  "note": "red in a clone with the ignore rule removed, and again with the manifest force-tracked"
+}

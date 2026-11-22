@@ -1,0 +1,11 @@
+{
+  "id": "AT-01.2",
+  "kind": "test",
+  "covers": [
+    "AC-01.1"
+  ],
+  "status": "green",
+  "legacy": {
+    "raw": "test/cdtempl.bats::\"import leaves an unmentioned path standing where install removes it\""
+  }
+}

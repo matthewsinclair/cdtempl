@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.11",
+  "text": "**The AC-00.9 reconciliation was itself run against a target proven able to see the tree.** The first attempt pointed at `design/` rather than `design/system/` and reported 0 assets for a tree that has four, each with its `spec.md`. It did not error -- it produced a well-formed document making a false claim. A zero from a generator is not evidence until the generator is shown able to find something",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "re-run against `design/system/` reports `**4 assets**` for Lamplight, matching the document it was being diffed against"
+  }
+}

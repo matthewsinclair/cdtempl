@@ -1,0 +1,8 @@
+{
+  "id": "AC-00.4",
+  "text": "A release archive carries neither `bin/devbin` nor `bin/.devbin/` -- devbin is how the tool is made, not the tool.",
+  "kind": "test",
+  "state": {
+    "is": "computed"
+  }
+}

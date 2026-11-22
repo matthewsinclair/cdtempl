@@ -1,0 +1,9 @@
+{
+  "id": "AC-00.10",
+  "text": "**Nothing was swept up from a sibling repository's uncommitted work.** Three of the four had live sessions with modified boards while this ran",
+  "kind": "non-test",
+  "state": {
+    "is": "satisfied",
+    "evidence": "overlap computed with `comm -12` between each repo's dirty set and this thread's target set before any mutation, empty in all three; every sibling commit made with `git commit --only` and an explicit pathspec, never `git add -A`; after each commit their modified boards remained unstaged (Laksa 4, Lamplight 5, Baize 4)"
+  }
+}
